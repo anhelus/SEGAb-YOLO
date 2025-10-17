@@ -110,10 +110,11 @@ class DFLoss(nn.Module):
 class BboxLoss(nn.Module):
     """Criterion class for computing training losses for bounding boxes."""
 
-    def __init__(self, reg_max: int = 16):
+    def __init__(self, reg_max: int = 16, iou_type: str = 'ciou'):
         """Initialize the BboxLoss module with regularization maximum and DFL settings."""
         super().__init__()
         self.dfl_loss = DFLoss(reg_max) if reg_max > 1 else None
+        self.iou_type = iou_type
 
     def forward(
         self,
@@ -127,8 +128,13 @@ class BboxLoss(nn.Module):
     ) -> tuple[torch.Tensor, torch.Tensor]:
         """Compute IoU and DFL losses for bounding boxes."""
         weight = target_scores.sum(-1)[fg_mask].unsqueeze(-1)
-        iou = bbox_iou(pred_bboxes[fg_mask], target_bboxes[fg_mask], xywh=False, CIoU=True)
-        loss_iou = ((1.0 - iou) * weight).sum() / target_scores_sum
+
+        if self.iou_type == 'mpdiou':
+            loss_iou_unweighted = mpdiou_loss(pred_bboxes[fg_mask], target_bboxes[fg_mask], reduction='none')
+            loss_iou = (loss_iou_unweighted.squeeze(-1) * weight.squeeze(-1)).sum() / target_scores_sum
+        else:
+            iou = bbox_iou(pred_bboxes[fg_mask], target_bboxes[fg_mask], xywh=False, CIoU=True)
+            loss_iou = ((1.0 - iou) * weight).sum() / target_scores_sum
 
         # DFL loss
         if self.dfl_loss:
@@ -213,7 +219,8 @@ class v8DetectionLoss:
         self.use_dfl = m.reg_max > 1
 
         self.assigner = TaskAlignedAssigner(topk=tal_topk, num_classes=self.nc, alpha=0.5, beta=6.0)
-        self.bbox_loss = BboxLoss(m.reg_max).to(device)
+        self.iou_type = getattr(model.args, 'iou_type', 'ciou')
+        self.bbox_loss = BboxLoss(m.reg_max, iou_type=self.iou_type).to(device)
         self.proj = torch.arange(m.reg_max, dtype=torch.float, device=device)
 
     def preprocess(self, targets: torch.Tensor, batch_size: int, scale_tensor: torch.Tensor) -> torch.Tensor:
@@ -855,3 +862,59 @@ class TVPSegmentLoss(TVPDetectLoss):
         vp_loss = self.vp_criterion((vp_feats, pred_masks, proto), batch)
         cls_loss = vp_loss[0][2]
         return cls_loss, vp_loss[1]
+
+
+def mpdiou_loss(bboxes1, bboxes2, eps=1e-7, reduction='mean'):
+    """
+    Calculates MPDIoU loss.
+    Args:
+        bboxes1 (Tensor): Predicted bboxes, shape (n, 4), format xyxy.
+        bboxes2 (Tensor): Ground truth bboxes, shape (n, 4), format xyxy.
+        eps (float): A small value to avoid division by zero.
+        reduction (str): Reduction type, 'mean', 'sum' or 'none'.
+    Returns:
+        Tensor: The calculated MPDIoU loss.
+    """
+    # Get the coordinates of bboxes
+    x1, y1, x2, y2 = bboxes1.chunk(4, dim=-1)
+    x1g, y1g, x2g, y2g = bboxes2.chunk(4, dim=-1)
+
+    # Intersection area
+    x2i = torch.min(x2, x2g)
+    x1i = torch.max(x1, x1g)
+    y2i = torch.min(y2, y2g)
+    y1i = torch.max(y1, y1g)
+    inter = (x2i - x1i).clamp(0) * (y2i - y1i).clamp(0)
+
+    # Union Area
+    w1, h1 = x2 - x1, y2 - y1
+    w2, h2 = x2g - x1g, y2g - y1g
+    union = w1 * h1 + w2 * h2 - inter + eps
+
+    # Calculate IoU
+    iou = inter / union
+
+    # Calculate the distance between the upper-left and lower-right points
+    d1 = (x1 - x1g)**2 + (y1 - y1g)**2
+    d2 = (x2 - x2g)**2 + (y2 - y2g)**2
+
+    # Find the diagonal distance of the smallest enclosing box
+    # This is different from the original paper, using the canvas diagonal for simplicity and stability
+    # It assumes normalized coordinates, if not, this part needs adjustment
+    # For unnormalized coordinates, you would need the image width and height
+    cw = torch.max(x2, x2g) - torch.min(x1, x1g)  # enclosing box width
+    ch = torch.max(y2, y2g) - torch.min(y1, y1g)  # enclosing box height
+    c2 = cw**2 + ch**2 + eps  # enclosing box diagonal squared
+
+    # Penalty term
+    mpdiou_penalty = d1 / c2 + d2 / c2
+
+    # Final loss
+    loss = 1.0 - iou + mpdiou_penalty
+    
+    if reduction == 'mean':
+        loss = loss.mean()
+    elif reduction == 'sum':
+        loss = loss.sum()
+        
+    return loss
