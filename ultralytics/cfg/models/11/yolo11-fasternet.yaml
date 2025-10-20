@@ -1,5 +1,5 @@
 # Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
-# YOLOv11n with SimAM attention
+# YOLOv11n with FasterNet blocks for a high-speed backbone
 
 # Parameters
 nc: 80
@@ -15,33 +15,32 @@ backbone:
   # [from, repeats, module, args]
   - [-1, 1, Conv, [64, 3, 2]] # 0-P1/2
   - [-1, 1, Conv, [128, 3, 2]] # 1-P2/4
-  - [-1, 2, C3k2, [256, False, 0.25]]
+  - [-1, 2, FasterNetBlock, [128, 1, 2]] # 2 <-- REPLACED C3k2 with FasterNetBlock
   - [-1, 1, Conv, [256, 3, 2]] # 3-P3/8
-  - [-1, 2, C3k2, [512, False, 0.25]]
+  - [-1, 2, FasterNetBlock, [256, 1, 2]] # 4 <-- REPLACED C3k2 with FasterNetBlock
   - [-1, 1, Conv, [512, 3, 2]] # 5-P4/16
-  - [-1, 2, C3k2, [512, True]]
+  - [-1, 2, FasterNetBlock, [512, 1, 2]] # 6 <-- REPLACED C3k2 with FasterNetBlock
   - [-1, 1, Conv, [1024, 3, 2]] # 7-P5/32
-  - [-1, 2, C3k2, [1024, True]]
+  - [-1, 2, FasterNetBlock, [1024, 1, 2]] # 8 <-- REPLACED C3k2 with FasterNetBlock
   - [-1, 1, SPPF, [1024, 5]] # 9
   - [-1, 2, C2PSA, [1024]] # 10
-  - [-1, 1, SimAM, []]           # 11 <-- ADDED SimAM BLOCK
 
-# YOLOv11n head (indices are relative, so no changes needed)
+# YOLOv11n head (no changes needed as backbone length is the same)
 head:
   - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
   - [[-1, 6], 1, Concat, [1]]
-  - [-1, 2, C3k2, [512, False]]
+  - [-1, 2, C3k2, [512, False]] # 13
 
   - [-1, 1, nn.Upsample, [None, 2, "nearest"]]
   - [[-1, 4], 1, Concat, [1]]
-  - [-1, 2, C3k2, [256, False]]
+  - [-1, 2, C3k2, [256, False]] # 16 (P3/8-small)
 
   - [-1, 1, Conv, [256, 3, 2]]
-  - [[-1, 14], 1, Concat, [1]] # Adjusted index from 13 to 14
-  - [-1, 2, C3k2, [512, False]]
+  - [[-1, 13], 1, Concat, [1]]
+  - [-1, 2, C3k2, [512, False]] # 19 (P4/16-medium)
 
   - [-1, 1, Conv, [512, 3, 2]]
-  - [[-1, 11], 1, Concat, [1]] # Adjusted index from 10 to 11
-  - [-1, 2, C3k2, [1024, True]]
+  - [[-1, 10], 1, Concat, [1]]
+  - [-1, 2, C3k2, [1024, True]] # 22 (P5/32-large)
 
-  - [[17, 20, 23], 1, Detect, [nc]] # Adjusted indices
+  - [[16, 19, 22], 1, Detect, [nc]] # Detect(P3, P4, P5)

@@ -47,6 +47,7 @@ from ultralytics.nn.modules import (
     DWConv,
     DWConvTranspose2d,
     Focus,
+    GAM,
     GhostBottleneck,
     GhostConv,
     HGBlock,
@@ -54,6 +55,7 @@ from ultralytics.nn.modules import (
     ImagePoolingAttn,
     Index,
     LRPCHead,
+    ODConv,
     Pose,
     RepC3,
     RepConv,
@@ -69,6 +71,8 @@ from ultralytics.nn.modules import (
     YOLOESegment,
     v10Detect,
     SimAM,
+    CoT,
+    FasterNetBlock,
 )
 from ultralytics.utils import DEFAULT_CFG_DICT, LOGGER, YAML, colorstr, emojis
 from ultralytics.utils.checks import check_requirements, check_suffix, check_yaml
@@ -1611,6 +1615,8 @@ def parse_model(d, ch, verbose=True):
             SCDown,
             C2fCIB,
             A2C2f,
+            ODConv,
+            FasterNetBlock,
         }
     )
     repeat_modules = frozenset(  # modules with 'repeat' arguments
@@ -1679,12 +1685,18 @@ def parse_model(d, ch, verbose=True):
             c2 = args[1] if args[3] else args[1] * 4
         elif m is torch.nn.BatchNorm2d:
             args = [ch[f]]
+        elif m is GAM:
+            c1, c2 = ch[f], ch[f]
+            args = [c1, *args]
+        elif m is CoT:
+            c1, c2 = ch[f], ch[f] # Input and output channels are the same
+            args = [c1, *args]   # Prepend the input channels to the args from YAML
         elif m is Concat:
             c2 = sum(ch[x] for x in f)
         # SimAM attention
         elif m is SimAM:
-            c2 = ch[f]
-            args = []
+            c1, c2 = ch[f], ch[f] # Channels don't change
+            args = [c1, *args]   # Prepend c1 to args from YAML
         elif m in frozenset(
             {Detect, WorldDetect, YOLOEDetect, Segment, YOLOESegment, Pose, OBB, ImagePoolingAttn, v10Detect}
         ):
