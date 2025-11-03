@@ -47,4 +47,4 @@ head:
   - [-1, 1, SimAM, []]           # 11 <-- ADDED SimAM BLOCK
   - [-1, 2, C3k2, [1024, True]]
 
-  - [[17, 20, 23], 1, Detect, [nc]] # Adjusted indices
+  - [[18, 22, 26], 1, Detect, [nc]] # Adjusted indices
