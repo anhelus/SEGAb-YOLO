@@ -27,7 +27,6 @@ backbone:
 
 # YOLOv11n head (indices are relative, so no changes needed)
 head:
-  # [from, repeats, module, args]
   - [-1, 1, nn.Upsample, [None, 2, "nearest"]] # 11
   - [[-1, 6], 1, Concat, [1]]                 # 12
   - [-1, 1, SimAM, []]                        # 13 <-- NEW
@@ -45,4 +44,4 @@ head:
   - [[-1, 10], 1, Concat, [1]]                # 22 (Connects to backbone P5-head)
   - [-1, 2, C3k2, [1024, True]]               # 23 (P5-large output)
 
-  - [[17, 20, 23], 1, Detect, [nc]]           # Detect(P3, P4, P5)
+  - [[17, 20, 23], 1, Segment, [nc, 32, 256]]           # Corrected Detect Layer
