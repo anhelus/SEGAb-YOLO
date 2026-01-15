@@ -144,12 +144,18 @@ class SimAM(nn.Module):
         super().__init__()
         self.activation = nn.Sigmoid()
         self.e_lambda = e_lambda
+        self.save_attention = False
+        self.last_attention = None
     
     def forward(self, x):
         b, c, h, w = x.size()
         n = w * h - 1
         x_minus_mu_square = (x - x.mean(dim=[2, 3], keepdim=True)).pow(2)
         y = x_minus_mu_square / (4 * (x_minus_mu_square.sum(dim=[2, 3], keepdim=True) / n + self.e_lambda)) + 0.5
+        
+        if self.save_attention:
+            self.last_attention = self.activation(y).detach()
+            
         return x * self.activation(y)
 
 
@@ -172,11 +178,33 @@ class GAM(nn.Module):
         
         # Instantiate the official SpatialAttention module, which only needs the kernel size.
         self.spatial_attention = SpatialAttention(kernel_size)
+        
+        self.save_attention = False
+        self.last_attention = None
 
     def forward(self, x):
         """Applies channel attention, then spatial attention."""
-        x = self.channel_attention(x)
-        return self.spatial_attention(x)
+        
+        # Channel Attention
+        # Re-implementing logic to access attention map
+        c_pool = self.channel_attention.pool(x)
+        c_fc = self.channel_attention.fc(c_pool)
+        c_att = self.channel_attention.act(c_fc)
+        
+        x = x * c_att
+        
+        # Spatial Attention
+        # Re-implementing logic to access attention map
+        s_mean = torch.mean(x, 1, keepdim=True)
+        s_max = torch.max(x, 1, keepdim=True)[0]
+        s_cat = torch.cat([s_mean, s_max], 1)
+        s_out = self.spatial_attention.cv1(s_cat)
+        s_att = self.spatial_attention.act(s_out)
+        
+        if self.save_attention:
+            self.last_attention = {"channel": c_att.detach(), "spatial": s_att.detach()}
+            
+        return x * s_att
 
 
 class PConv(nn.Module):
