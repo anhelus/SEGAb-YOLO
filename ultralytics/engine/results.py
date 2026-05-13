@@ -14,6 +14,7 @@ from typing import Any
 
 import numpy as np
 import torch
+import cv2
 
 from ultralytics.data.augment import LetterBox
 from ultralytics.utils import LOGGER, DataExportMixin, SimpleClass, ops
@@ -323,6 +324,60 @@ class Results(SimpleClass, DataExportMixin):
             v = getattr(self, k)
             if v is not None:
                 return len(v)
+
+    def plot_xai(self, method='gradcam', box_index=0, layer_index=-2, alpha=0.6):
+        """
+        Generates and plots an Explainable AI (XAI) heatmap on the original image.
+        """
+        # 1. --- Input Validation and Setup ---
+        if not hasattr(self, 'model') or not hasattr(self, '_processed_tensor'):
+            LOGGER.warning("⚠️ XAI attributes not found. This version of Ultralytics may not be configured for XAI.")
+            return self.orig_img
+        
+        if self.boxes is None or len(self.boxes) == 0:
+            LOGGER.warning("⚠️ No bounding boxes found in this result. Cannot generate XAI plot.")
+            return self.orig_img
+
+        if box_index >= len(self.boxes):
+            LOGGER.warning(f"⚠️ box_index {box_index} out of bounds. Using box 0.")
+            box_index = 0
+            
+        try:
+            from ultralytics.utils.xai import generate_cam
+        except ImportError:
+            LOGGER.error("❌ 'grad-cam' package not found. Please run 'pip install grad-cam' to use XAI features.")
+            return self.orig_img
+
+        target_box = self.boxes[box_index]
+        
+        # 2. --- Generate the CAM Heatmap ---
+
+        # ------------------- THE FINAL, DEFINITIVE FIX IS HERE -------------------
+        # 1. Create a "clean" deepcopy of the model. This new model is not in InferenceMode.
+        model_for_xai = deepcopy(self.model)
+        model_for_xai.eval() # Ensure it's in evaluation mode (for layers like BatchNorm)
+
+        # 2. Select the target layer FROM THE NEW, CLEAN MODEL.
+        target_layer = model_for_xai.model.model[layer_index]
+
+        # 3. Pass the clean model to the generate_cam function.
+        heatmap = generate_cam(model_for_xai, self._processed_tensor, target_layer, target_box, method=method)
+        # -----------------------------------------------------------------------
+        
+        # 3. --- Plot the Heatmap ---
+        heatmap_resized = cv2.resize(heatmap, (self.orig_img.shape[1], self.orig_img.shape[0]))
+        heatmap_normalized = cv2.normalize(heatmap_resized, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+        heatmap_colored = cv2.applyColorMap(heatmap_normalized, cv2.COLORMAP_JET)
+        overlay_image = cv2.addWeighted(self.orig_img, 1 - alpha, heatmap_colored, alpha, 0)
+
+        predicted_class_idx = int(target_box.cls[0])
+        x1, y1, x2, y2 = map(int, target_box.xyxy[0])
+        label = f"{self.names[predicted_class_idx]} ({target_box.conf[0]:.2f})"
+        cv2.rectangle(overlay_image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+        cv2.putText(overlay_image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        return overlay_image
+
 
     def update(
         self,

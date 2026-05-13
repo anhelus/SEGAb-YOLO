@@ -177,3 +177,9 @@ pnnx*
 
 # calibration image
 calibration_*.npy
+
+# Random images or labels
+*.txt
+*.png
+*.jpg
+*.jpeg

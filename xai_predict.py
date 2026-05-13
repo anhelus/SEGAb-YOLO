@@ -6,12 +6,11 @@ import torch
 import cv2
 import numpy as np
 from ultralytics import YOLO
-from ultralytics.xai import EigenCAM
-from ultralytics.xai.utils import show_cam_on_image, scale_cam_image
+from ultralytics.utils.xai import EigenCAM, GradCAM, GradCAMPlusPlus, generate_cam, show_cam_on_image, scale_cam_image
 from ultralytics.nn.modules.attention import GAM, SimAM
 import argparse
 
-def run_xai(model_path, source, output_dir='xai_output'):
+def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
     os.makedirs(output_dir, exist_ok=True)
     
     # Load model
@@ -28,7 +27,7 @@ def run_xai(model_path, source, output_dir='xai_output'):
             
     print(f"Found {len(attention_modules)} attention modules (GAM/SimAM).")
     
-    # Prepare EigenCAM
+    # Prepare target layers
     # We target the last convolution layer of the backbone or head. 
     # For YOLOv8/11, let's try to target the last layer of the backbone (usually SPPF) 
     # and the Detect head layers if possible.
@@ -43,15 +42,13 @@ def run_xai(model_path, source, output_dir='xai_output'):
             target_layers.append(m)
             
     if not target_layers:
-        print("Warning: Could not find specific target layers for EigenCAM. Using all Conv2d outputs might be too heavy.")
+        print("Warning: Could not find specific target layers. Using all Conv2d outputs might be too heavy.")
         # Fallback: traverse and find the last conv2d
         all_convs = [m for m in model.model.modules() if isinstance(m, torch.nn.Conv2d)]
         if all_convs:
             target_layers = [all_convs[-1]]
             
-    print(f"EigenCAM target layers: {len(target_layers)}")
-    
-    eigencam = EigenCAM(model.model, target_layers)
+    print(f"Target layers: {len(target_layers)}")
     
     # Load image
     img = cv2.imread(source)
@@ -59,33 +56,40 @@ def run_xai(model_path, source, output_dir='xai_output'):
         raise ValueError(f"Could not load image: {source}")
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     
-    # Run Inference (EigenCAM handles the forward pass hook)
-    # But we also need the attention maps, which are saved during forward.
-    # EigenCAM.__call__ runs model(x).
+    # Preprocess for YOLO
+    results = model.predict(source, save=False, verbose=False)
+    result = results[0]
     
-    # Preprocess image for YOLO
-    # We can use model.predict() which handles preprocessing, but EigenCAM expects raw tensor or creates it?
-    # EigenCAM.__call__ calls self.model(x).
-    # If we pass the image path to model(), it works.
-    
-    # Let's use model.predict() to get standard results first (boxes)
-    # and we can hook into that?
-    # No, EigenCAM hooks into forward.
-    
-    # Let's use EigenCAM(img_rgb) passing the numpy array. 
-    # YOLO model.__call__ handles numpy inputs.
-    
-    print("Running inference...")
-    cams = eigencam(img_rgb)
-    
-    # Process EigenCAM result
-    # CAM is for the whole image (or resized to it)
-    if cams:
+    if method.lower() == 'eigencam':
+        print("Running EigenCAM...")
+        eigencam = EigenCAM(model.model, target_layers)
+        cams = eigencam(img_rgb)
         cam = cams[0] # PCA 1
-        cam_resized = cv2.resize(cam, (img.shape[1], img.shape[0]))
-        cam_viz = show_cam_on_image(img_rgb, cam_resized, use_rgb=True)
-        cv2.imwrite(os.path.join(output_dir, 'eigencam.jpg'), cv2.cvtColor(cam_viz, cv2.COLOR_RGB2BGR))
-        print(f"Saved EigenCAM to {output_dir}/eigencam.jpg")
+    else:
+        print(f"Running {method}...")
+        if len(result.boxes) == 0:
+            print("No objects detected. Cannot run Grad-CAM variants.")
+            return
+        
+        # Take the best detection
+        target_box = result.boxes[0]
+        
+        # We need a single target layer for generate_cam as currently implemented
+        # Use the last one
+        t_layer = target_layers[-1]
+        
+        # Prepare image tensor [1, 3, H, W]
+        img_tensor = torch.from_numpy(img_rgb).permute(2, 0, 1).float() / 255.0
+        img_tensor = img_tensor.unsqueeze(0).to(model.device)
+        
+        cam = generate_cam(model.model, img_tensor, t_layer, target_box, method=method)
+        
+    # Save Result
+    cam_resized = cv2.resize(cam, (img.shape[1], img.shape[0]))
+    cam_viz = show_cam_on_image(img_rgb, cam_resized, use_rgb=True)
+    out_path = os.path.join(output_dir, f'{method}.jpg')
+    cv2.imwrite(out_path, cv2.cvtColor(cam_viz, cv2.COLOR_RGB2BGR))
+    print(f"Saved {method} to {out_path}")
         
     # Process Attention Maps
     for i, m in enumerate(attention_modules):
@@ -132,6 +136,7 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str, default='yolo11n.pt', help='Path to model')
     parser.add_argument('--source', type=str, default='ultralytics/assets/bus.jpg', help='Path to image')
     parser.add_argument('--output', type=str, default='xai_output', help='Output directory')
+    parser.add_argument('--method', type=str, default='eigencam', help='XAI method: gradcam, gradcam++, ss-gradcam++, eigencam')
     args = parser.parse_args()
     
-    run_xai(args.model, args.source, args.output)
+    run_xai(args.model, args.source, args.output, args.method)

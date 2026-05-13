@@ -343,6 +343,16 @@ class BasePredictor:
                     self.results = self.postprocess(preds, im, im0s)
                 self.run_callbacks("on_predict_postprocess_end")
 
+                # --------------------- START: THE FINAL FIX IS HERE ---------------------
+                # Enrich each Results object with the model and the exact input tensor.
+                # This makes them available for methods like plot_xai().
+                if self.results:
+                    for i, result in enumerate(self.results):
+                        result.model = self.model  # Attach the model object
+                        result._processed_tensor = im[i:i + 1] # Attach the tensor slice for this specific image
+                # ---------------------- END: THE FINAL FIX IS HERE ----------------------
+
+
                 # Visualize, save, write results
                 n = len(im0s)
                 try:
