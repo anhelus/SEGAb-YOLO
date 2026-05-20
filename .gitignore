@@ -169,3 +169,10 @@ pnnx*
 
 # calibration image
 calibration_*.npy
+
+# Other files
+xai_output/
+*env/
+*.jpg
+*.png
+*.txt
