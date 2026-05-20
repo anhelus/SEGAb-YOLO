@@ -1,28 +1,22 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# Ultralytics YOLO 🚀, AGPL-3.0 license
 """
-Ultralytics neural network modules.
+Ultralytics modules.
 
-This module provides access to various neural network components used in Ultralytics models, including convolution
-blocks, attention mechanisms, transformer components, and detection/segmentation heads.
+Example:
+    Visualize a module with Netron.
+    ```python
+    from ultralytics.nn.modules import *
+    import torch
+    import os
 
-Examples:
-    Visualize a module with Netron
-    >>> from ultralytics.nn.modules import Conv
-    >>> import torch
-    >>> import subprocess
-    >>> x = torch.ones(1, 128, 40, 40)
-    >>> m = Conv(128, 128)
-    >>> f = f"{m._get_name()}.onnx"
-    >>> torch.onnx.export(m, x, f)
-    >>> subprocess.run(f"onnxslim {f} {f} && open {f}", shell=True, check=True)  # pip install onnxslim
+    x = torch.ones(1, 128, 40, 40)
+    m = Conv(128, 128)
+    f = f"{m._get_name()}.onnx"
+    torch.onnx.export(m, x, f)
+    os.system(f"onnxslim {f} {f} && open {f}")  # pip install onnxslim
+    ```
 """
-from .attention import (
-    SimAM,
-    CoT,
-    ODConv,
-    GAM,
-    FasterNetBlock,
-)
+
 from .block import (
     C1,
     C2,
@@ -36,7 +30,6 @@ from .block import (
     SPP,
     SPPELAN,
     SPPF,
-    A2C2f,
     AConv,
     ADown,
     Attention,
@@ -57,16 +50,17 @@ from .block import (
     HGBlock,
     HGStem,
     ImagePoolingAttn,
-    MaxSigmoidAttnBlock,
     Proto,
     RepC3,
     RepNCSPELAN4,
     RepVGGDW,
     ResNetLayer,
     SCDown,
-    TorchVision,
+    BiLevelRoutingAttention,
+    CSPStage
 )
 from .conv import (
+    CBAM,
     ChannelAttention,
     Concat,
     Conv,
@@ -76,24 +70,15 @@ from .conv import (
     DWConvTranspose2d,
     Focus,
     GhostConv,
-    Index,
     LightConv,
     RepConv,
     SpatialAttention,
+    GAM_Attention,
+    ShuffleAttention,
+    ECAAttention,
+    ResBlock_CBAM
 )
-from .head import (
-    OBB,
-    Classify,
-    Detect,
-    LRPCHead,
-    Pose,
-    RTDETRDecoder,
-    Segment,
-    WorldDetect,
-    YOLOEDetect,
-    YOLOESegment,
-    v10Detect,
-)
+from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect, v10Detect
 from .transformer import (
     AIFI,
     MLP,
@@ -108,10 +93,6 @@ from .transformer import (
 )
 
 __all__ = (
-    "ODConv",
-    "CoT",
-    "SimAM",
-    "GAM",
     "Conv",
     "Conv2",
     "LightConv",
@@ -123,6 +104,7 @@ __all__ = (
     "GhostConv",
     "ChannelAttention",
     "SpatialAttention",
+    "CBAM",
     "Concat",
     "TransformerLayer",
     "TransformerBlock",
@@ -164,12 +146,8 @@ __all__ = (
     "ResNetLayer",
     "OBB",
     "WorldDetect",
-    "YOLOEDetect",
-    "YOLOESegment",
     "v10Detect",
-    "LRPCHead",
     "ImagePoolingAttn",
-    "MaxSigmoidAttnBlock",
     "ContrastiveHead",
     "BNContrastiveHead",
     "RepNCSPELAN4",
@@ -184,8 +162,10 @@ __all__ = (
     "C2fCIB",
     "Attention",
     "PSA",
-    "TorchVision",
-    "Index",
-    "A2C2f",
-    "FasterNetBlock"
+    "GAM_Attention",
+    "ShuffleAttention",
+    "ECAAttention",
+    "ResBlock_CBAM",
+    "BiLevelRoutingAttention",
+    "CSPStage"
 )
