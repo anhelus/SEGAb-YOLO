@@ -42,8 +42,52 @@ def image_generator(source_path):
         raise FileNotFoundError(f"Source path does not exist: {source_path}")
 
 
-def setup_model(model_path):
-    """Load the YOLO model and configure attention modules. Returns (model, attention_modules, target_layers)."""
+def find_target_layers(model):
+    """
+    Find suitable target layers for CAM visualization in a YOLO model.
+    Strategy:
+      1. Look for SPPF module (backbone output) and use its output conv.
+      2. Fall back to the last Conv-like wrapper in model.model.model (the Sequential).
+      3. Final fall back to the last nn.Conv2d found anywhere.
+    """
+    # Strategy 1: SPPF module (backbone output – best for CAM)
+    for name, module in model.model.named_modules():
+        class_name = type(module).__name__
+        if 'SPPF' in class_name or 'SPP' in class_name:
+            # SPPF has cv2 (output conv wrapper) in ultralytics
+            if hasattr(module, 'cv2'):
+                print(f"  Target layer: {name}.cv2 ({type(module.cv2).__name__})")
+                return [module.cv2]
+            else:
+                print(f"  Target layer: {name} ({class_name})")
+                return [module]
+
+    # Strategy 2: Last Conv-like wrapper in the top-level Sequential
+    if hasattr(model.model, 'model'):  # model.model.model is the nn.Sequential
+        seq = model.model.model
+        for i in reversed(range(len(seq))):
+            layer = seq[i]
+            class_name = type(layer).__name__
+            # Skip the Detect/Segment head itself
+            if class_name in ('Detect', 'Segment', 'Pose', 'OBB'):
+                continue
+            # Look for Conv wrappers or modules containing Conv2d
+            convs = [m for m in layer.modules() if isinstance(m, torch.nn.Conv2d)]
+            if convs:
+                print(f"  Target layer: model.model[{i}] ({class_name}), last Conv2d")
+                return [convs[-1]]
+
+    # Strategy 3: Absolute fallback – last Conv2d anywhere
+    all_convs = [m for m in model.model.modules() if isinstance(m, torch.nn.Conv2d)]
+    if all_convs:
+        print("  Target layer: last Conv2d in model (fallback)")
+        return [all_convs[-1]]
+
+    return []
+
+
+def setup_model(model_path, method='eigencam'):
+    """Load the YOLO model, configure attention modules, find target layers, and build CAM. Returns dict."""
     print(f"Loading model: {model_path}")
     model = YOLO(model_path)
 
@@ -56,27 +100,36 @@ def setup_model(model_path):
 
     print(f"Found {len(attention_modules)} attention modules (GAM/SimAM).")
 
-    # Prepare target layers – last few Conv2d layers as a heuristic
-    target_layers = []
-    for m in list(model.model.modules())[-5:]:
-        if isinstance(m, torch.nn.Conv2d):
-            target_layers.append(m)
-
+    # Find target layers using architecture-aware heuristic
+    target_layers = find_target_layers(model)
     if not target_layers:
-        print("Warning: Could not find specific target layers in tail. Falling back to last Conv2d.")
-        all_convs = [m for m in model.model.modules() if isinstance(m, torch.nn.Conv2d)]
-        if all_convs:
-            target_layers = [all_convs[-1]]
-
+        raise RuntimeError("Could not find any suitable target layers for CAM.")
     print(f"Target layers: {len(target_layers)}")
-    return model, attention_modules, target_layers
+
+    # Pre-build EigenCAM once (avoids re-registering hooks per image)
+    eigencam_obj = None
+    if method.lower() == 'eigencam':
+        eigencam_obj = EigenCAM(model.model, target_layers)
+        print("EigenCAM initialized.")
+
+    return {
+        'model': model,
+        'attention_modules': attention_modules,
+        'target_layers': target_layers,
+        'eigencam': eigencam_obj,
+    }
 
 
-def process_single_image(img_path, model, attention_modules, target_layers, output_dir, method):
+def process_single_image(img_path, ctx, output_dir, method):
     """
     Run XAI on a single image and save the result.
     Returns True on success, False on failure.
     """
+    model = ctx['model']
+    attention_modules = ctx['attention_modules']
+    target_layers = ctx['target_layers']
+    eigencam_obj = ctx['eigencam']
+
     img_path = Path(img_path)
     stem = img_path.stem  # filename without extension
 
@@ -99,8 +152,7 @@ def process_single_image(img_path, model, attention_modules, target_layers, outp
 
     # --- CAM computation ---
     if method.lower() == 'eigencam':
-        eigencam = EigenCAM(model.model, target_layers)
-        cams = eigencam(img_tensor, targets=[DummyTarget()])
+        cams = eigencam_obj(img_tensor, targets=[DummyTarget()])
         cam = cams[0]
     else:
         if len(result.boxes) == 0:
@@ -187,7 +239,7 @@ def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
     """Main entry point: process a single image or every image in a folder."""
     os.makedirs(output_dir, exist_ok=True)
 
-    model, attention_modules, target_layers = setup_model(model_path)
+    ctx = setup_model(model_path, method=method)
 
     # Count images first for progress reporting
     images = list(image_generator(source))
@@ -208,7 +260,7 @@ def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
     for i, img_path in enumerate(images, 1):
         print(f"[{i}/{total}] {img_path.name}")
         try:
-            ok = process_single_image(img_path, model, attention_modules, target_layers, output_dir, method)
+            ok = process_single_image(img_path, ctx, output_dir, method)
             if ok:
                 success += 1
             else:
