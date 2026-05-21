@@ -1,20 +1,20 @@
-# Ultralytics YOLO 🚀, AGPL-3.0 license
+# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
 """
-Ultralytics modules.
+Ultralytics neural network modules.
 
-Example:
-    Visualize a module with Netron.
-    ```python
-    from ultralytics.nn.modules import *
-    import torch
-    import os
+This module provides access to various neural network components used in Ultralytics models, including convolution
+blocks, attention mechanisms, transformer components, and detection/segmentation heads.
 
-    x = torch.ones(1, 128, 40, 40)
-    m = Conv(128, 128)
-    f = f"{m._get_name()}.onnx"
-    torch.onnx.export(m, x, f)
-    os.system(f"onnxslim {f} {f} && open {f}")  # pip install onnxslim
-    ```
+Examples:
+    Visualize a module with Netron
+    >>> from ultralytics.nn.modules import Conv
+    >>> import torch
+    >>> import subprocess
+    >>> x = torch.ones(1, 128, 40, 40)
+    >>> m = Conv(128, 128)
+    >>> f = f"{m._get_name()}.onnx"
+    >>> torch.onnx.export(m, x, f)
+    >>> subprocess.run(f"onnxslim {f} {f} && open {f}", shell=True, check=True)  # pip install onnxslim
 """
 
 from .block import (
@@ -30,6 +30,7 @@ from .block import (
     SPP,
     SPPELAN,
     SPPF,
+    A2C2f,
     AConv,
     ADown,
     Attention,
@@ -50,6 +51,7 @@ from .block import (
     HGBlock,
     HGStem,
     ImagePoolingAttn,
+    MaxSigmoidAttnBlock,
     Proto,
     RepC3,
     RepNCSPELAN4,
@@ -57,7 +59,6 @@ from .block import (
     ResNetLayer,
     SCDown,
     TorchVision,
-    FasterNetBlock
 )
 from .conv import (
     CBAM,
@@ -70,15 +71,29 @@ from .conv import (
     DWConvTranspose2d,
     Focus,
     GhostConv,
+    Index,
     LightConv,
     RepConv,
     SpatialAttention,
-    GAM_Attention,
-    ShuffleAttention,
-    ECAAttention,
-    ResBlock_CBAM
 )
-from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect, v10Detect
+from .head import (
+    OBB,
+    OBB26,
+    Classify,
+    Detect,
+    LRPCHead,
+    Pose,
+    Pose26,
+    RTDETRDecoder,
+    Segment,
+    Segment26,
+    SemanticSegment,
+    WorldDetect,
+    YOLOEDetect,
+    YOLOESegment,
+    YOLOESegment26,
+    v10Detect,
+)
 from .transformer import (
     AIFI,
     MLP,
@@ -91,15 +106,8 @@ from .transformer import (
     TransformerEncoderLayer,
     TransformerLayer,
 )
-from .attention import (
-    CoT,
-    ODConv,
-    SimAM,
-    GAM
-)
 
 __all__ = (
-    "FasterNetBlock",
     "AIFI",
     "C1",
     "C2",
@@ -139,59 +147,46 @@ __all__ = (
     "ContrastiveHead",
     "Conv",
     "Conv2",
-    "LightConv",
-    "RepConv",
+    "ConvTranspose",
     "DWConv",
     "DWConvTranspose2d",
-    "ConvTranspose",
-    "Focus",
-    "GhostConv",
-    "ChannelAttention",
-    "SpatialAttention",
-    "CBAM",
-    "Concat",
-    "TransformerLayer",
-    "TransformerBlock",
-    "MLPBlock",
-    "LayerNorm2d",
-    "DFL",
-    "HGBlock",
-    "HGStem",
-    "SPP",
-    "SPPF",
-    "C1",
-    "C2",
-    "C3",
-    "C2f",
-    "C3k2",
-    "SCDown",
-    "C2fPSA",
-    "C2PSA",
-    "C2fAttn",
-    "C3x",
-    "C3TR",
-    "C3Ghost",
-    "GhostBottleneck",
-    "Bottleneck",
-    "BottleneckCSP",
-    "Proto",
-    "Detect",
-    "Segment",
-    "Pose",
-    "Classify",
-    "TransformerEncoderLayer",
-    "RepC3",
-    "RTDETRDecoder",
-    "AIFI",
     "DeformableTransformerDecoder",
     "DeformableTransformerDecoderLayer",
+    "Detect",
+    "Focus",
+    "GhostBottleneck",
+    "GhostConv",
+    "HGBlock",
+    "HGStem",
+    "ImagePoolingAttn",
+    "Index",
+    "LRPCHead",
+    "LayerNorm2d",
+    "LightConv",
+    "MLPBlock",
     "MSDeformAttn",
-    "MLP",
+    "MaxSigmoidAttnBlock",
+    "Pose",
+    "Pose26",
+    "Proto",
+    "RTDETRDecoder",
+    "RepC3",
+    "RepConv",
+    "RepNCSPELAN4",
+    "RepVGGDW",
     "ResNetLayer",
-    "OBB",
+    "SCDown",
+    "Segment",
+    "Segment26",
+    "SemanticSegment",
+    "SpatialAttention",
+    "TorchVision",
+    "TransformerBlock",
+    "TransformerEncoderLayer",
+    "TransformerLayer",
     "WorldDetect",
+    "YOLOEDetect",
+    "YOLOESegment",
+    "YOLOESegment26",
     "v10Detect",
-    "CoT",
-    "SimAM",
-    "GAM"
 )
