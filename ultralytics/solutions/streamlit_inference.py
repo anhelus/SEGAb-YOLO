@@ -16,8 +16,7 @@ torch.classes.__path__ = []  # Torch module __path__._path issue: https://github
 
 
 class Inference:
-    """
-    A class to perform object detection, image classification, image segmentation and pose estimation inference.
+    """A class to perform object detection, image classification, image segmentation and pose estimation inference.
 
     This class provides functionalities for loading models, configuring settings, uploading video files, and performing
     real-time inference using Streamlit and Ultralytics YOLO models.
@@ -54,8 +53,7 @@ class Inference:
     """
 
     def __init__(self, **kwargs: Any) -> None:
-        """
-        Initialize the Inference class, checking Streamlit requirements and setting up the model path.
+        """Initialize the Inference class, checking Streamlit requirements and setting up the model path.
 
         Args:
             **kwargs (Any): Additional keyword arguments for model configuration.
@@ -152,7 +150,17 @@ class Inference:
     def configure(self) -> None:
         """Configure the model and load selected classes for inference."""
         # Add dropdown menu for model selection
-        M_ORD, T_ORD = ["yolo11n", "yolo11s", "yolo11m", "yolo11l", "yolo11x"], ["", "-seg", "-pose", "-obb", "-cls"]
+        M_ORD, T_ORD = (
+            ["yolo26n", "yolo26s", "yolo26m", "yolo26l", "yolo26x"],
+            [
+                "",
+                "-seg",
+                "-sem",
+                "-pose",
+                "-obb",
+                "-cls",
+            ],
+        )
         available_models = sorted(
             [
                 x.replace("yolo", "YOLO")
