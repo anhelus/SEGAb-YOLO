@@ -55,53 +55,32 @@ __all__ = (
 )
 
 
-class Swish(nn.Module):
-    def __init__(self, inplace=True):
-        super(Swish, self).__init__()
-        self.inplace = inplace
+class Partial_conv3x3(nn.Module):
+    def __init__(self, dim, forward='split_cat'):
+        super().__init__()
+        self.dim_conv3x3 = dim // 4
+        self.dim_untouched = dim - self.dim_conv3x3
+        self.partial_conv3x3 = nn.Conv2d(self.dim_conv3x3, self.dim_conv3x3, 3, 1, 1, bias=False)
 
     def forward(self, x):
-        if self.inplace:
-            x.mul_(F.sigmoid(x))
-            return x
-        else:
-            return x * F.sigmoid(x)
+        # Supporta sia l'addestramento che l'inferenza veloce
+        x1, x2 = torch.split(x, [self.dim_conv3x3, self.dim_untouched], dim=1)
+        x1 = self.partial_conv3x3(x1)
+        return torch.cat((x1, x2), dim=1)
 
+class FasterNetBlock(nn.Module):
+    def __init__(self, c1, rate=4, act=nn.ReLU(), drop=0.):
+        super().__init__()
+        self.spatial_mixing = Partial_conv3x3(c1)
+        self.mlp = nn.Sequential(
+            nn.Conv2d(c1, int(rate * c1), 1, 1, 0, bias=False),
+            nn.BatchNorm2d(int(rate * c1)),
+            act,
+            nn.Conv2d(int(rate * c1), c1, 1, 1, 0, bias=False)
+        )
 
-def get_activation(name='silu', inplace=True):
-    if name is None:
-        return nn.Identity()
-
-    if isinstance(name, str):
-        if name == 'silu':
-            module = nn.SiLU(inplace=inplace)
-        elif name == 'relu':
-            module = nn.ReLU(inplace=inplace)
-        elif name == 'lrelu':
-            module = nn.LeakyReLU(0.1, inplace=inplace)
-        elif name == 'swish':
-            module = Swish(inplace=inplace)
-        elif name == 'hardsigmoid':
-            module = nn.Hardsigmoid(inplace=inplace)
-        elif name == 'identity':
-            module = nn.Identity()
-        else:
-            raise AttributeError('Unsupported act type: {}'.format(name))
-        return module
-
-    elif isinstance(name, nn.Module):
-        return name
-
-    else:
-        raise AttributeError('Unsupported act type: {}'.format(name))
-
-
-def get_norm(name, out_channels, inplace=True):
-    if name == 'bn':
-        module = nn.BatchNorm2d(out_channels)
-    else:
-        raise NotImplementedError
-    return module
+    def forward(self, x):
+        return x + self.mlp(self.spatial_mixing(x))
 
 
 class DFL(nn.Module):
