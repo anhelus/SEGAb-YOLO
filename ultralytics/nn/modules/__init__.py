@@ -17,6 +17,14 @@ Examples:
     >>> subprocess.run(f"onnxslim {f} {f} && open {f}", shell=True, check=True)  # pip install onnxslim
 """
 
+from .attention import (
+    SimAM,
+    GAM,
+    CoT,
+    ODConv,
+    FasterNetBlock
+)
+
 from .block import (
     C1,
     C2,
@@ -108,6 +116,11 @@ from .transformer import (
 )
 
 __all__ = (
+    "FasterNetBlock",
+    "CoT",
+    "ODConv",
+    "GAM",
+    "SimAM",
     "AIFI",
     "C1",
     "C2",
