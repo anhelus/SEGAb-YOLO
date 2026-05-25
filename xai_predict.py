@@ -9,6 +9,7 @@ from pathlib import Path
 from ultralytics import YOLO
 from ultralytics.utils.xai import EigenCAM, GradCAM, GradCAMPlusPlus, generate_cam, show_cam_on_image, scale_cam_image
 from ultralytics.nn.modules.attention import GAM, SimAM
+from ultralytics.data.augment import LetterBox
 import argparse
 
 # Supported image extensions
@@ -18,6 +19,48 @@ IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.tif', '.webp'}
 class DummyTarget:
     def __call__(self, model_output):
         return torch.tensor(0.0)
+
+
+class VanillaActivation:
+    """
+    Hook-based activation map extraction (no gradients needed).
+    Captures the feature map from a target layer after a forward pass,
+    then aggregates channels via L2-norm for visualization.
+    """
+    def __init__(self, model, target_layers):
+        self.activation = None
+        self._handle = None
+        layer = target_layers[0] if isinstance(target_layers, list) else target_layers
+        self._handle = layer.register_forward_hook(self._hook)
+
+    def _hook(self, module, inp, out):
+        self.activation = out.detach()
+
+    def __call__(self, img_tensor):
+        # Forward pass captures activation in hook
+        _ = img_tensor  # hook triggers automatically
+        return self.activation
+
+    def close(self):
+        if self._handle is not None:
+            self._handle.remove()
+
+    def get_heatmap(self, method='l2'):
+        """Aggregate feature map into a 2D heatmap."""
+        if self.activation is None:
+            return None
+        fm = self.activation[0]  # (C, H, W)
+        if method == 'l2':
+            heatmap = torch.sqrt(torch.sum(fm ** 2, dim=0))
+        elif method == 'mean':
+            heatmap = torch.mean(fm, dim=0)
+        elif method == 'max':
+            heatmap = torch.max(fm, dim=0)[0]
+        else:
+            heatmap = torch.mean(fm, dim=0)
+        heatmap = heatmap.cpu().numpy()
+        heatmap = (heatmap - heatmap.min()) / (heatmap.max() - heatmap.min() + 1e-7)
+        return heatmap
 
 
 def image_generator(source_path):
@@ -86,10 +129,12 @@ def find_target_layers(model):
     return []
 
 
-def setup_model(model_path, method='eigencam'):
+def setup_model(model_path, method='eigencam', device=None):
     """Load the YOLO model, configure attention modules, find target layers, and build CAM. Returns dict."""
     print(f"Loading model: {model_path}")
     model = YOLO(model_path)
+    if device:
+        model.to(device)
 
     # Enable save_attention for GAM and SimAM modules
     attention_modules = []
@@ -106,21 +151,30 @@ def setup_model(model_path, method='eigencam'):
         raise RuntimeError("Could not find any suitable target layers for CAM.")
     print(f"Target layers: {len(target_layers)}")
 
+    method_key = method.lower()
+
     # Pre-build EigenCAM once (avoids re-registering hooks per image)
     eigencam_obj = None
-    if method.lower() == 'eigencam':
+    if method_key == 'eigencam':
         eigencam_obj = EigenCAM(model.model, target_layers)
         print("EigenCAM initialized.")
+
+    # Pre-build VanillaActivation hook once
+    activation_obj = None
+    if method_key == 'activation':
+        activation_obj = VanillaActivation(model.model, target_layers)
+        print("VanillaActivation hook registered.")
 
     return {
         'model': model,
         'attention_modules': attention_modules,
         'target_layers': target_layers,
         'eigencam': eigencam_obj,
+        'activation': activation_obj,
     }
 
 
-def process_single_image(img_path, ctx, output_dir, method):
+def process_single_image(img_path, ctx, output_dir, method, conf_thres=0.25, save_npy=False, act_method='l2'):
     """
     Run XAI on a single image and save the result.
     Returns True on success, False on failure.
@@ -129,11 +183,11 @@ def process_single_image(img_path, ctx, output_dir, method):
     attention_modules = ctx['attention_modules']
     target_layers = ctx['target_layers']
     eigencam_obj = ctx['eigencam']
+    activation_obj = ctx['activation']
 
     img_path = Path(img_path)
-    stem = img_path.stem  # filename without extension
+    stem = img_path.stem
 
-    # Load image
     img = cv2.imread(str(img_path))
     if img is None:
         print(f"  ✗ Could not load image: {img_path}")
@@ -141,29 +195,58 @@ def process_single_image(img_path, ctx, output_dir, method):
 
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    # Run YOLO prediction
-    results = model.predict(str(img_path), save=False, verbose=False)
+    imgsz = model.overrides.get('imgsz', 640)
+    imgsz = int(imgsz) if not isinstance(imgsz, (list, tuple)) else int(imgsz[0])
+    stride = int(model.model.stride.max()) if hasattr(model.model, 'stride') else 32
+
+    results = model.predict(str(img_path), save=False, verbose=False, conf=conf_thres)
     result = results[0]
 
-    # Prepare image tensor resized to 640x640 (prevents SVD memory errors)
-    img_resized = cv2.resize(img_rgb, (640, 640))
-    img_tensor = torch.from_numpy(img_resized).permute(2, 0, 1).float() / 255.0
+    letterbox = LetterBox(new_shape=(imgsz, imgsz), auto=False, stride=stride)
+    lb_params = letterbox.get_params({"img": img_rgb})
+    img_preproc = letterbox(image=img_rgb)
+    img_tensor = torch.from_numpy(img_preproc).permute(2, 0, 1).float() / 255.0
     img_tensor = img_tensor.unsqueeze(0).to(model.device)
 
-    # --- CAM computation ---
-    if method.lower() == 'eigencam':
+    method_key = method.lower()
+
+    # --- CAM / Activation computation ---
+    cam = None
+
+    if method_key == 'eigencam':
         cams = eigencam_obj(img_tensor, targets=[DummyTarget()])
         cam = cams[0]
+
+    elif method_key == 'activation':
+        _ = model.model(img_tensor)  # trigger hook
+        cam = activation_obj.get_heatmap(method=act_method)
+
     else:
         if len(result.boxes) == 0:
             print(f"  ✗ No objects detected in {img_path.name}. Cannot run {method}.")
             return False
-
         target_box = result.boxes[0]
         t_layer = target_layers[-1]
         cam = generate_cam(model.model, img_tensor, t_layer, target_box, method=method)
 
+    if cam is None:
+        print(f"  ✗ Failed to generate {method} for {img_path.name}.")
+        return False
+
+    # --- Save raw activation / CAM as .npy ---
+    if save_npy:
+        npy_dir = os.path.join(output_dir, 'npy')
+        os.makedirs(npy_dir, exist_ok=True)
+        npy_path = os.path.join(npy_dir, f"{stem}_{method}.npy")
+        np.save(npy_path, cam)
+        print(f"  ✓ Saved raw → {npy_path}")
+
     # --- Visualize ---
+    # Crop letterbox padding from CAM before resizing to original image
+    h_unpad, w_unpad = lb_params["new_unpad"][1], lb_params["new_unpad"][0]
+    t, l = lb_params["top"], lb_params["left"]
+    if h_unpad < cam.shape[0] or w_unpad < cam.shape[1]:
+        cam = cam[t:t + h_unpad, l:l + w_unpad]
     cam_resized = cv2.resize(cam, (img.shape[1], img.shape[0]))
     cam_viz = show_cam_on_image(img_rgb, cam_resized, use_rgb=True)
 
@@ -176,12 +259,10 @@ def process_single_image(img_path, ctx, output_dir, method):
         xyxy = box.xyxy[0].cpu().numpy().astype(int)
         print(f"    [{i}] {cls_name} ({conf:.2%}) | Box: {xyxy.tolist()}")
 
-        # Draw bounding box
-        color = (255, 0, 128)  # Neon magenta (RGB)
+        color = (255, 0, 128)
         thickness = 5
         cv2.rectangle(cam_viz, (xyxy[0], xyxy[1]), (xyxy[2], xyxy[3]), color, thickness)
 
-        # Label with background banner
         label = f"{cls_name} {conf:.2f}"
         font = cv2.FONT_HERSHEY_SIMPLEX
         font_scale = 1.0
@@ -200,7 +281,6 @@ def process_single_image(img_path, ctx, output_dir, method):
         )
         cv2.putText(cam_viz, label, (xyxy[0] + 5, text_y), font, font_scale, (255, 255, 255), font_thickness)
 
-    # Save CAM image
     out_path = os.path.join(output_dir, f"{stem}_{method}.jpg")
     cv2.imwrite(out_path, cv2.cvtColor(cam_viz, cv2.COLOR_RGB2BGR))
     print(f"  ✓ Saved → {out_path}")
@@ -214,7 +294,7 @@ def process_single_image(img_path, ctx, output_dir, method):
 
             att = m.last_attention
 
-            if isinstance(att, dict):  # GAM
+            if isinstance(att, dict):
                 for k, v in att.items():
                     if k == 'spatial':
                         heatmap = v[0, 0].cpu().numpy()
@@ -225,7 +305,7 @@ def process_single_image(img_path, ctx, output_dir, method):
                     elif k == 'channel':
                         with open(os.path.join(mod_dir, f'{k}_values.txt'), 'w') as f:
                             f.write(str(v[0].squeeze().cpu().numpy().tolist()))
-            else:  # SimAM
+            else:
                 heatmap = att[0].mean(dim=0).cpu().numpy()
                 heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
                 heatmap = (heatmap - heatmap.min()) / (heatmap.max() - heatmap.min() + 1e-7)
@@ -235,13 +315,13 @@ def process_single_image(img_path, ctx, output_dir, method):
     return True
 
 
-def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
+def run_xai(model_path, source, output_dir='xai_output', method='eigencam',
+            conf_thres=0.25, device=None, save_npy=False, act_method='l2'):
     """Main entry point: process a single image or every image in a folder."""
     os.makedirs(output_dir, exist_ok=True)
 
-    ctx = setup_model(model_path, method=method)
+    ctx = setup_model(model_path, method=method, device=device)
 
-    # Count images first for progress reporting
     images = list(image_generator(source))
     total = len(images)
 
@@ -252,6 +332,8 @@ def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
     print(f"\n{'='*60}")
     print(f"Processing {total} image(s) with method: {method}")
     print(f"Output directory: {output_dir}")
+    if device:
+        print(f"Device: {device}")
     print(f"{'='*60}\n")
 
     success = 0
@@ -260,7 +342,10 @@ def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
     for i, img_path in enumerate(images, 1):
         print(f"[{i}/{total}] {img_path.name}")
         try:
-            ok = process_single_image(img_path, ctx, output_dir, method)
+            ok = process_single_image(
+                img_path, ctx, output_dir, method,
+                conf_thres=conf_thres, save_npy=save_npy, act_method=act_method,
+            )
             if ok:
                 success += 1
             else:
@@ -270,7 +355,10 @@ def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
             failed += 1
         print()
 
-    # Summary
+    # Cleanup activation hooks
+    if ctx.get('activation'):
+        ctx['activation'].close()
+
     print(f"{'='*60}")
     print(f"Done! {success}/{total} succeeded, {failed} failed.")
     print(f"Results saved to: {output_dir}")
@@ -278,7 +366,7 @@ def run_xai(model_path, source, output_dir='xai_output', method='eigencam'):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run XAI (EigenCAM / GradCAM) on YOLO predictions.")
+    parser = argparse.ArgumentParser(description="Run XAI (EigenCAM / GradCAM / Activation) on YOLO predictions.")
     parser.add_argument('--model',  type=str, default='yolo11n.pt',
                         help='Path to YOLO model weights (.pt)')
     parser.add_argument('--source', type=str, default='ultralytics/assets/bus.jpg',
@@ -286,8 +374,21 @@ if __name__ == "__main__":
     parser.add_argument('--output', type=str, default='xai_output',
                         help='Output directory for XAI visualizations')
     parser.add_argument('--method', type=str, default='eigencam',
-                        choices=['eigencam', 'gradcam', 'gradcam++', 'ss-gradcam++'],
+                        choices=['eigencam', 'gradcam', 'gradcam++', 'ss-gradcam++', 'activation'],
                         help='XAI method to use')
+    parser.add_argument('--conf', type=float, default=0.25,
+                        help='Detection confidence threshold (default: 0.25)')
+    parser.add_argument('--device', type=str, default=None,
+                        help='Device to use (e.g., cpu, cuda:0, mps). Default: auto')
+    parser.add_argument('--save-npy', action='store_true',
+                        help='Save raw CAM/activation arrays as .npy files')
+    parser.add_argument('--act-method', type=str, default='l2',
+                        choices=['l2', 'mean', 'max'],
+                        help='Aggregation method for activation maps (default: l2)')
     args = parser.parse_args()
 
-    run_xai(args.model, args.source, args.output, args.method)
+    run_xai(
+        args.model, args.source, args.output, args.method,
+        conf_thres=args.conf, device=args.device,
+        save_npy=args.save_npy, act_method=args.act_method,
+    )
