@@ -1,4 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 
 import io
 import shutil
@@ -13,11 +13,11 @@ import pytest
 import torch
 
 from tests import MODEL, SOURCE
-from ultralytics import YOLO
-from ultralytics.cfg import TASK2DATA, TASK2MODEL, TASKS
-from ultralytics.utils import ARM64, IS_DOCKER, IS_RASPBERRYPI, LINUX, MACOS, MACOS_VERSION, WINDOWS, checks
-from ultralytics.utils.export.engine import torch2onnx
-from ultralytics.utils.torch_utils import (
+from segab_yolo import YOLO
+from segab_yolo.cfg import TASK2DATA, TASK2MODEL, TASKS
+from segab_yolo.utils import ARM64, IS_DOCKER, IS_RASPBERRYPI, LINUX, MACOS, MACOS_VERSION, WINDOWS, checks
+from segab_yolo.utils.export.engine import torch2onnx
+from segab_yolo.utils.torch_utils import (
     TORCH_1_10,
     TORCH_1_11,
     TORCH_1_13,

@@ -1,8 +1,8 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 """
-Helper file to build Ultralytics Docs reference section.
+Helper file to build segab_yolo Docs reference section.
 
-This script recursively walks through the ultralytics directory and builds a MkDocs reference section of *.md files
+This script recursively walks through the segab_yolo directory and builds a MkDocs reference section of *.md files
 composed of classes and functions, and also creates a navigation menu for use in mkdocs.yaml.
 
 Note: Must be run from repository root directory. Do not run from docs directory.
@@ -21,15 +21,15 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from ultralytics.utils import LOGGER
-from ultralytics.utils.tqdm import TQDM
+from segab_yolo.utils import LOGGER
+from segab_yolo.utils.tqdm import TQDM
 
 # Constants
 FILE = Path(__file__).resolve()
 REPO_ROOT = FILE.parents[1]
-PACKAGE_DIR = REPO_ROOT / "ultralytics"
+PACKAGE_DIR = REPO_ROOT / "segab_yolo"
 REFERENCE_DIR = PACKAGE_DIR.parent / "docs/en/reference"
-GITHUB_REPO = "ultralytics/ultralytics"
+GITHUB_REPO = "segab_yolo/segab_yolo"
 SIGNATURE_LINE_LENGTH = 120
 # Use Font Awesome brand GitHub icon (CSS already loaded via mkdocs.yml and HTML head)
 GITHUB_ICON = '<i class="fa-brands fa-github" aria-hidden="true" style="margin-right:6px;"></i>'
@@ -720,7 +720,7 @@ def contribution_admonition(pretty: str, url: str, *, kind: str = "note", title:
     label = f' "{title}"' if title else ""
     body = (
         f"This page is sourced from [{pretty}]({url}). Have an improvement or example to add? "
-        f"Open a [Pull Request](https://docs.ultralytics.com/help/contributing) — thank you! 🙏"
+        f"Open a [Pull Request](https://docs.segab_yolo.com/help/contributing) — thank you! 🙏"
     )
     return f"!!! {kind}{label}\n\n    {body}\n\n"
 

@@ -1,4 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 
 import shutil
 from pathlib import Path
@@ -13,8 +13,8 @@ def solution_assets():
     Lazily downloads solution assets into a persistent directory (WEIGHTS_DIR/solution_assets) and returns a callable
     that resolves asset names to cached paths.
     """
-    from ultralytics.utils import ASSETS_URL, WEIGHTS_DIR
-    from ultralytics.utils.downloads import safe_download
+    from segab_yolo.utils import ASSETS_URL, WEIGHTS_DIR
+    from segab_yolo.utils.downloads import safe_download
 
     # Use persistent directory alongside weights
     cache_dir = WEIGHTS_DIR / "solution_assets"
@@ -73,7 +73,7 @@ def pytest_sessionstart(session):
     Args:
         session: The pytest session object.
     """
-    from ultralytics.utils.torch_utils import init_seeds
+    from segab_yolo.utils.torch_utils import init_seeds
 
     init_seeds()
 
@@ -89,7 +89,7 @@ def pytest_terminal_summary(terminalreporter, exitstatus, config):
         exitstatus (int): The exit status of the test run.
         config: The pytest config object.
     """
-    from ultralytics.utils import WEIGHTS_DIR
+    from segab_yolo.utils import WEIGHTS_DIR
 
     # Remove files
     models = [path for x in {"*.onnx", "*.torchscript"} for path in WEIGHTS_DIR.rglob(x)]

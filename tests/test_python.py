@@ -1,4 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 
 import contextlib
 import csv
@@ -15,11 +15,11 @@ import torch
 from PIL import Image
 
 from tests import CFG, MODEL, MODELS, SOURCE, SOURCES_LIST, TASK_MODEL_DATA
-from ultralytics import RTDETR, YOLO
-from ultralytics.cfg import TASK2DATA, TASKS
-from ultralytics.data.build import load_inference_source
-from ultralytics.data.utils import check_det_dataset
-from ultralytics.utils import (
+from segab_yolo import RTDETR, YOLO
+from segab_yolo.cfg import TASK2DATA, TASKS
+from segab_yolo.data.build import load_inference_source
+from segab_yolo.data.utils import check_det_dataset
+from segab_yolo.utils import (
     ARM64,
     ASSETS,
     ASSETS_URL,
@@ -37,8 +37,8 @@ from ultralytics.utils import (
     checks,
     is_github_action_running,
 )
-from ultralytics.utils.downloads import download, safe_download
-from ultralytics.utils.torch_utils import TORCH_1_11, TORCH_1_13
+from segab_yolo.utils.downloads import download, safe_download
+from segab_yolo.utils.torch_utils import TORCH_1_11, TORCH_1_13
 
 
 def skip_rpi_semantic():
@@ -75,7 +75,7 @@ def test_model_methods():
 
 def test_model_profile():
     """Test profiling of the YOLO model with `profile=True` to assess performance and resource usage."""
-    from ultralytics.nn.tasks import DetectionModel
+    from segab_yolo.nn.tasks import DetectionModel
 
     model = DetectionModel()  # build model
     im = torch.randn(1, 3, 64, 64)  # requires min imgsz=64
@@ -132,7 +132,7 @@ def test_predict_img(model_name):
     batch = [
         str(SOURCE),  # filename
         Path(SOURCE),  # Path
-        "https://cdn.jsdelivr.net/gh/ultralytics/assets@main/im/zidane.jpg?token=123" if ONLINE else SOURCE,  # URI
+        "https://cdn.jsdelivr.net/gh/segab_yolo/assets@main/im/zidane.jpg?token=123" if ONLINE else SOURCE,  # URI
         im,  # OpenCV
         Image.open(SOURCE),  # PIL
         np.zeros((320, 640, channels), dtype=np.uint8),  # numpy
@@ -283,7 +283,7 @@ def test_all_model_yamls():
             YOLO(m.name)
 
 
-@pytest.mark.skipif(WINDOWS, reason="Windows slow CI export bug https://github.com/ultralytics/ultralytics/pull/16003")
+@pytest.mark.skipif(WINDOWS, reason="Windows slow CI export bug https://github.com/segab_yolo/segab_yolo/pull/16003")
 def test_workflow():
     """Test the complete workflow including training, validation, prediction, and exporting."""
     model = YOLO(MODEL)
@@ -321,7 +321,7 @@ def test_results(model: str, tmp_path):
     """Test YOLO model results processing and output in various formats."""
     if IS_RASPBERRYPI and model == "yolo26n-sem.pt":
         skip_rpi_semantic()
-    im = "https://cdn.jsdelivr.net/gh/ultralytics/assets@main/im/boats.jpg" if model == "yolo26n-obb.pt" else SOURCE
+    im = "https://cdn.jsdelivr.net/gh/segab_yolo/assets@main/im/boats.jpg" if model == "yolo26n-obb.pt" else SOURCE
     is_semantic = "semantic" in model or "-sem" in model
     results = YOLO(WEIGHTS_DIR / model)([im, im], imgsz=32 if is_semantic else 160)
     for r in results:
@@ -337,7 +337,7 @@ def test_results(model: str, tmp_path):
         r = r.to(device="cpu", dtype=torch.float32)
         r.save_txt(txt_file=tmp_path / "runs/tests/label.txt", save_conf=True)
         r.save_crop(save_dir=tmp_path / "runs/tests/crops/")
-        r.to_df(decimals=3)  # Align to_ methods: https://docs.ultralytics.com/modes/predict/#working-with-results
+        r.to_df(decimals=3)  # Align to_ methods: https://docs.segab_yolo.com/modes/predict/#working-with-results
         r.to_csv()
         r.to_json(normalize=True)
         r.plot(pil=True, save=True, filename=tmp_path / "results_plot_save.jpg")
@@ -377,18 +377,18 @@ def test_labels_and_crops():
 @pytest.mark.skipif(not ONLINE, reason="environment is offline")
 def test_data_utils(tmp_path):
     """Test data utility functions including dataset stats, auto-splitting, and zip archiving."""
-    from ultralytics.data.split import autosplit
-    from ultralytics.data.utils import HUBDatasetStats
-    from ultralytics.utils.downloads import zip_directory
+    from segab_yolo.data.split import autosplit
+    from segab_yolo.data.utils import HUBDatasetStats
+    from segab_yolo.utils.downloads import zip_directory
 
-    # from ultralytics.utils.files import WorkingDirectory
+    # from segab_yolo.utils.files import WorkingDirectory
     # with WorkingDirectory(ROOT.parent / 'tests'):
 
     for task in TASKS:
         if task == "semantic":  # HUB stats do not support semantic segmentation datasets yet.
             continue
         file = Path(TASK2DATA[task]).with_suffix(".zip")  # i.e. coco8.zip
-        download(f"https://github.com/ultralytics/hub/raw/main/example_datasets/{file}", unzip=False, dir=tmp_path)
+        download(f"https://github.com/segab_yolo/hub/raw/main/example_datasets/{file}", unzip=False, dir=tmp_path)
         stats = HUBDatasetStats(tmp_path / file, task=task)
         stats.get_json(save=True)
         stats.process_images()
@@ -449,7 +449,7 @@ def test_safe_download_skips_unsafe_tar_members(tmp_path):
 @pytest.mark.skipif(not ONLINE, reason="environment is offline")
 def test_data_converter(tmp_path):
     """Test dataset conversion functions from COCO to YOLO format and class mappings."""
-    from ultralytics.data.converter import coco80_to_coco91_class, convert_coco
+    from segab_yolo.data.converter import coco80_to_coco91_class, convert_coco
 
     download(f"{ASSETS_URL}/instances_val2017.json", dir=tmp_path)
     convert_coco(
@@ -460,7 +460,7 @@ def test_data_converter(tmp_path):
 
 def test_data_annotator(tmp_path):
     """Test automatic annotation of data using detection and segmentation models."""
-    from ultralytics.data.annotator import auto_annotate
+    from segab_yolo.data.annotator import auto_annotate
 
     auto_annotate(
         ASSETS,
@@ -472,7 +472,7 @@ def test_data_annotator(tmp_path):
 
 def test_events():
     """Test event sending functionality."""
-    from ultralytics.utils.events import Events
+    from segab_yolo.utils.events import Events
 
     events = Events()
     events.enabled = True
@@ -482,8 +482,8 @@ def test_events():
 
 
 def test_cfg_init():
-    """Test configuration initialization utilities from the 'ultralytics.cfg' module."""
-    from ultralytics.cfg import check_dict_alignment, copy_default_cfg, smart_value
+    """Test configuration initialization utilities from the 'segab_yolo.cfg' module."""
+    from segab_yolo.cfg import check_dict_alignment, copy_default_cfg, smart_value
 
     with contextlib.suppress(SyntaxError):
         check_dict_alignment({"a": 1}, {"b": 2})
@@ -535,8 +535,8 @@ def test_cfg_init():
 
 
 def test_utils_init():
-    """Test initialization utilities in the Ultralytics library."""
-    from ultralytics.utils import get_ubuntu_version, is_github_action_running
+    """Test initialization utilities in the segab_yolo library."""
+    from segab_yolo.utils import get_ubuntu_version, is_github_action_running
 
     get_ubuntu_version()
     is_github_action_running()
@@ -548,22 +548,22 @@ def test_utils_checks():
     checks.check_requirements("numpy")  # check requirements.txt
     checks.check_imgsz([600, 600], max_dim=1)
     checks.check_imshow(warn=True)
-    checks.check_version("ultralytics", "8.0.0")
+    checks.check_version("segab_yolo", "8.0.0")
     checks.print_args()
 
 
 @pytest.mark.skipif(WINDOWS, reason="Windows profiling is extremely slow (cause unknown)")
 def test_utils_benchmarks():
-    """Benchmark model performance using 'ProfileModels' from 'ultralytics.utils.benchmarks'."""
-    from ultralytics.utils.benchmarks import ProfileModels
+    """Benchmark model performance using 'ProfileModels' from 'segab_yolo.utils.benchmarks'."""
+    from segab_yolo.utils.benchmarks import ProfileModels
 
     ProfileModels(["yolo26n.yaml"], imgsz=32, min_time=1, num_timed_runs=3, num_warmup_runs=1).run()
 
 
 def test_utils_torchutils():
     """Test Torch utility functions including profiling and FLOP calculations."""
-    from ultralytics.nn.modules.conv import Conv
-    from ultralytics.utils.torch_utils import get_flops_with_torch_profiler, profile_ops, time_sync
+    from segab_yolo.nn.modules.conv import Conv
+    from segab_yolo.utils.torch_utils import get_flops_with_torch_profiler, profile_ops, time_sync
 
     x = torch.randn(1, 64, 20, 20)
     m = Conv(64, 64, k=1, s=2)
@@ -575,7 +575,7 @@ def test_utils_torchutils():
 
 def test_utils_ops():
     """Test utility operations for coordinate transformations and normalizations."""
-    from ultralytics.utils.ops import (
+    from segab_yolo.utils.ops import (
         ltwh2xywh,
         ltwh2xyxy,
         make_divisible,
@@ -604,7 +604,7 @@ def test_utils_ops():
 
 def test_utils_files(tmp_path):
     """Test file handling utilities including file age, date, and paths with spaces."""
-    from ultralytics.utils.files import file_age, file_date, get_latest_run, increment_path, spaces_in_path
+    from segab_yolo.utils.files import file_age, file_date, get_latest_run, increment_path, spaces_in_path
 
     file_age(SOURCE)
     file_date(SOURCE)
@@ -629,11 +629,11 @@ def test_utils_patches_torch_save(tmp_path):
     """Test torch_save backoff when _torch_save raises RuntimeError."""
     from unittest.mock import MagicMock, patch
 
-    from ultralytics.utils.patches import torch_save
+    from segab_yolo.utils.patches import torch_save
 
     mock = MagicMock(side_effect=RuntimeError)
 
-    with patch("ultralytics.utils.patches._torch_save", new=mock):
+    with patch("segab_yolo.utils.patches._torch_save", new=mock):
         with pytest.raises(RuntimeError):
             torch_save(torch.zeros(1), tmp_path / "test.pt")
 
@@ -642,7 +642,7 @@ def test_utils_patches_torch_save(tmp_path):
 
 def test_nn_modules_conv():
     """Test Convolutional Neural Network modules including CBAM, Conv2, and ConvTranspose."""
-    from ultralytics.nn.modules.conv import CBAM, Conv2, ConvTranspose, DWConvTranspose2d, Focus
+    from segab_yolo.nn.modules.conv import CBAM, Conv2, ConvTranspose, DWConvTranspose2d, Focus
 
     c1, c2 = 8, 16  # input and output channels
     x = torch.zeros(4, c1, 10, 10)  # BCHW
@@ -661,7 +661,7 @@ def test_nn_modules_conv():
 
 def test_nn_modules_block():
     """Test various neural network block modules."""
-    from ultralytics.nn.modules.block import C1, C3TR, BottleneckCSP, C3Ghost, C3x
+    from segab_yolo.nn.modules.block import C1, C3TR, BottleneckCSP, C3Ghost, C3x
 
     c1, c2 = 8, 16  # input and output channels
     x = torch.zeros(4, c1, 10, 10)  # BCHW
@@ -676,9 +676,9 @@ def test_nn_modules_block():
 
 @pytest.mark.skipif(not ONLINE, reason="environment is offline")
 def test_hub():
-    """Test Ultralytics HUB functionalities."""
-    from ultralytics.hub import export_fmts_hub, logout
-    from ultralytics.hub.utils import smart_request
+    """Test segab_yolo HUB functionalities."""
+    from segab_yolo.hub import export_fmts_hub, logout
+    from segab_yolo.hub.utils import smart_request
 
     export_fmts_hub()
     logout()
@@ -702,7 +702,7 @@ def image():
 )
 def test_classify_transforms_train(image, auto_augment, erasing, force_color_jitter):
     """Test classification transforms during training with various augmentations."""
-    from ultralytics.data.augment import classify_augmentations
+    from segab_yolo.data.augment import classify_augmentations
 
     transform = classify_augmentations(
         size=224,
@@ -788,7 +788,7 @@ def test_yolo_world():
     )
 
     # test WorWorldTrainerFromScratch
-    from ultralytics.models.yolo.world.train_world import WorldTrainerFromScratch
+    from segab_yolo.models.yolo.world.train_world import WorldTrainerFromScratch
 
     model = YOLO("yolov8s-worldv2.yaml")  # no YOLO11n-world model yet
     model.train(
@@ -815,8 +815,8 @@ def test_yoloe(tmp_path):
     model.set_classes(["person", "bus"])
     model(SOURCE, conf=0.01)
 
-    from ultralytics import YOLOE
-    from ultralytics.models.yolo.yoloe import YOLOEVPSegPredictor
+    from segab_yolo import YOLOE
+    from segab_yolo.models.yolo.yoloe import YOLOEVPSegPredictor
 
     # visual-prompts
     visuals = dict(
@@ -837,7 +837,7 @@ def test_yoloe(tmp_path):
     model.val(data="coco128-seg.yaml", load_vp=True, imgsz=32)
 
     # Train, fine-tune
-    from ultralytics.models.yolo.yoloe import YOLOEPESegTrainer, YOLOESegTrainerFromScratch
+    from segab_yolo.models.yolo.yoloe import YOLOEPESegTrainer, YOLOESegTrainerFromScratch
 
     model = YOLOE("yoloe-11s-seg.pt")
     model.train(

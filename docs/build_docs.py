@@ -1,4 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 """
 Automates building and post-processing of MkDocs documentation, especially for multilingual projects.
 
@@ -36,14 +36,14 @@ from bs4 import BeautifulSoup
 from minijinja import Environment, load_from_path
 
 try:
-    from plugin import postprocess_site  # mkdocs-ultralytics-plugin
+    from plugin import postprocess_site  # mkdocs-segab_yolo-plugin
 except ImportError:
     postprocess_site = None
 
 from build_reference import build_reference_docs
 
-from ultralytics.utils import LINUX, LOGGER, MACOS
-from ultralytics.utils.tqdm import TQDM
+from segab_yolo.utils import LINUX, LOGGER, MACOS
+from segab_yolo.utils.tqdm import TQDM
 
 os.environ["JUPYTER_PLATFORM_DIRS"] = "1"  # fix DeprecationWarning: Jupyter is migrating to use standard platformdirs
 DOCS = Path(__file__).parent.resolve()
@@ -68,7 +68,7 @@ def prepare_docs_markdown(clone_repos: bool = True):
 
     if clone_repos:
         # Get docs repo
-        repo = "https://github.com/ultralytics/docs"
+        repo = "https://github.com/segab_yolo/docs"
         local_dir = DOCS / "repos" / Path(repo).name
         subprocess.run(
             ["git", "clone", "-q", "--depth=1", "--single-branch", "-b", "main", repo, str(local_dir)], check=True
@@ -164,7 +164,7 @@ def _process_html_file(html_file: Path) -> bool:
             changed = True
 
     if rel_path == "404.html":
-        new_content = re.sub(r"<title>.*?</title>", "<title>Ultralytics Docs - Not Found</title>", content)
+        new_content = re.sub(r"<title>.*?</title>", "<title>segab_yolo Docs - Not Found</title>", content)
         if new_content != content:
             content, changed = new_content, True
 
@@ -351,7 +351,7 @@ def remove_comments_and_empty_lines(content: str, file_type: str) -> str:
         (str): Cleaned content with comments and empty lines removed.
 
     Notes:
-        Typical reductions for Ultralytics Docs are:
+        Typical reductions for segab_yolo Docs are:
         - Total HTML reduction: 2.83% (1301.56 KB saved)
         - Total CSS reduction: 1.75% (2.61 KB saved)
         - Total JS reduction: 13.51% (99.31 KB saved)
@@ -449,7 +449,7 @@ def minify_files(html: bool = True, css: bool = True, js: bool = True):
 def render_jinja_macros() -> None:
     """Render MiniJinja macros in Markdown files before building with MkDocs."""
     mkdocs_yml = DOCS.parent / "mkdocs.yml"
-    default_yaml = DOCS.parent / "ultralytics" / "cfg" / "default.yaml"
+    default_yaml = DOCS.parent / "segab_yolo" / "cfg" / "default.yaml"
 
     class SafeFallbackLoader(yaml.SafeLoader):
         """SafeLoader that gracefully skips unknown tags (required for mkdocs.yml)."""
@@ -479,7 +479,7 @@ def render_jinja_macros() -> None:
 
     mkdocs_cfg = load_yaml(mkdocs_yml, safe_loader=SafeFallbackLoader)
     extra_vars = mkdocs_cfg.get("extra", {}) or {}
-    site_name = mkdocs_cfg.get("site_name", "Ultralytics Docs")
+    site_name = mkdocs_cfg.get("site_name", "segab_yolo Docs")
     extra_vars.update(load_yaml(default_yaml))
 
     env = Environment(
@@ -625,9 +625,9 @@ def main():
             postprocess_site(
                 site_dir=SITE,
                 docs_dir=DOCS / "en",
-                site_url="https://docs.ultralytics.com",
-                default_image="https://raw.githubusercontent.com/ultralytics/assets/main/yolov8/banner-yolov8.png",
-                default_author="glenn.jocher@ultralytics.com",
+                site_url="https://docs.segab_yolo.com",
+                default_image="https://raw.githubusercontent.com/segab_yolo/assets/main/yolov8/banner-yolov8.png",
+                default_author="glenn.jocher@segab_yolo.com",
                 add_desc=False,
                 add_image=True,
                 add_authors=True,
@@ -648,7 +648,7 @@ def main():
             content = sitemap.read_text()
             in_sitemap = set(re.findall(r"<loc>([^<]+)</loc>", content))
             all_pages = {
-                f"https://docs.ultralytics.com/{f.relative_to(SITE).as_posix().replace('index.html', '')}"
+                f"https://docs.segab_yolo.com/{f.relative_to(SITE).as_posix().replace('index.html', '')}"
                 for f in SITE.rglob("*.html")
                 if f.name != "404.html"
             }

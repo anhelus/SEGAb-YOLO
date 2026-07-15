@@ -1,0 +1,21 @@
+models:
+  # Lettuce models to train on lettuce-omni-ul
+  - yolo11n
+  - yolo11n-gam
+  - yolo11n-gam-bbone
+  - yolo11n-simam
+  - yolo11n-simam-bbone
+  - yolo11n-ema
+  - yolo11n-ema-bbone
+  - yolo26n
+
+dataset: data/lettuce-omni-ul/lettuce-omni-ul.yaml
+
+training:
+  project: runs/lettuce-omni-ul
+  epochs: 100
+  batch: 16
+  imgsz: 640
+  fraction: 1.0
+  device: null
+  patience: 50

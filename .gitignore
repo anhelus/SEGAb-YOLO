@@ -177,3 +177,9 @@ xai_output/
 *.png
 *.txt
 *.zip
+data/
+results/
+models/
+*.mp4
+videos/
+metro_xai/

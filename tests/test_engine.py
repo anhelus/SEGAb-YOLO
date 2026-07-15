@@ -1,4 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 
 import sys
 from types import SimpleNamespace
@@ -8,13 +8,13 @@ import pytest
 import torch
 
 from tests import MODEL, SOURCE, TASK_MODEL_DATA
-from ultralytics import YOLO
-from ultralytics.cfg import get_cfg
-from ultralytics.engine.exporter import Exporter
-from ultralytics.engine.trainer import BaseTrainer
-from ultralytics.models.yolo import classify, detect, obb, pose, segment, semantic
-from ultralytics.nn.tasks import load_checkpoint
-from ultralytics.utils import ASSETS, DEFAULT_CFG, WEIGHTS_DIR
+from segab_yolo import YOLO
+from segab_yolo.cfg import get_cfg
+from segab_yolo.engine.exporter import Exporter
+from segab_yolo.engine.trainer import BaseTrainer
+from segab_yolo.models.yolo import classify, detect, obb, pose, segment, semantic
+from segab_yolo.nn.tasks import load_checkpoint
+from segab_yolo.utils import ASSETS, DEFAULT_CFG, WEIGHTS_DIR
 
 
 def test_func(*args, **kwargs):
@@ -203,10 +203,10 @@ def test_train_reuses_loaded_checkpoint_model(monkeypatch, kwargs, uses_weights)
         def train(self):
             return None
 
-    monkeypatch.setattr("ultralytics.engine.model.checks.check_pip_update_available", lambda: None)
+    monkeypatch.setattr("segab_yolo.engine.model.checks.check_pip_update_available", lambda: None)
     monkeypatch.setattr(model, "_smart_load", lambda key: FakeTrainer)
     monkeypatch.setattr(
-        "ultralytics.engine.model.load_checkpoint",
+        "segab_yolo.engine.model.load_checkpoint",
         lambda path: (original_model, {"checkpoint": True}),
     )
 
@@ -234,7 +234,7 @@ def test_setup_model_respects_pretrained_arg_for_pt_models(monkeypatch, pretrain
 
     trainer.get_model = fake_get_model
     monkeypatch.setattr(
-        "ultralytics.engine.trainer.load_checkpoint", lambda path: (checkpoint_model, {"checkpoint": True})
+        "segab_yolo.engine.trainer.load_checkpoint", lambda path: (checkpoint_model, {"checkpoint": True})
     )
 
     trainer.setup_model()

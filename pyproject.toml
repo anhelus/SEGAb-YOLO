@@ -1,22 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
-
-# Overview:
-# This pyproject.toml file manages the build, packaging, and distribution of the Ultralytics library.
-# It defines essential project metadata, dependencies, and settings used to develop and deploy the library.
-
-# Key Sections:
-# - [build-system]: Specifies the build requirements and backend (e.g., setuptools, wheel).
-# - [project]: Includes details like name, version, description, authors, dependencies and more.
-# - [project.optional-dependencies]: Provides additional, optional packages for extended features.
-# - [tool.*]: Configures settings for various tools (pytest, yapf, etc.) used in the project.
-
-# Installation:
-# The Ultralytics library can be installed using the command: 'pip install ultralytics'
-# For development purposes, you can install the package in editable mode with: 'pip install -e .'
-# This approach allows for real-time code modifications without the need for re-installation.
-
-# Documentation:
-# For comprehensive documentation and usage instructions, visit: https://docs.ultralytics.com
+# SEGAb-YOLO — AGPL-3.0 License
 
 [build-system]
 requires = ["setuptools>=70.0.0", "wheel"]
@@ -26,17 +8,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "segab-yolo"
 dynamic = ["version"]
-description = "Ultralytics YOLO 🚀 for SOTA object detection, multi-object tracking, instance segmentation, pose estimation and image classification."
+description = "SEGAb-YOLO: Segmentation-Guided Attention Boosting for YOLO — explainability and robustness tools."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { "text" = "AGPL-3.0" }
-keywords = ["machine-learning", "deep-learning", "computer-vision", "ML", "DL", "AI", "YOLO", "YOLOv3", "YOLOv5", "YOLOv8", "YOLOv9", "YOLOv10", "YOLO11", "HUB", "Ultralytics"]
+keywords = ["machine-learning", "deep-learning", "computer-vision", "YOLO", "XAI", "explainable-AI", "GradCAM", "robustness", "SEGAb"]
 authors = [
-    { name = "Glenn Jocher", email = "glenn.jocher@ultralytics.com" },
-    { name = "Jing Qiu", email = "jing.qiu@ultralytics.com" },
-]
-maintainers = [
-    { name = "Ultralytics", email = "hello@ultralytics.com" },
+    { name = "ACard", email = "a.cardellicchio@gmail.com" },
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -130,11 +108,7 @@ typing = [
 ]
 
 [project.urls]
-"Homepage" = "https://ultralytics.com"
-"Source" = "https://github.com/ultralytics/ultralytics"
-"Documentation" = "https://docs.ultralytics.com"
-"Bug Reports" = "https://github.com/ultralytics/ultralytics/issues"
-"Changelog" = "https://github.com/ultralytics/ultralytics/releases"
+"Source" = "https://github.com/acard/SEGAb-YOLO"
 
 [project.scripts]
 yolo = "ultralytics.cfg:entrypoint"

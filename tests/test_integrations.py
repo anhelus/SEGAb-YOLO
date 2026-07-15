@@ -1,4 +1,4 @@
-# Ultralytics 🚀 AGPL-3.0 License - https://ultralytics.com/license
+# segab_yolo 🚀 AGPL-3.0 License - https://segab_yolo.com/license
 
 import contextlib
 import os
@@ -9,9 +9,9 @@ from pathlib import Path
 import pytest
 
 from tests import MODEL, SOURCE
-from ultralytics import YOLO, download
-from ultralytics.utils import ASSETS_URL, DATASETS_DIR, SETTINGS
-from ultralytics.utils.checks import check_requirements
+from segab_yolo import YOLO, download
+from segab_yolo.utils import ASSETS_URL, DATASETS_DIR, SETTINGS
+from segab_yolo.utils.checks import check_requirements
 
 
 @pytest.mark.slow
@@ -38,7 +38,7 @@ def test_mlflow():
     SETTINGS["mlflow"] = False
 
 
-@pytest.mark.skipif(True, reason="Test failing in scheduled CI https://github.com/ultralytics/ultralytics/pull/8868")
+@pytest.mark.skipif(True, reason="Test failing in scheduled CI https://github.com/segab_yolo/segab_yolo/pull/8868")
 @pytest.mark.skipif(not check_requirements("mlflow", install=False), reason="mlflow not installed")
 def test_mlflow_keep_run_active():
     """Ensure MLflow run status matches MLFLOW_KEEP_RUN_ACTIVE environment variable settings."""
@@ -125,9 +125,9 @@ def test_triton(tmp_path):
 @pytest.mark.skipif(not check_requirements("faster-coco-eval", install=False), reason="faster-coco-eval not installed")
 def test_faster_coco_eval():
     """Validate YOLO model predictions on COCO dataset using faster-coco-eval."""
-    from ultralytics.models.yolo.detect import DetectionValidator
-    from ultralytics.models.yolo.pose import PoseValidator
-    from ultralytics.models.yolo.segment import SegmentationValidator
+    from segab_yolo.models.yolo.detect import DetectionValidator
+    from segab_yolo.models.yolo.pose import PoseValidator
+    from segab_yolo.models.yolo.segment import SegmentationValidator
 
     args = {"model": "yolo26n.pt", "data": "coco8.yaml", "save_json": True, "imgsz": 64}
     validator = DetectionValidator(args=args)
