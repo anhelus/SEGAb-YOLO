@@ -18,12 +18,19 @@ Examples:
 """
 
 from .attention import (
-    SimAM,
-    GAM,
-    EMA,
+    BiLevelRoutingAttention,
+    CoordAtt,
     CoT,
+    ECAAttention,
+    EMA,
+    FasterNetBlock,
+    GAM,
+    LSKBlock,
     ODConv,
-    FasterNetBlock
+    ResBlock_CBAM,
+    ShuffleAttention,
+    SimAM,
+    TripletAttention,
 )
 
 from .block import (
@@ -117,12 +124,19 @@ from .transformer import (
 )
 
 __all__ = (
-    "FasterNetBlock",
+    "BiLevelRoutingAttention",
+    "CoordAtt",
     "CoT",
-    "ODConv",
-    "GAM",
+    "ECAAttention",
     "EMA",
+    "FasterNetBlock",
+    "GAM",
+    "LSKBlock",
+    "ODConv",
+    "ResBlock_CBAM",
+    "ShuffleAttention",
     "SimAM",
+    "TripletAttention",
     "AIFI",
     "C1",
     "C2",

@@ -56,6 +56,7 @@ from segab_yolo.nn.modules import (
     ImagePoolingAttn,
     Index,
     LRPCHead,
+    LSKBlock,
     ODConv,
     Pose,
     Pose26,
@@ -69,16 +70,18 @@ from segab_yolo.nn.modules import (
     Segment,
     Segment26,
     SemanticSegment,
+    SimAM,
     TorchVision,
+    TripletAttention,
     WorldDetect,
     YOLOEDetect,
     YOLOESegment,
     YOLOESegment26,
     v10Detect,
-    SimAM,
-    EMA,
     CoT,
     FasterNetBlock,
+    CoordAtt,
+    EMA,
 )
 from segab_yolo.utils import DEFAULT_CFG_DICT, LOGGER, SETTINGS, WINDOWS, YAML, colorstr, emojis
 from segab_yolo.utils.checks import REMOTE_FILE_PREFIXES, check_file, check_requirements, check_suffix, check_yaml
@@ -1791,14 +1794,23 @@ def parse_model(d, ch, verbose=True):
             c1, c2 = ch[f], ch[f]
             args = [c1, *args]
         elif m is CoT:
-            c1, c2 = ch[f], ch[f] # Input and output channels are the same
-            args = [c1, *args]   # Prepend the input channels to the args from YAML
+            c1, c2 = ch[f], ch[f]  # Input and output channels are the same
+            args = [c1, *args]  # Prepend the input channels to the args from YAML
         elif m is Concat:
             c2 = sum(ch[x] for x in f)
         # SimAM attention
         elif m is SimAM:
-            c1, c2 = ch[f], ch[f] # Channels don't change
-            args = [c1, *args]   # Prepend c1 to args from YAML
+            c1, c2 = ch[f], ch[f]  # Channels don't change
+            args = [c1, *args]  # Prepend c1 to args from YAML
+        elif m is CoordAtt:
+            c1, c2 = ch[f], ch[f]
+            args = [c1, *args]
+        elif m is TripletAttention:
+            c1, c2 = ch[f], ch[f]
+            args = [c1, *args]
+        elif m is LSKBlock:
+            c1, c2 = ch[f], ch[f]
+            args = [c1, *args]
         elif m in frozenset(
             {
                 Detect,

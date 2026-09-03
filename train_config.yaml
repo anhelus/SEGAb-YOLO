@@ -1,21 +1,36 @@
 models:
-  # Lettuce models to train on lettuce-omni-ul
+  # Baseline
   - yolo11n
-  - yolo11n-gam
-  - yolo11n-gam-bbone
-  - yolo11n-simam
-  - yolo11n-simam-bbone
-  - yolo11n-ema
-  - yolo11n-ema-bbone
+  # Phase 1: Singoli attention (neck full P3+P4)
+  - yolo11_gam_n
+  - yolo11_simam_n
+  # Phase 1: Singoli attention (backbone)
+  - yolo11_gam_bbone_n
+  # Phase 1: LSK backbone
+  - yolo11_lsk_coordatt_full
+  # Phase 2: Min variants (solo P3 - small objects focus)
+  - yolo11_gam_min
+  - yolo11_coordatt_min
+  - yolo11_triplet_min
+  # Phase 3: Combo backbone+neck (best per small obj)
+  - yolo11_gam_coordatt_full
+  - yolo11_simam_triplet_full
+  - yolo11_lsk_coordatt_full
+  # Reference
   - yolo26n
 
-dataset: data/lettuce-omni-ul/lettuce-omni-ul.yaml
+datasets:
+  - name: tomatoes
+    path: data/tomatoes/yolotomato_bboxes.yaml
+    project: runs/tomatoes
+  - name: lettuces
+    path: data/lettuce-omni-ul/lettuce-omni-ul.yaml
+    project: runs/lettuces
 
 training:
-  project: runs/lettuce-omni-ul
   epochs: 100
   batch: 16
   imgsz: 640
   fraction: 1.0
-  device: null
+  device: 0
   patience: 50
