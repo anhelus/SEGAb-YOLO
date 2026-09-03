@@ -102,7 +102,7 @@ class Inference:
     def sidebar(self) -> None:
         """Configure the Streamlit sidebar for model and inference settings."""
         with self.st.sidebar:  # Add segab_yolo LOGO
-            logo = "https://raw.githubusercontent.com/segab_yolo/assets/main/logo/Ultralytics_Logotype_Original.svg"
+            logo = "https://raw.githubusercontent.com/ultralytics/assets/main/logo/Ultralytics_Logotype_Original.svg"
             self.st.image(logo, width=250)
 
         self.st.sidebar.title("User Configuration")  # Add elements to vertical setting menu

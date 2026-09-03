@@ -2,9 +2,13 @@
 
 __version__ = "8.4.52"
 
+import sys
 import importlib
 import os
 from typing import TYPE_CHECKING
+
+# Shim: allow old checkpoints referencing 'ultralytics.*' to resolve via 'segab_yolo.*'
+sys.modules.setdefault("ultralytics", sys.modules[__name__])
 
 # Set ENV variables (place before imports)
 if not os.environ.get("OMP_NUM_THREADS"):

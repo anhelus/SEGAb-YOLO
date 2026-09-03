@@ -349,9 +349,8 @@ class BasePredictor:
                 if self.results:
                     for i, result in enumerate(self.results):
                         result.model = self.model  # Attach the model object
-                        result._processed_tensor = im[i:i + 1] # Attach the tensor slice for this specific image
+                        result._processed_tensor = im[i : i + 1]  # Attach the tensor slice for this specific image
                 # ---------------------- END: THE FINAL FIX IS HERE ----------------------
-
 
                 # Visualize, save, write results
                 n = len(im0s)

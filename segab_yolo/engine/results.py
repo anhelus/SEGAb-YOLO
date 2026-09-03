@@ -312,15 +312,15 @@ class Results(SimpleClass, DataExportMixin):
                 return len(v)
         return 0
 
-    def plot_xai(self, method='gradcam', box_index=0, layer_index=-2, alpha=0.6):
+    def plot_xai(self, method="gradcam", box_index=0, layer_index=-2, alpha=0.6):
         """
         Generates and plots an Explainable AI (XAI) heatmap on the original image.
         """
         # 1. --- Input Validation and Setup ---
-        if not hasattr(self, 'model') or not hasattr(self, '_processed_tensor'):
+        if not hasattr(self, "model") or not hasattr(self, "_processed_tensor"):
             LOGGER.warning("⚠️ XAI attributes not found. This version of segab_yolo may not be configured for XAI.")
             return self.orig_img
-        
+
         if self.boxes is None or len(self.boxes) == 0:
             LOGGER.warning("⚠️ No bounding boxes found in this result. Cannot generate XAI plot.")
             return self.orig_img
@@ -328,7 +328,7 @@ class Results(SimpleClass, DataExportMixin):
         if box_index >= len(self.boxes):
             LOGGER.warning(f"⚠️ box_index {box_index} out of bounds. Using box 0.")
             box_index = 0
-            
+
         try:
             from segab_yolo.utils.xai import generate_cam
         except ImportError:
@@ -336,13 +336,13 @@ class Results(SimpleClass, DataExportMixin):
             return self.orig_img
 
         target_box = self.boxes[box_index]
-        
+
         # 2. --- Generate the CAM Heatmap ---
 
         # ------------------- THE FINAL, DEFINITIVE FIX IS HERE -------------------
         # 1. Create a "clean" deepcopy of the model. This new model is not in InferenceMode.
         model_for_xai = deepcopy(self.model)
-        model_for_xai.eval() # Ensure it's in evaluation mode (for layers like BatchNorm)
+        model_for_xai.eval()  # Ensure it's in evaluation mode (for layers like BatchNorm)
 
         # 2. Select the target layer FROM THE NEW, CLEAN MODEL.
         target_layer = model_for_xai.model.model[layer_index]
@@ -350,7 +350,7 @@ class Results(SimpleClass, DataExportMixin):
         # 3. Pass the clean model to the generate_cam function.
         heatmap = generate_cam(model_for_xai, self._processed_tensor, target_layer, target_box, method=method)
         # -----------------------------------------------------------------------
-        
+
         # 3. --- Plot the Heatmap ---
         heatmap_resized = cv2.resize(heatmap, (self.orig_img.shape[1], self.orig_img.shape[0]))
         heatmap_normalized = cv2.normalize(heatmap_resized, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
@@ -364,7 +364,6 @@ class Results(SimpleClass, DataExportMixin):
         cv2.putText(overlay_image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         return overlay_image
-
 
     def update(
         self,

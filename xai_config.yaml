@@ -1,172 +1,33 @@
-models:
-  # --- Tomato models ---
-  - path: ./models/tomatoes/yolo11n.pt
-    name: tomatoes/yolo11n
-    source: ./data/tomatoes
-    target_location: both
-
-  - path: ./models/tomatoes/yolo11n-gam.pt
-    name: tomatoes/yolo11n-gam
-    source: ./data/tomatoes
-    target_location: both
-
-  - path: ./models/tomatoes/yolo11n-gam-bbone.pt
-    name: tomatoes/yolo11n-gam-bbone
-    source: ./data/tomatoes
-    target_location: both
-
-  - path: ./models/tomatoes/yolo11n-simam.pt
-    name: tomatoes/yolo11n-simam
-    source: ./data/tomatoes
-    target_location: both
-
-  - path: ./models/tomatoes/yolo11n-simam-bbone.pt
-    name: tomatoes/yolo11n-simam-bbone
-    source: ./data/tomatoes
-    target_location: both
-
-  # --- Tomato models (yolo26n) ---
-  - path: ./models/tomatoes/yolo26n.pt
-    name: tomatoes/yolo26n
-    source: ./data/tomatoes
-    target_location: both
-
-  # --- Lettuce models ---
-  - path: ./models/lettuces/yolo11n.pt
-    name: lettuces/yolo11n
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11n-gam.pt
-    name: lettuces/yolo11n-gam
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11n-gam-bbone.pt
-    name: lettuces/yolo11n-gam-bbone
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11n-simam-full.pt
-    name: lettuces/yolo11n-simam-full
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11n-simam-min.pt
-    name: lettuces/yolo11n-simam-min
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11s.pt
-    name: lettuces/yolo11s
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11s-gam.pt
-    name: lettuces/yolo11s-gam
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11s-gam-bbone.pt
-    name: lettuces/yolo11s-gam-bbone
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11s-simam-full.pt
-    name: lettuces/yolo11s-simam-full
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11s-simam-min.pt
-    name: lettuces/yolo11s-simam-min
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11m.pt
-    name: lettuces/yolo11m
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11m-gam.pt
-    name: lettuces/yolo11m-gam
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11m-gam-bbone.pt
-    name: lettuces/yolo11m-gam-bbone
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11m-simam-full.pt
-    name: lettuces/yolo11m-simam-full
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11m-simam-min.pt
-    name: lettuces/yolo11m-simam-min
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11l.pt
-    name: lettuces/yolo11l
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11l-gam.pt
-    name: lettuces/yolo11l-gam
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11l-gam-bbone.pt
-    name: lettuces/yolo11l-gam-bbone
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11l-simam-full.pt
-    name: lettuces/yolo11l-simam-full
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11l-simam-min.pt
-    name: lettuces/yolo11l-simam-min
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11x.pt
-    name: lettuces/yolo11x
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11x-gam.pt
-    name: lettuces/yolo11x-gam
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11x-gam-bbone.pt
-    name: lettuces/yolo11x-gam-bbone
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11x-simam-full.pt
-    name: lettuces/yolo11x-simam-full
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo11x-simam-min.pt
-    name: lettuces/yolo11x-simam-min
-    source: ./data/lettuces
-    target_location: both
-
-  - path: ./models/lettuces/yolo26n.pt
-    name: lettuces/yolo26n
-    source: ./data/lettuces
-    target_location: both
-
+# XAI configuration — models grouped by dataset
 methods:
   - eigencam
   - activation
 
 common:
-  output_base: xai_output/batch
+  output_base: reports/xai
   conf_threshold: 0.25
   device: null
+  target_location: both
+
+datasets:
+  tomatoes:
+    source: data/tomatoes/val/images
+    model_base: runs/tomatoes
+    models:
+      - yolo11n
+      - yolo11n-gam
+      - yolo11n-gam-bbone
+      - yolo11n-simam
+      - yolo11n-simam-bbone
+      - yolo26n
+
+  lettuces:
+    source: data/lettuce-omni-ul/val/images
+    model_base: runs/lettuces
+    models:
+      - yolo11n
+      - yolo11n-gam
+      - yolo11n-gam-bbone
+      - yolo11n-simam
+      - yolo11n-simam-bbone
+      - yolo26n

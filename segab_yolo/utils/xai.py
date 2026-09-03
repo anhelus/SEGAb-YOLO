@@ -17,9 +17,7 @@ from pytorch_grad_cam import GradCAM, GradCAMPlusPlus, EigenCAM
 from torchvision.ops import box_iou
 
 
-def preprocess_for_cam(
-    img_rgb: np.ndarray, imgsz: int, stride: int, device: str
-) -> Tuple[torch.Tensor, dict]:
+def preprocess_for_cam(img_rgb: np.ndarray, imgsz: int, stride: int, device: str) -> Tuple[torch.Tensor, dict]:
     """LetterBox-resize an RGB image and convert to a batched CHW tensor.
 
     Args:
@@ -119,11 +117,12 @@ class VanillaActivation:
         heatmap = (heatmap - heatmap.min()) / (heatmap.max() - heatmap.min() + 1e-7)
         return heatmap
 
+
 class DetCAM_Target:
     """
     Custom CAM Target for YOLO-style Object Detection models.
-    
-    This class defines the target to be maximized by the CAM algorithm, which is 
+
+    This class defines the target to be maximized by the CAM algorithm, which is
     typically the confidence score of a specific class for the best matching bounding box.
     """
 
@@ -157,25 +156,25 @@ class DetCAM_Target:
         # by adding back the batch dimension if it was squeezed.
         if output.ndim == 2:
             output = output.unsqueeze(0)
-        
+
         # Ensure output is (Batch, Predictions, Channels)
         # YOLO outputs are sometimes (Batch, Channels, Predictions)
         if output.shape[1] < output.shape[2]:
             output = output.transpose(1, 2).contiguous()
-        
+
         boxes = output[..., :4].clone()
-        
+
         # Convert boxes from cxcywh to xyxy
         # cx, cy, w, h -> x1, y1, x2, y2
         boxes[..., 0] = boxes[..., 0] - boxes[..., 2] / 2
         boxes[..., 1] = boxes[..., 1] - boxes[..., 3] / 2
         boxes[..., 2] = boxes[..., 0] + boxes[..., 2]
         boxes[..., 3] = boxes[..., 1] + boxes[..., 3]
-        
+
         # Find the box with the highest IoU with the target box
         ious = box_iou(self.box, boxes[0]).squeeze()
         best_match_index = ious.argmax()
-        
+
         # Return the score for the target class
         # (4 box coords + cls_idx)
         score = output[0, best_match_index, 4 + self.cls_idx]
@@ -263,13 +262,15 @@ class _TrainModeWrapper(torch.nn.Module):
         return (torch.tensor(0.0, device=x.device),)
 
 
-def generate_cam(model: torch.nn.Module, 
-                 image_tensor: torch.Tensor, 
-                 target_layer: torch.nn.Module, 
-                 target_box, 
-                 method: str = 'gradcam',
-                 n_samples: int = 15,
-                 noise_level: float = 0.1) -> np.ndarray:
+def generate_cam(
+    model: torch.nn.Module,
+    image_tensor: torch.Tensor,
+    target_layer: torch.nn.Module,
+    target_box,
+    method: str = "gradcam",
+    n_samples: int = 15,
+    noise_level: float = 0.1,
+) -> np.ndarray:
     """
     Generates a class activation map (CAM) using the specified method.
 
@@ -286,12 +287,12 @@ def generate_cam(model: torch.nn.Module,
         np.ndarray: The generated CAM heatmap.
     """
     cam_methods = {
-        'gradcam': GradCAM, 
-        'gradcam++': GradCAMPlusPlus, 
-        'eigencam': EigenCAM,
-        'ss-gradcam++': GradCAMPlusPlus
+        "gradcam": GradCAM,
+        "gradcam++": GradCAMPlusPlus,
+        "eigencam": EigenCAM,
+        "ss-gradcam++": GradCAMPlusPlus,
     }
-    
+
     method_key = method.lower()
     cam_constructor = cam_methods.get(method_key)
     if cam_constructor is None:
@@ -299,7 +300,7 @@ def generate_cam(model: torch.nn.Module,
         return torch.zeros_like(image_tensor).squeeze().cpu().numpy()
 
     # Gradient-based methods need train mode for PyTorch 2.x compatibility
-    if method_key == 'eigencam':
+    if method_key == "eigencam":
         cam_model = model
     else:
         cam_model = _TrainModeWrapper(model)
@@ -309,7 +310,7 @@ def generate_cam(model: torch.nn.Module,
     predicted_class_index = int(target_box.cls[0])
     targets = [DetCAM_Target(target_box.xyxy, predicted_class_index)]
 
-    if method_key.startswith('ss-'):
+    if method_key.startswith("ss-"):
         total_cam = None
         for i in range(n_samples):
             noise = torch.randn_like(image_tensor) * noise_level * (image_tensor.max() - image_tensor.min())
@@ -330,7 +331,9 @@ def generate_cam(model: torch.nn.Module,
     return heatmap
 
 
-def show_cam_on_image(img: np.ndarray, mask: np.ndarray, use_rgb: bool = True, colormap: int = cv2.COLORMAP_JET) -> np.ndarray:
+def show_cam_on_image(
+    img: np.ndarray, mask: np.ndarray, use_rgb: bool = True, colormap: int = cv2.COLORMAP_JET
+) -> np.ndarray:
     """
     Overlays the CAM mask on the image as a heatmap.
 
@@ -346,12 +349,12 @@ def show_cam_on_image(img: np.ndarray, mask: np.ndarray, use_rgb: bool = True, c
     heatmap = cv2.applyColorMap(np.uint8(255 * mask), colormap)
     if use_rgb:
         heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
-    
+
     heatmap = np.float32(heatmap) / 255
-    
+
     if np.max(img) > 1:
         img = img / 255.0
-        
+
     cam = heatmap + img
     cam = cam / np.max(cam)
     return np.uint8(255 * cam)

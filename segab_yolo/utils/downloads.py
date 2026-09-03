@@ -13,8 +13,8 @@ from urllib import parse, request
 
 from segab_yolo.utils import ASSETS_URL, LOGGER, TQDM, checks, clean_url, emojis, is_online, url2file
 
-# Define segab_yolo GitHub assets maintained at https://github.com/segab_yolo/assets
-GITHUB_ASSETS_REPO = "segab_yolo/assets"
+# Define segab_yolo GitHub assets maintained at https://github.com/ultralytics/assets
+GITHUB_ASSETS_REPO = "ultralytics/assets"
 GITHUB_ASSETS_NAMES = frozenset(
     [f"yolov8{k}{suffix}.pt" for k in "nsmlx" for suffix in ("", "-cls", "-seg", "-pose", "-obb", "-oiv7")]
     + [f"yolo11{k}{suffix}.pt" for k in "nsmlx" for suffix in ("", "-cls", "-seg", "-pose", "-obb")]
@@ -424,7 +424,7 @@ def safe_download(
 
 
 def get_github_assets(
-    repo: str = "segab_yolo/assets",
+    repo: str = "ultralytics/assets",
     version: str = "latest",
     retry: bool = False,
 ) -> tuple[str, list[str]]:
@@ -442,7 +442,7 @@ def get_github_assets(
         assets (list[str]): A list of asset names.
 
     Examples:
-        >>> tag, assets = get_github_assets(repo="segab_yolo/assets", version="latest")
+        >>> tag, assets = get_github_assets(repo="ultralytics/assets", version="latest")
     """
     import requests  # scoped as slow import
 
@@ -461,7 +461,7 @@ def get_github_assets(
 
 def attempt_download_asset(
     file: str | Path,
-    repo: str = "segab_yolo/assets",
+    repo: str = "ultralytics/assets",
     release: str = "v8.4.0",
     **kwargs,
 ) -> str:
@@ -477,7 +477,7 @@ def attempt_download_asset(
         (str): The path to the downloaded file.
 
     Examples:
-        >>> file_path = attempt_download_asset("yolo26n.pt", repo="segab_yolo/assets", release="latest")
+        >>> file_path = attempt_download_asset("yolo26n.pt", repo="ultralytics/assets", release="latest")
     """
     from segab_yolo.utils import SETTINGS  # scoped for circular import
 

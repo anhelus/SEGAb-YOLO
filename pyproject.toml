@@ -54,7 +54,6 @@ dependencies = [
     "grad-cam",
     "ultralytics-thop>=2.0.0", # FLOPs computation https://github.com/ultralytics/thop
     "einops>=0.8.2",
-    "ultralytics>=8.4.52",
 ]
 
 # Optional dependencies ------------------------------------------------------------------------------------------------
@@ -108,20 +107,19 @@ typing = [
 ]
 
 [project.urls]
-"Source" = "https://github.com/acard/SEGAb-YOLO"
+"Source" = "https://github.com/anhelus/SEGAb-YOLO"
 
 [project.scripts]
-yolo = "ultralytics.cfg:entrypoint"
-ultralytics = "ultralytics.cfg:entrypoint"
+yolo = "segab_yolo.cfg:entrypoint"
+segab-yolo = "segab_yolo.cfg:entrypoint"
 
 # Tools settings -------------------------------------------------------------------------------------------------------
-[tool.setuptools]  # configuration specific to the `setuptools` build backend.
-packages = { find = { where = ["."], include = ["ultralytics", "ultralytics.*"] } }
-# Tests included below for checking Conda builds in https://github.com/conda-forge/ultralytics-feedstock
-package-data = { "ultralytics" = ["**/*.yaml", "**/*.sh", "../tests/*.py"], "ultralytics.assets" = ["*.jpg"], "ultralytics.solutions.templates" = ["*.html"]}
+[tool.setuptools]
+packages = { find = { where = ["."], include = ["segab_yolo", "segab_yolo.*"] } }
+package-data = { "segab_yolo" = ["**/*.yaml", "**/*.sh", "../tests/*.py"], "segab_yolo.assets" = ["*.jpg"], "segab_yolo.solutions.templates" = ["*.html"]}
 
 [tool.setuptools.dynamic]
-version = { attr = "ultralytics.__version__" }
+version = { attr = "segab_yolo.__version__" }
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --durations=30 --color=yes"
@@ -131,9 +129,9 @@ markers = [
 norecursedirs = [".git", "dist", "build"]
 
 [tool.coverage.run]
-source = ["ultralytics/"]
+source = ["segab_yolo/"]
 data_file = "tests/.coverage"
-omit = ["ultralytics/utils/callbacks/*"]
+omit = ["segab_yolo/utils/callbacks/*"]
 
 [tool.isort]
 line_length = 120

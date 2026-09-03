@@ -1,47 +1,30 @@
-models:
-  # --- Tomato models ---
-  - path: ./models/tomatoes/yolo11n.pt
-    name: tomatoes/yolo11n
-
-  - path: ./models/tomatoes/yolo11n-gam.pt
-    name: tomatoes/yolo11n-gam
-
-  - path: ./models/tomatoes/yolo11n-gam-bbone.pt
-    name: tomatoes/yolo11n-gam-bbone
-
-  - path: ./models/tomatoes/yolo11n-simam.pt
-    name: tomatoes/yolo11n-simam
-
-  - path: ./models/tomatoes/yolo11n-simam-bbone.pt
-    name: tomatoes/yolo11n-simam-bbone
-
-  - path: ./models/tomatoes/yolo26n.pt
-    name: tomatoes/yolo26n
-
-  # --- Lettuce models ---
-  - path: ./models/lettuces/yolo11n.pt
-    name: lettuces/yolo11n
-
-  - path: ./models/lettuces/yolo11n-gam.pt
-    name: lettuces/yolo11n-gam
-
-  - path: ./models/lettuces/yolo11n-gam-bbone.pt
-    name: lettuces/yolo11n-gam-bbone
-
-  - path: ./models/lettuces/yolo11n-simam.pt
-    name: lettuces/yolo11n-simam
-
-  - path: ./models/lettuces/yolo11n-simam-bbone.pt
-    name: lettuces/yolo11n-simam-bbone
-
-  - path: ./models/lettuces/yolo26n.pt
-    name: lettuces/yolo26n
-
-source: data/lettuces
-
+# Inference benchmark config — models grouped by dataset
 common:
   device: null
   warmup: 3
   conf: 0.25
   imgsz: 640
   iou: 0.45
+
+datasets:
+  tomatoes:
+    source: data/tomatoes/val/images
+    model_base: runs/tomatoes
+    models:
+      - yolo11n
+      - yolo11n-gam
+      - yolo11n-gam-bbone
+      - yolo11n-simam
+      - yolo11n-simam-bbone
+      - yolo26n
+
+  lettuces:
+    source: data/lettuce-omni-ul/val/images
+    model_base: runs/lettuces
+    models:
+      - yolo11n
+      - yolo11n-gam
+      - yolo11n-gam-bbone
+      - yolo11n-simam
+      - yolo11n-simam-bbone
+      - yolo26n

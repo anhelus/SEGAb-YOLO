@@ -1,0 +1,7 @@
+model_key,label,is_baseline,metrics/mAP50(B),metrics/mAP50-95(B),metrics/precision(B),metrics/recall(B),fps,ms
+yolo11n,yolo11n,true,0.65135,0.38241,0.75754,0.60136,19.3,51.8
+yolo11n-gam,yolo11n-gam,false,0.67619,0.41542,0.77057,0.62162,20.8,48.0
+yolo11n-gam-bbone,yolo11n-gam-bbone,false,0.67776,0.41873,0.76796,0.62679,17.6,56.8
+yolo11n-simam,yolo11n-simam,false,0.6509,0.38325,0.75747,0.60068,21.2,47.2
+yolo11n-simam-bbone,yolo11n-simam-bbone,false,0.67573,0.41384,0.76793,0.62516,21.0,47.6
+yolo26n,yolo26n,false,0.61737,0.34287,0.73107,0.57683,25.4,39.3

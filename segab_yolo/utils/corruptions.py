@@ -46,9 +46,7 @@ def gaussian_noise(img: np.ndarray, std: float = 25) -> np.ndarray:
     return np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
 
 
-def random_occlusion(
-    img: np.ndarray, max_boxes: int = 3, max_size: float = 0.3
-) -> np.ndarray:
+def random_occlusion(img: np.ndarray, max_boxes: int = 3, max_size: float = 0.3) -> np.ndarray:
     """Add random coloured rectangles to the image."""
     h, w = img.shape[:2]
     out = img.copy()
@@ -71,9 +69,7 @@ def salt_pepper(img: np.ndarray, prob: float = 0.01) -> np.ndarray:
     return out
 
 
-def brightness_contrast(
-    img: np.ndarray, brightness: int = 0, contrast: float = 1.0
-) -> np.ndarray:
+def brightness_contrast(img: np.ndarray, brightness: int = 0, contrast: float = 1.0) -> np.ndarray:
     """Adjust brightness and contrast."""
     return cv2.convertScaleAbs(img, alpha=contrast, beta=brightness)
 
@@ -145,9 +141,7 @@ SEVERITY_PARAMS: Dict[int, dict] = {
 }
 
 
-def image_generator(
-    source_path: str, ext: Optional[str] = None
-) -> Generator[Path, None, None]:
+def image_generator(source_path: str, ext: Optional[str] = None) -> Generator[Path, None, None]:
     """Yield image file paths from a file or directory."""
     source = Path(source_path)
     if source.is_file():
@@ -167,9 +161,7 @@ def apply_corruption(img: np.ndarray, corr: str, sp: dict) -> np.ndarray:
     elif corr == "blur":
         return gaussian_blur(img, kernel_size=sp["kernel"])
     elif corr == "motion_blur":
-        return motion_blur(
-            img, kernel_size=sp["motion_kernel"], angle=np.random.randint(0, 180)
-        )
+        return motion_blur(img, kernel_size=sp["motion_kernel"], angle=np.random.randint(0, 180))
     elif corr == "noise":
         return gaussian_noise(img, std=sp["std"])
     elif corr == "occlusion":
@@ -177,9 +169,7 @@ def apply_corruption(img: np.ndarray, corr: str, sp: dict) -> np.ndarray:
     elif corr == "salt_pepper":
         return salt_pepper(img, prob=sp["prob"])
     elif corr == "brightness":
-        return brightness_contrast(
-            img, brightness=sp["brightness"], contrast=sp["contrast"]
-        )
+        return brightness_contrast(img, brightness=sp["brightness"], contrast=sp["contrast"])
     elif corr == "jpeg":
         return jpeg_compression(img, quality=sp["quality"])
     elif corr == "hue":

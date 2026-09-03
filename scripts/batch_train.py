@@ -34,8 +34,8 @@ def validate_config(config: Dict) -> None:
     """Validate configuration structure."""
     if "models" not in config or not config["models"]:
         raise ValueError("Config must contain at least one model under 'models'.")
-    if "dataset" not in config:
-        raise ValueError("Config must contain 'dataset'.")
+    if "datasets" not in config or not config["datasets"]:
+        raise ValueError("Config must contain 'datasets' list.")
     if "training" not in config:
         raise ValueError("Config must contain 'training'.")
 
@@ -43,15 +43,15 @@ def validate_config(config: Dict) -> None:
 def batch_run(
     config: Dict,
     model_filter: Optional[str] = None,
+    dataset_filter: Optional[str] = None,
     dry_run: bool = False,
     verbose: bool = False,
 ) -> None:
-    """Run training over all specified model variants."""
+    """Run training over all specified model variants and datasets."""
     models = config["models"]
-    dataset = config["dataset"]
+    datasets = config["datasets"]
     training_cfg = config["training"]
 
-    project = training_cfg.get("project", "runs/train")
     epochs = training_cfg.get("epochs", 100)
     batch = training_cfg.get("batch", 16)
     imgsz = training_cfg.get("imgsz", 640)
@@ -59,75 +59,80 @@ def batch_run(
     device = training_cfg.get("device", None)
     patience = training_cfg.get("patience", 50)
 
-    os.makedirs(project, exist_ok=True)
-
     from tqdm import tqdm as tqdm_bar
 
-    # Count matches
-    total = sum(
-        1 for m in models
-        if not model_filter or (m.get("name") or m) == model_filter
-    )
-    if total == 0:
-        print("No models match the filter.")
+    filtered_datasets = [
+        d for d in datasets
+        if not dataset_filter or d.get("name") == dataset_filter
+    ]
+    if not filtered_datasets:
+        print("No datasets match the filter.")
         return
 
-    pbar = tqdm_bar(total=total, desc="Batch Train", disable=verbose)
-    trained = 0
+    for ds in filtered_datasets:
+        ds_name = ds["name"]
+        ds_path = ds["path"]
+        project = ds.get("project", f"runs/{ds_name}")
+        abs_project = str(Path(project).resolve())
+        os.makedirs(abs_project, exist_ok=True)
 
-    for entry in models:
-        if isinstance(entry, str):
-            model_name = entry
-        elif isinstance(entry, dict):
-            model_name = entry.get("name", entry.get("model", str(entry)))
-        else:
-            raise ValueError(f"Unexpected model entry type: {type(entry)}")
-
-        if model_filter and model_name != model_filter:
+        def _model_name(m):
+            return m if isinstance(m, str) else m.get("name", m.get("model", str(m)))
+        total = sum(
+            1 for m in models
+            if not model_filter or _model_name(m) == model_filter
+        )
+        if total == 0:
             continue
 
-        trained += 1
+        pbar = tqdm_bar(total=total, desc=f"Train {ds_name}", disable=verbose)
+        trained = 0
 
-        if verbose:
-            print(f"\n[{trained}/{total}] Training: {model_name}")
+        for entry in models:
+            model_name = _model_name(entry)
 
-        if dry_run:
+            if model_filter and model_name != model_filter:
+                continue
+
+            trained += 1
+
+            sep = "=" * 70
             if verbose:
-                yaml_path = f"{model_name}.yaml"
-                print(f"  [DRY RUN] YOLO('{yaml_path}').train(...)")
+                print(f"\n{sep}", flush=True)
+                print(f"  [{trained}/{total}] Training: dataset={ds_name}  model={model_name}", flush=True)
+                print(f"  YOLO('{model_name}.yaml').train(data={ds_path}, project={project})", flush=True)
+                print(f"{sep}\n", flush=True)
+
+            if dry_run:
+                if verbose:
+                    print(f"  [DRY RUN] (would train)", flush=True)
+                pbar.update(1)
+                continue
+
+            try:
+                model = YOLO(f"{model_name}.yaml")
+                model.train(
+                    data=ds_path,
+                    project=abs_project,
+                    name=model_name,
+                    epochs=epochs,
+                    batch=batch,
+                    imgsz=imgsz,
+                    fraction=fraction,
+                    device=device,
+                    patience=patience,
+                    exist_ok=True,
+                )
+                if verbose:
+                    print(f"  ok {ds_name}/{model_name}", flush=True)
+            except Exception as e:
+                if verbose:
+                    print(f"  fail {ds_name}/{model_name}: {e}", flush=True)
+
             pbar.update(1)
-            continue
 
-        try:
-            model = YOLO(f"{model_name}.yaml")
-            model.train(
-                data=dataset,
-                project=project,
-                name=model_name,
-                epochs=epochs,
-                batch=batch,
-                imgsz=imgsz,
-                fraction=fraction,
-                device=device,
-                patience=patience,
-                exist_ok=True,
-            )
-            if verbose:
-                print(f"  \u2713 Completed: {model_name}")
-        except Exception as e:
-            if verbose:
-                print(f"  \u2717 Error: {e}")
-
-        pbar.update(1)
-
-    pbar.close()
-    if verbose:
-        print(f"\n{'=' * 60}")
-        print(f"Batch training completed: {trained} model(s).")
-        print(f"Results saved to: {project}")
-        print(f"{'=' * 60}")
-    else:
-        print(f"Batch completed: {trained} model(s) trained. -> {project}")
+        pbar.close()
+        print(f"Done: {trained} model(s) trained for {ds_name} -> {project}")
 
 
 def parse_args() -> argparse.Namespace:
@@ -145,7 +150,13 @@ def parse_args() -> argparse.Namespace:
         "--model",
         type=str,
         default=None,
-        help="Only train this model (name). E.g. 'yolo11n-ema'.",
+        help="Only train this model (name). E.g. 'yolo11n'.",
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        default=None,
+        help="Only train on this dataset (name). E.g. 'tomatoes'.",
     )
     parser.add_argument(
         "--dry-run",
@@ -168,6 +179,7 @@ def main() -> None:
     batch_run(
         config,
         model_filter=args.model,
+        dataset_filter=args.dataset,
         dry_run=args.dry_run,
         verbose=args.verbose,
     )

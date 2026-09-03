@@ -462,6 +462,7 @@ def run_xai(
     n_samples: int = 15,
     verbose: bool = False,
     location: str = "backbone",
+    limit: Optional[int] = None,
 ) -> None:
     """Process a single image or every image in a folder.
 
@@ -494,6 +495,7 @@ def run_xai(
                 n_samples=n_samples,
                 verbose=verbose,
                 location=loc,
+                limit=limit,
             )
         return
 
@@ -521,6 +523,8 @@ def run_xai(
             )
 
     images = list(image_generator(source))
+    if limit:
+        images = images[:limit]
     total = len(images)
     if total == 0:
         print(f"No images found in: {source}")

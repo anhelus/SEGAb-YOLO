@@ -177,9 +177,17 @@ xai_output/
 *.png
 *.txt
 *.zip
-data/
+/data/
 results/
-models/
+/models/
 *.mp4
 videos/
 metro_xai/
+
+# Experiment scripts & configs (moved to yolo-experiments/)
+scripts/
+infer_config.yaml
+train_config.yaml
+viz_config.yaml
+xai_config.yaml
+pipeline.yaml
