@@ -185,7 +185,7 @@ videos/
 metro_xai/
 
 # Experiment scripts & configs (moved to yolo-experiments/)
-scripts/
+# scripts/
 infer_config.yaml
 train_config.yaml
 viz_config.yaml
