@@ -46,17 +46,22 @@ def batch_run(
     dataset_filter: Optional[str] = None,
     dry_run: bool = False,
     verbose: bool = False,
+    data_override: Optional[str] = None,
+    epochs_override: Optional[int] = None,
+    batch_override: Optional[int] = None,
+    imgsz_override: Optional[int] = None,
+    device_override: Optional[str] = None,
 ) -> None:
     """Run training over all specified model variants and datasets."""
     models = config["models"]
     datasets = config["datasets"]
     training_cfg = config["training"]
 
-    epochs = training_cfg.get("epochs", 100)
-    batch = training_cfg.get("batch", 16)
-    imgsz = training_cfg.get("imgsz", 640)
+    epochs = epochs_override if epochs_override is not None else training_cfg.get("epochs", 100)
+    batch = batch_override if batch_override is not None else training_cfg.get("batch", 16)
+    imgsz = imgsz_override if imgsz_override is not None else training_cfg.get("imgsz", 640)
     fraction = training_cfg.get("fraction", 1.0)
-    device = training_cfg.get("device", None)
+    device = device_override if device_override is not None else training_cfg.get("device", None)
     patience = training_cfg.get("patience", 50)
 
     from tqdm import tqdm as tqdm_bar
@@ -71,7 +76,7 @@ def batch_run(
 
     for ds in filtered_datasets:
         ds_name = ds["name"]
-        ds_path = ds["path"]
+        ds_path = data_override if data_override is not None else ds["path"]
         project = ds.get("project", f"runs/{ds_name}")
         abs_project = str(Path(project).resolve())
         os.makedirs(abs_project, exist_ok=True)
@@ -159,6 +164,36 @@ def parse_args() -> argparse.Namespace:
         help="Only train on this dataset (name). E.g. 'tomatoes'.",
     )
     parser.add_argument(
+        "--data",
+        type=str,
+        default=None,
+        help="Custom data YAML path (overrides dataset path from config).",
+    )
+    parser.add_argument(
+        "--epochs",
+        type=int,
+        default=None,
+        help="Number of epochs (overrides config training.epochs).",
+    )
+    parser.add_argument(
+        "--batch",
+        type=int,
+        default=None,
+        help="Batch size (overrides config training.batch).",
+    )
+    parser.add_argument(
+        "--imgsz",
+        type=int,
+        default=None,
+        help="Image size (overrides config training.imgsz).",
+    )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default=None,
+        help="Device (overrides config training.device).",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print commands without executing.",
@@ -182,6 +217,11 @@ def main() -> None:
         dataset_filter=args.dataset,
         dry_run=args.dry_run,
         verbose=args.verbose,
+        data_override=args.data,
+        epochs_override=args.epochs,
+        batch_override=args.batch,
+        imgsz_override=args.imgsz,
+        device_override=args.device,
     )
 
 
