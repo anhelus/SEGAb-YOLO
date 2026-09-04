@@ -1,0 +1,36 @@
+# Pipeline: from training to visualization
+steps:
+  # - name: Train
+  #   script: scripts/batch_train.py
+  #   config: train_config.yaml
+  #   forward_flags:
+  #     - dataset
+  #     - model
+
+  # - name: Validate
+  #   script: scripts/validate_models.py
+  #   forward_flags:
+  #     - dataset
+  #     - model
+
+  - name: Infer
+    script: scripts/batch_infer.py
+    config: infer_config.yaml
+    forward_flags:
+      - dataset
+      - model
+      - limit
+
+  - name: XAI
+    script: scripts/batch_xai.py
+    config: xai_config.yaml
+    forward_flags:
+      - dataset
+      - model
+      - limit
+
+  - name: Viz
+    script: scripts/batch_viz.py
+    config: viz_config.yaml
+    forward_flags:
+      - dataset
