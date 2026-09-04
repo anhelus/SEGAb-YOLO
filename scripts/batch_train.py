@@ -76,7 +76,12 @@ def batch_run(
 
     for ds in filtered_datasets:
         ds_name = ds["name"]
-        ds_path = data_override if data_override is not None else ds["path"]
+        # Apply data_override only if dataset_filter is set (single dataset mode)
+        # Otherwise use each dataset's own path
+        if data_override is not None and dataset_filter is not None:
+            ds_path = data_override
+        else:
+            ds_path = ds["path"]
         project = ds.get("project", f"runs/{ds_name}")
         abs_project = str(Path(project).resolve())
         os.makedirs(abs_project, exist_ok=True)
