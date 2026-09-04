@@ -153,7 +153,11 @@ def batch_run(
 
         source = ds_cfg["source"]
         model_base = Path(ds_cfg.get("model_base", f"runs/{ds_name}"))
-        model_names = ds_cfg["models"]
+        model_names = list(ds_cfg.get("models", []))
+        
+        # Allow CLI model_filter to add arbitrary model not in config
+        if model_filter and model_filter not in model_names:
+            model_names.append(model_filter)
 
         images = collect_images(source, limit=limit)
         if verbose:
