@@ -1,0 +1,54 @@
+# Viz comparison configuration
+output_base: reports/comparison
+runs_dir: runs
+
+datasets:
+  tomatoes:
+    baseline: yolo11n
+    labels:
+      yolo11n: YOLO11n
+      yolo11n-gam: YOLO11n-GAM
+      yolo11n-gam-bbone: YOLO11n-GAM-BBone
+      yolo11n-simam: YOLO11n-SimAM
+      yolo11n-simam-bbone: YOLO11n-SimAM-BBone
+      yolo26n: YOLO26n
+    metrics:
+      - metrics/mAP50(B)
+      - metrics/mAP50-95(B)
+      - metrics/precision(B)
+      - metrics/recall(B)
+    models:
+      yolo11n: {}
+      yolo11n-gam: {}
+      yolo11n-gam-bbone: {}
+      yolo11n-simam: {}
+      yolo11n-simam-bbone: {}
+      yolo26n: {}
+    timing:
+      enabled: true
+      source: data/tomatoes/val/images
+
+  lettuces:
+    baseline: yolo11n
+    labels:
+      yolo11n: YOLO11n
+      yolo11n-gam: YOLO11n-GAM
+      yolo11n-gam-bbone: YOLO11n-GAM-BBone
+      yolo11n-simam: YOLO11n-SimAM
+      yolo11n-simam-bbone: YOLO11n-SimAM-BBone
+      yolo26n: YOLO26n
+    metrics:
+      - metrics/mAP50(B)
+      - metrics/mAP50-95(B)
+      - metrics/precision(B)
+      - metrics/recall(B)
+    models:
+      yolo11n: {}
+      yolo11n-gam: {}
+      yolo11n-gam-bbone: {}
+      yolo11n-simam: {}
+      yolo11n-simam-bbone: {}
+      yolo26n: {}
+    timing:
+      enabled: true
+      source: data/lettuce-omni-ul/val/images

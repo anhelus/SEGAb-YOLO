@@ -177,17 +177,17 @@ xai_output/
 *.png
 *.txt
 *.zip
-/data/
+# /data/  <- REMOVED: serve per dataset custom
 results/
-/models/
+# /models/  <- REMOVED: serve per model configs
 *.mp4
 videos/
 metro_xai/
 
 # Experiment scripts & configs (moved to yolo-experiments/)
 # scripts/
-infer_config.yaml
-train_config.yaml
-viz_config.yaml
-xai_config.yaml
+# infer_config.yaml   <- REMOVED: serve per training
+# train_config.yaml   <- REMOVED: serve per training
+# viz_config.yaml     <- REMOVED: serve per training
+# xai_config.yaml     <- REMOVED: serve per training
 # pipeline.yaml

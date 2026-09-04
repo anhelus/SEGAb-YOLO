@@ -1,0 +1,6 @@
+path: C:/Users/acard/GitHub/Lavoro/STIIMA/YOLO/SEGAb-YOLO/data/lettuce-omni-ul
+train: train/images
+val: val/images
+nc: 1
+names:
+  0: lettuce
