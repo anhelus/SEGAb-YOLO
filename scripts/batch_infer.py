@@ -30,8 +30,10 @@ def validate_config(config: Dict) -> None:
             raise ValueError(f"Dataset '{ds_name}' missing 'source'.")
         if "models" not in ds_cfg or not ds_cfg["models"]:
             raise ValueError(f"Dataset '{ds_name}' missing 'models' list.")
-        if not Path(ds_cfg["source"]).exists():
-            raise ValueError(f"Source not found: {ds_cfg['source']}")
+        # Skip existence check if source will be overridden via CLI
+        if "source" in ds_cfg and ds_cfg["source"] and not ds_cfg.get("_source_override"):
+            if not Path(ds_cfg["source"]).exists():
+                raise ValueError(f"Source not found: {ds_cfg['source']}")
 
 
 def collect_images(source: str, limit: Optional[int] = None) -> List[Path]:
@@ -205,6 +207,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--config", type=str, default="infer_config.yaml", help="Path to inference configuration YAML file.")
     parser.add_argument("--dataset", type=str, default=None, help="Only benchmark this dataset.")
     parser.add_argument("--model", type=str, default=None, help="Only benchmark this model name.")
+    parser.add_argument("--source", type=str, default=None, help="Override source path for the dataset (images directory).")
     parser.add_argument("--limit", type=int, default=None, help="Limit to N images per dataset.")
     parser.add_argument("--save-results", type=str, default=None, help="Directory to save per-image detection JSONs.")
     parser.add_argument("--dry-run", action="store_true", help="Print commands without executing.")
@@ -215,6 +218,15 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     config = load_config(args.config)
+    
+    # Override source if provided via CLI
+    if args.source and args.dataset:
+        if args.dataset in config.get("datasets", {}):
+            config["datasets"][args.dataset]["_source_override"] = True
+            config["datasets"][args.dataset]["source"] = args.source
+        else:
+            raise ValueError(f"Dataset '{args.dataset}' not found in config.")
+    
     validate_config(config)
 
     print(f"\n{'=' * 60}")
