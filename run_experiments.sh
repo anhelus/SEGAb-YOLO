@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # =============================================================================
 # SEGAb-YOLO Experiment Runner
-# Runs all attention mechanism experiments on tomatoes & lettuces datasets
+# Runs all attention mechanism experiments on custom datasets
 # =============================================================================
 
 set -euo pipefail
@@ -13,14 +13,36 @@ PYTHON="${PYTHON:-python}"
 DEVICE="${DEVICE:-0}"
 EPOCHS_FULL="${EPOCHS_FULL:-100}"
 EPOCHS_QUICK="${EPOCHS_QUICK:-3}"
+DATA_QUICK="${DATA_QUICK:-coco128.yaml}"
+DATA_FULL="${DATA_FULL:-}"
 BATCH="${BATCH:-16}"
 IMGSZ="${IMGSZ:-640}"
 WORKERS="${WORKERS:-0}"
 
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --data-quick) DATA_QUICK="$2"; shift 2 ;;
+        --data-full) DATA_FULL="$2"; shift 2 ;;
+        --epochs-quick) EPOCHS_QUICK="$2"; shift 2 ;;
+        --epochs-full) EPOCHS_FULL="$2"; shift 2 ;;
+        --device) DEVICE="$2"; shift 2 ;;
+        --batch) BATCH="$2"; shift 2 ;;
+        --imgsz) IMGSZ="$2"; shift 2 ;;
+        --workers) WORKERS="$2"; shift 2 ;;
+        *) break ;;
+    esac
+done
+
+# If DATA_FULL not set, use DATA_QUICK for full training too
+DATA_FULL="${DATA_FULL:-$DATA_QUICK}"
+
 echo "============================================================================="
 echo "SEGAb-YOLO Experiment Runner"
 echo "Project: $PROJECT_ROOT"
-echo "Device: $DEVICE | Epochs full: $EPOCHS_FULL | Quick: $EPOCHS_QUICK"
+echo "Device: $DEVICE | Epochs quick: $EPOCHS_QUICK | Epochs full: $EPOCHS_FULL"
+echo "Data quick: $DATA_QUICK | Data full: $DATA_FULL"
+echo "Batch: $BATCH | Img size: $IMGSZ | Workers: $WORKERS"
 echo "============================================================================="
 
 # -----------------------------------------------------------------------------
@@ -30,7 +52,7 @@ run_train() {
     local model_yaml="$1"
     local name="${2:-$(basename "$model_yaml" .yaml)}"
     local epochs="${3:-$EPOCHS_QUICK}"
-    local data="${4:-coco128.yaml}"
+    local data="${4:-$DATA_QUICK}"
     
     echo ""
     echo ">>> Training: $name ($epochs epochs on $data)"
@@ -61,11 +83,11 @@ run_pipeline() {
 }
 
 # -----------------------------------------------------------------------------
-# PHASE 1: Singoli attention (neck full + backbone) - quick test on coco128
+# PHASE 1: Singoli attention (neck full + backbone) - quick test on custom data
 # -----------------------------------------------------------------------------
 phase1_quick() {
     echo "============================================================================="
-    echo "PHASE 1: Quick test (3 epochs on coco128) - Singoli attention"
+    echo "PHASE 1: Quick test ($EPOCHS_QUICK epochs on $DATA_QUICK) - Singoli attention"
     echo "============================================================================="
     
     local models=(
@@ -80,7 +102,7 @@ phase1_quick() {
     
     for entry in "${models[@]}"; do
         read -r yaml name <<< "$entry"
-        run_train "$yaml" "$name" "$EPOCHS_QUICK" "coco128.yaml"
+        run_train "$yaml" "$name" "$EPOCHS_QUICK" "$DATA_QUICK"
     done
 }
 
@@ -89,7 +111,7 @@ phase1_quick() {
 # -----------------------------------------------------------------------------
 phase2_quick() {
     echo "============================================================================="
-    echo "PHASE 2: Quick test (3 epochs on coco128) - Min variants (P3 only)"
+    echo "PHASE 2: Quick test ($EPOCHS_QUICK epochs on $DATA_QUICK) - Min variants (P3 only)"
     echo "============================================================================="
     
     local models=(
@@ -100,7 +122,7 @@ phase2_quick() {
     
     for entry in "${models[@]}"; do
         read -r yaml name <<< "$entry"
-        run_train "$yaml" "$name" "$EPOCHS_QUICK" "coco128.yaml"
+        run_train "$yaml" "$name" "$EPOCHS_QUICK" "$DATA_QUICK"
     done
 }
 
@@ -109,7 +131,7 @@ phase2_quick() {
 # -----------------------------------------------------------------------------
 phase3_quick() {
     echo "============================================================================="
-    echo "PHASE 3: Quick test (3 epochs on coco128) - Combo backbone+neck"
+    echo "PHASE 3: Quick test ($EPOCHS_QUICK epochs on $DATA_QUICK) - Combo backbone+neck"
     echo "============================================================================="
     
     local models=(
@@ -120,15 +142,15 @@ phase3_quick() {
     
     for entry in "${models[@]}"; do
         read -r yaml name <<< "$entry"
-        run_train "$yaml" "$name" "$EPOCHS_QUICK" "coco128.yaml"
+        run_train "$yaml" "$name" "$EPOCHS_QUICK" "$DATA_QUICK"
     done
 }
 
 # -----------------------------------------------------------------------------
-# PHASE 4: Full training on tomatoes & lettuces (100 epochs)
+# PHASE 4: Full training on custom dataset (EPOCHS_FULL epochs)
 # -----------------------------------------------------------------------------
 phase4_full() {
-    local dataset="$1"
+    local dataset="${1:-$DATA_FULL}"
     local models=(
         "yolo11n"
         "yolo11_gam_coordatt_full"
@@ -171,28 +193,39 @@ usage() {
 Usage: $0 <command> [options]
 
 Commands:
-  phase1          Quick test Phase 1 (7 singoli, 3 epoche su coco128)
-  phase2          Quick test Phase 2 (3 min variants, 3 epoche su coco128)
-  phase3          Quick test Phase 3 (3 combo, 3 epoche su coco128)
+  phase1          Quick test Phase 1 (7 singoli, EPOCHS_QUICK epochs on DATA_QUICK)
+  phase2          Quick test Phase 2 (3 min variants, EPOCHS_QUICK epochs on DATA_QUICK)
+  phase3          Quick test Phase 3 (3 combo, EPOCHS_QUICK epochs on DATA_QUICK)
   quick-all       Run phase1 + phase2 + phase3 sequentially
   
-  full-tomatoes   Full training on tomatoes (100 epoche, all models)
-  full-lettuces   Full training on lettuces (100 epoche, all models)
-  full-both       Full training on both datasets
+  full            Full training on custom dataset (EPOCHS_FULL epochs)
+                    Usage: $0 full [--data-full path/to/data.yaml] [--epochs-full N]
   
   validate        Quick validation on dataset (limit 50 imgs)
-                    Usage: $0 validate <tomatoes|lettuces> <model_name>
+                    Usage: $0 validate <dataset_path> <model_name>
   
   pipeline        Run full pipeline (infer → xai → viz) on dataset
-                    Usage: $0 pipeline <tomatoes|lettuces> [model] [limit]
+                    Usage: $0 pipeline <dataset_path> [model] [limit]
   
   dry-run         Dry-run pipeline to check config
-                    Usage: $0 dry-run <tomatoes|lettuces> [model]
+                    Usage: $0 dry-run <dataset_path> [model]
+
+Options:
+  --data-quick PATH     Dataset for quick tests (default: coco128.yaml)
+  --data-full PATH      Dataset for full training (default: DATA_QUICK)
+  --epochs-quick N      Epochs for quick tests (default: 3)
+  --epochs-full N       Epochs for full training (default: 100)
+  --device N            GPU device (default: 0)
+  --batch N             Batch size (default: 16)
+  --imgsz N             Image size (default: 640)
+  --workers N           DataLoader workers (default: 0)
 
 Environment variables:
   DEVICE=0              GPU device (default: 0)
   EPOCHS_FULL=100       Full training epochs
   EPOCHS_QUICK=3        Quick test epochs
+  DATA_QUICK=coco128.yaml   Quick test dataset
+  DATA_FULL=                Full training dataset (default: DATA_QUICK)
   BATCH=16              Batch size
   IMGSZ=640             Image size
   WORKERS=0             DataLoader workers
@@ -200,12 +233,13 @@ Environment variables:
 
 Examples:
   $0 phase1
-  $0 quick-all
-  $0 full-tomatoes
-  $0 validate tomatoes yolo11_gam_coordatt_full
-  $0 pipeline tomatoes yolo11_gam_coordatt_full 100
-  $0 dry-run tomatoes
-  DEVICE=1 EPOCHS_FULL=50 $0 full-lettuces
+  $0 --data-quick data/my_dataset.yaml phase1
+  $0 --data-quick data/my_dataset.yaml --epochs-quick 5 quick-all
+  $0 --data-full data/my_dataset.yaml --epochs-full 50 full
+  $0 validate data/my_dataset.yaml yolo11_gam_coordatt_full
+  $0 pipeline data/my_dataset.yaml yolo11_gam_coordatt_full 100
+  $0 dry-run data/my_dataset.yaml
+  DEVICE=1 EPOCHS_FULL=50 $0 --data-full data/my_dataset.yaml full
 EOF
 }
 
@@ -227,15 +261,8 @@ case "${1:-}" in
         phase2_quick
         phase3_quick
         ;;
-    full-tomatoes)
-        phase4_full "tomatoes"
-        ;;
-    full-lettuces)
-        phase4_full "lettuces"
-        ;;
-    full-both)
-        phase4_full "tomatoes"
-        phase4_full "lettuces"
+    full)
+        phase4_full
         ;;
     validate)
         [[ -z "${2:-}" || -z "${3:-}" ]] && { usage; exit 1; }
