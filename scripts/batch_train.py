@@ -121,25 +121,25 @@ def batch_run(
                 continue
 
 try:
-                model = YOLO(f"{model_name}.yaml")
-                run_name = name_override if name_override is not None else model_name
-                model.train(
-                    data=ds_path,
-                    project=abs_project,
-                    name=run_name,
-                    epochs=epochs,
-                    batch=batch,
-                    imgsz=imgsz,
-                    fraction=fraction,
-                    device=device,
-                    patience=patience,
-                    exist_ok=True,
-                )
-                if verbose:
-                    print(f"  ok {ds_name}/{model_name}", flush=True)
-            except Exception as e:
-                if verbose:
-                    print(f"  fail {ds_name}/{model_name}: {e}", flush=True)
+                    model = YOLO(f"{model_name}.yaml")
+                    run_name = name_override if name_override is not None else model_name
+                    model.train(
+                        data=ds_path,
+                        project=abs_project,
+                        name=run_name,
+                        epochs=epochs,
+                        batch=batch,
+                        imgsz=imgsz,
+                        fraction=fraction,
+                        device=device,
+                        patience=patience,
+                        exist_ok=True,
+                    )
+                    if verbose:
+                        print(f"  ok {ds_name}/{model_name}", flush=True)
+                except Exception as e:
+                    if verbose:
+                        print(f"  fail {ds_name}/{model_name}: {e}", flush=True)
 
             pbar.update(1)
 
