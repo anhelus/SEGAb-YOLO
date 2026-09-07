@@ -51,6 +51,7 @@ def batch_run(
     batch_override: Optional[int] = None,
     imgsz_override: Optional[int] = None,
     device_override: Optional[str] = None,
+    name_override: Optional[str] = None,
 ) -> None:
     """Run training over all specified model variants and datasets."""
     models = config["models"]
@@ -119,12 +120,13 @@ def batch_run(
                 pbar.update(1)
                 continue
 
-            try:
+try:
                 model = YOLO(f"{model_name}.yaml")
+                run_name = name_override if name_override is not None else model_name
                 model.train(
                     data=ds_path,
                     project=abs_project,
-                    name=model_name,
+                    name=run_name,
                     epochs=epochs,
                     batch=batch,
                     imgsz=imgsz,
@@ -199,6 +201,12 @@ def parse_args() -> argparse.Namespace:
         help="Device (overrides config training.device).",
     )
     parser.add_argument(
+        "--name",
+        type=str,
+        default=None,
+        help="Custom run name (subdirectory under project). Defaults to model name.",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print commands without executing.",
@@ -227,6 +235,7 @@ def main() -> None:
         batch_override=args.batch,
         imgsz_override=args.imgsz,
         device_override=args.device,
+        name_override=args.name,
     )
 
 
