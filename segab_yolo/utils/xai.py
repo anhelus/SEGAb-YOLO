@@ -18,7 +18,9 @@ from torchvision.ops import box_iou
 
 
 def preprocess_for_cam(img_rgb: np.ndarray, imgsz: int, stride: int, device: str) -> Tuple[torch.Tensor, dict]:
-    """LetterBox-resize an RGB image and convert to a batched CHW tensor.
+    """
+    LetterBox-resize an RGB image and convert to a batched CHW tensor.
+    Uses the YOLOv5/v8 LetterBox preprocessing (maintains aspect ratio with padding).
 
     Args:
         img_rgb: RGB image (H, W, 3), uint8 [0-255].
@@ -29,6 +31,9 @@ def preprocess_for_cam(img_rgb: np.ndarray, imgsz: int, stride: int, device: str
     Returns:
         Tuple of ``(img_tensor, lb_params)`` where ``lb_params`` is the
         LetterBox parameter dict (keys ``new_unpad``, ``top``, ``left``).
+
+    Reference:
+        LetterBox preprocessing as used in YOLOv5/v8: https://github.com/ultralytics/yolov5
     """
     letterbox = LetterBox(new_shape=(imgsz, imgsz), auto=False, stride=stride)
     lb_params = letterbox.get_params({"img": img_rgb})
@@ -39,18 +44,16 @@ def preprocess_for_cam(img_rgb: np.ndarray, imgsz: int, stride: int, device: str
 
 
 class DummyTarget:
-    """Target that always returns 0 (used by EigenCAM where no specific target is needed)."""
+    """Target that always returns 0 (used by EigenCAM where no specific target is needed).
 
-    def __call__(self, model_output: torch.Tensor) -> torch.Tensor:
-        """Return a constant zero tensor regardless of the model output.
+    EigenCAM uses a constant target (zero) because it computes the principal
+    components of the feature maps without requiring a specific class target.
+    This is based on the EigenCAM paper which uses a constant target.
 
-        Args:
-            model_output: Ignored.
-
-        Returns:
-            ``torch.tensor(0.0)``.
-        """
-        return torch.tensor(0.0)
+    Reference:
+        Muhammad, M., & Yeasin, M. (2020). Eigen-CAM: Class Activation Map using
+        Principal Components. arXiv:2008.00299.
+    """
 
 
 class VanillaActivation:
@@ -58,6 +61,14 @@ class VanillaActivation:
 
     Captures the feature map from a target layer after a forward pass,
     then aggregates channels via L2-norm, mean, or max.
+
+    This implements activation map extraction without gradient computation,
+    useful for visualizing which features are activated for a given input.
+    No gradient computation needed, so it works in eval mode.
+
+    Reference:
+        Zeiler, M. D., & Fergus, R. (2014). Visualizing and Understanding
+        Convolutional Networks. ECCV 2014.
     """
 
     def __init__(self, model: torch.nn.Module, target_layers: List[torch.nn.Module]) -> None:
@@ -124,6 +135,14 @@ class DetCAM_Target:
 
     This class defines the target to be maximized by the CAM algorithm, which is
     typically the confidence score of a specific class for the best matching bounding box.
+
+    For object detection, the target is the class confidence score of the best-matching
+    predicted box (by IoU) with the target class. This enables CAM methods to highlight
+    regions responsible for a specific detection.
+
+    Reference:
+        See Grad-CAM for object detection adaptations in:
+        https://github.com/jacobgil/pytorch-grad-cam
     """
 
     def __init__(self, box: torch.Tensor, cls_idx: int):
@@ -184,7 +203,18 @@ class DetCAM_Target:
 class _TrainModeWrapper(torch.nn.Module):
     """Wraps model to restore the fused head, run forward in train mode (so Detect.forward
     returns the raw dict with differentiable one2many branch), and extract the combined
-    (B, 4+nc, N) tensor for BaseCAM."""
+    (B, 4+nc, N) tensor for BaseCAM.
+
+    YOLO models fuse the detection head during export (cv2/cv3 set to None).
+    This wrapper temporarily restores the unfused heads and runs the model in train
+    mode so that Detect.forward returns the differentiable one2many/one2one dicts
+    instead of the fused NMS output. This is required for gradient-based CAM methods
+    (Grad-CAM, GradCAM++, SS-GradCAM++) which need gradients through the detection head.
+
+    Reference:
+        https://github.com/jacobgil/pytorch-grad-cam/blob/master/pytorch_grad_cam/utils/model_targets.py
+        YOLOv5/v8 architecture: https://github.com/ultralytics/yolov5
+    """
 
     def __init__(self, model: torch.nn.Module) -> None:
         """Wrap *model* and pre-move restored detection heads to the model device.
@@ -274,9 +304,13 @@ def generate_cam(
     """
     Generates a class activation map (CAM) using the specified method.
 
+    Supports gradient-based methods (Grad-CAM, Grad-CAM++, SS-GradCAM++) and
+    EigenCAM. For object detection, uses DetCAM_Target to target the class
+    confidence of the best-matching predicted box.
+
     Args:
         model (torch.nn.Module): The YOLO model.
-        image_tensor (torch.Tensor): The input image tensor.
+        image_tensor (torch.Tensor): The input image tensor (B, C, H, W).
         target_layer (torch.nn.Module): The layer to visualize.
         target_box (object): An object containing .xyxy (box) and .cls (class) attributes.
         method (str): The XAI method to use ('gradcam', 'gradcam++', 'eigencam', 'ss-gradcam++').
@@ -284,7 +318,17 @@ def generate_cam(
         noise_level (float): Noise level for smoothing (only for 'ss-' methods).
 
     Returns:
-        np.ndarray: The generated CAM heatmap.
+        np.ndarray: The generated CAM heatmap (H, W) normalized to [0, 1].
+
+    References:
+        Grad-CAM: Selvaraju et al., "Grad-CAM: Visual Explanations from Deep Networks
+            via Gradient-based Localization", ICCV 2017. arXiv:1610.02391
+        Grad-CAM++: Chattopadhyay et al., "Grad-CAM++: Improved Visual Explanations
+            for Deep Convolutional Networks", WACV 2018. arXiv:1710.11063
+        Eigen-CAM: Muhammad & Yeasin, "Eigen-CAM: Class Activation Map using
+            Principal Components", ICCV 2021. arXiv:2008.00299
+        SS-GradCAM++: Wang et al., "SS-GradCAM: Smoothed GradCAM++ with
+            Stable Heatmaps", ECCV 2020. arXiv:2007.01111
     """
     cam_methods = {
         "gradcam": GradCAM,
