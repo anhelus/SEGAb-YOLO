@@ -191,3 +191,4 @@ metro_xai/
 # viz_config.yaml     <- REMOVED: serve per training
 # xai_config.yaml     <- REMOVED: serve per training
 # pipeline.yaml
+TECHNICAL_REPORT.md

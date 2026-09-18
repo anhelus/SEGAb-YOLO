@@ -165,7 +165,16 @@ class CoT(nn.Module):
 
 
 class SimAM(nn.Module):
-    """TODO"""
+    """
+    SimAM: A Simple, Parameter-Free Attention Module for Convolutional Neural Networks.
+    Paper: https://arxiv.org/abs/2006.04412 (CVPR 2021)
+    "SimAM: A Simple, Parameter-Free Attention Module for Convolutional Neural Networks"
+    by Lingxiao Yang, Ruilin Li, Jie Yang, et al.
+
+    Computes channel-wise attention without parameters using the neuroscience-inspired
+    "neuron importance" metric: neurons with high variance relative to their surroundings
+    are considered more informative. No learnable parameters, no extra computation.
+    """
 
     def __init__(self, e_lambda=1e-4):
         super().__init__()
