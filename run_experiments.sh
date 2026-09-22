@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# SEGAb-YOLO Experiment Runner
-# Runs all attention mechanism experiments on custom datasets
+# SEGAb-YOLO Experiment Runner - Simplified
 # =============================================================================
 
 set -euo pipefail
@@ -9,59 +8,119 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$PROJECT_ROOT"
 
-PYTHON="${PYTHON:-python}"
+PYTHON="${PYTHON:-python3}"
 DEVICE="${DEVICE:-0}"
-EPOCHS_FULL="${EPOCHS_FULL:-100}"
-EPOCHS_QUICK="${EPOCHS_QUICK:-3}"
-DATA_QUICK="${DATA_QUICK:-coco128.yaml}"
-DATA_FULL="${DATA_FULL:-}"
+EPOCHS="${EPOCHS:-100}"
+DATA="${DATA:-coco128.yaml}"
 BATCH="${BATCH:-16}"
 IMGSZ="${IMGSZ:-640}"
 WORKERS="${WORKERS:-0}"
+MODEL="${MODEL:-}"
+DATASET="${DATASET:-}"
+LIMIT="${LIMIT:-}"
+DRY_RUN="${DRY_RUN:-false}"
+VERBOSE="${VERBOSE:-false}"
+NAME="${NAME:-}"
+
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$PROJECT_ROOT"
 
 # Parse command line arguments
+COMMAND="${1:-}"
+shift || true
+
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --data-quick) DATA_QUICK="$2"; shift 2 ;;
-        --data-full) DATA_FULL="$2"; shift 2 ;;
-        --epochs-quick) EPOCHS_QUICK="$2"; shift 2 ;;
-        --epochs-full) EPOCHS_FULL="$2"; shift 2 ;;
+        --data) DATA="$2"; shift 2 ;;
+        --epochs) EPOCHS="$2"; shift 2 ;;
+        --model) MODEL="$2"; shift 2 ;;
+        --dataset) DATASET="$2"; shift 2 ;;
+        --limit) LIMIT="$2"; shift 2 ;;
         --device) DEVICE="$2"; shift 2 ;;
         --batch) BATCH="$2"; shift 2 ;;
         --imgsz) IMGSZ="$2"; shift 2 ;;
         --workers) WORKERS="$2"; shift 2 ;;
-        *) break ;;
+        --name) NAME="$2"; shift 2 ;;
+        --dry-run) DRY_RUN="true"; shift ;;
+        --verbose) VERBOSE="true"; shift ;;
+        *) echo "Unknown option: $1"; exit 1 ;;
     esac
 done
 
-# If DATA_FULL not set, use DATA_QUICK for full training too
-DATA_FULL="${DATA_FULL:-$DATA_QUICK}"
+PYTHON="${PYTHON:-python}"
+DEVICE="${DEVICE:-0}"
+EPOCHS="${EPOCHS:-100}"
+DATA="${DATA:-coco128.yaml}"
+BATCH="${BATCH:-16}"
+IMGSZ="${IMGSZ:-640}"
+WORKERS="${WORKERS:-0}"
+LIMIT="${LIMIT:-}"
+DRY_RUN="${DRY_RUN:-false}"
+VERBOSE="${VERBOSE:-false}"
+NAME="${NAME:-}"
 
 echo "============================================================================="
 echo "SEGAb-YOLO Experiment Runner"
 echo "Project: $PROJECT_ROOT"
-echo "Device: $DEVICE | Epochs quick: $EPOCHS_QUICK | Epochs full: $EPOCHS_FULL"
-echo "Data quick: $DATA_QUICK | Data full: $DATA_FULL"
+echo "Command: $COMMAND | Data: $DATA | Epochs: $EPOCHS | Device: $DEVICE"
+echo "Model: ${MODEL:-all} | Dataset: ${DATASET:-all} | Limit: ${LIMIT:-none}"
 echo "Batch: $BATCH | Img size: $IMGSZ | Workers: $WORKERS"
+[[ -n "$NAME" ]] && echo "Run name: $NAME"
 echo "============================================================================="
 
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+resolve() {
+    local p="$1"
+    if [[ ! "$p" = /* ]]; then
+        echo "$PROJECT_ROOT/$p"
+    else
+        echo "$p"
+    fi
+}
+
 run_train() {
     local model_yaml="$1"
     local name="${2:-$(basename "$model_yaml" .yaml)}"
-    local epochs="${3:-$EPOCHS_QUICK}"
-    local data="${4:-$DATA_QUICK}"
-    
+    local epochs="${3:-$EPOCHS}"
+    local data="${4:-$DATA}"
+    local run_name="${5:-}"
+
+    if [[ -n "$NAME" ]]; then
+        run_name="$NAME"
+    fi
+
     echo ""
-    echo ">>> Training: $name ($epochs epochs on $data)"
+    echo ">>> Training: ${name:-$model_yaml} ($epochs epochs on $data)"
     echo "-----------------------------------------------------------------------------"
-    $PYTHON -c "
+
+    local model_path="$(resolve "segab_yolo/cfg/models/11/${model_yaml}")"
+    local project_dir="runs/$(basename "$data" .yaml)"
+    local run_name_final="${NAME:-$(basename "$model_yaml" .yaml)}"
+
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "[DRY RUN] Would train: $model_yaml on $data for $epochs epochs"
+        return 0
+    fi
+
+    local python_cmd="${PYTHON:-python3}"
+    $python_cmd -c "
 from segab_yolo import YOLO
-model = YOLO('segab_yolo/cfg/models/11/$model_yaml')
-model.train(data='$data', epochs=$epochs, batch=$BATCH, imgsz=$IMGSZ, device=$DEVICE, workers=$WORKERS, verbose=False, name='$name')
-print('DONE: $name')
+model = YOLO('$model_yaml')
+model.train(
+    data='$data',
+    epochs=$epochs,
+    batch=$BATCH,
+    imgsz=$IMGSZ,
+    device=$DEVICE,
+    workers=$WORKERS,
+    verbose=False,
+    name='$run_name_final',
+    project='runs',
+    exist_ok=True
+)
+print('DONE: $run_name_final')
 "
 }
 
@@ -70,87 +129,117 @@ run_pipeline() {
     local model="${2:-}"
     local limit="${3:-}"
     local dry_run="${4:-false}"
-    
-    local cmd="$PYTHON scripts/run_pipeline.py --dataset $dataset"
+
+    local python_cmd="${PYTHON:-python3}"
+    local cmd="$python_cmd scripts/run_pipeline.py --dataset $dataset"
     [[ -n "$model" ]] && cmd="$cmd --model $model"
     [[ -n "$limit" ]] && cmd="$cmd --limit $limit"
     [[ "$dry_run" == "true" ]] && cmd="$cmd --dry-run"
-    
+
     echo ""
-    echo ">>> Pipeline: dataset=$dataset model=${model:-all} limit=${limit:-none} dry_run=$dry_run"
+    echo ">>> Pipeline: dataset=$dataset model=${model:-all} limit=${limit:-none}"
     echo "-----------------------------------------------------------------------------"
+
+    if [[ "$dry_run" == "true" ]]; then
+        echo "[DRY RUN] $cmd"
+        return 0
+    fi
+
     eval "$cmd"
 }
 
-# -----------------------------------------------------------------------------
-# PHASE 1: Singoli attention (neck full + backbone) - quick test on custom data
-# -----------------------------------------------------------------------------
-phase1_quick() {
-    echo "============================================================================="
-    echo "PHASE 1: Quick test ($EPOCHS_QUICK epochs on $DATA_QUICK) - Singoli attention"
-    echo "============================================================================="
-    
-    local models=(
-        "yolo11n.yaml yolo11n_baseline"
-        "yolo11_gam_n.yaml yolo11_gam_n"
-        "yolo11_gam_bbone_n.yaml yolo11_gam_bbone_n"
-        "yolo11_simam_n.yaml yolo11_simam_n"
-        "yolo11_coordatt_min.yaml yolo11_coordatt_min"
-        "yolo11_triplet_min.yaml yolo11_triplet_min"
-        "yolo11_lsk_coordatt_full.yaml yolo11_lsk_coordatt_full"
-    )
-    
-    for entry in "${models[@]}"; do
-        read -r yaml name <<< "$entry"
-        run_train "$yaml" "$name" "$EPOCHS_QUICK" "$DATA_QUICK"
-    done
+run_validate() {
+    local dataset="$1"
+    local model="$2"
+
+    local python_cmd="${PYTHON:-python3}"
+    local cmd="$python_cmd scripts/validate_models.py --dataset $dataset"
+    [[ -n "$model" ]] && cmd="$cmd --model $model"
+
+    echo ""
+    echo ">>> Validation: dataset=$dataset model=${model:-all}"
+    eval "$cmd"
+}
+
+# Read model list from train_config.yaml
+get_models() {
+    local config="train_config.yaml"
+    [[ -f "$config" ]] || { echo "train_config.yaml not found"; exit 1; }
+    python3 -c "
+import yaml, sys
+with open('train_config.yaml') as f:
+    cfg = yaml.safe_load(f)
+for m in cfg.get('models', []):
+    if isinstance(m, str):
+        print(m)
+    elif isinstance(m, dict) and 'name' in m:
+        print(m['name'])
+    else:
+        print(m)
+"
 }
 
 # -----------------------------------------------------------------------------
-# PHASE 2: Min variants (solo P3) - quick test
+# Commands
 # -----------------------------------------------------------------------------
-phase2_quick() {
-    echo "============================================================================="
-    echo "PHASE 2: Quick test ($EPOCHS_QUICK epochs on $DATA_QUICK) - Min variants (P3 only)"
-    echo "============================================================================="
-    
-    local models=(
-        "yolo11_gam_min.yaml yolo11_gam_min"
-        "yolo11_coordatt_min.yaml yolo11_coordatt_min"
-        "yolo11_triplet_min.yaml yolo11_triplet_min"
-    )
-    
-    for entry in "${models[@]}"; do
-        read -r yaml name <<< "$entry"
-        run_train "$yaml" "$name" "$EPOCHS_QUICK" "$DATA_QUICK"
+cmd_train() {
+    local data_override=""
+    local epochs_override=""
+    local model_filter=""
+    local dataset_filter=""
+    local name_override=""
+
+    # Parse train-specific args
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --data) DATA="$2"; shift 2 ;;
+            --epochs) EPOCHS="$2"; shift 2 ;;
+            --model) MODEL="$2"; shift 2 ;;
+            --dataset) DATASET="$2"; shift 2 ;;
+            --name) NAME="$2"; shift 2 ;;
+            *) break ;;
+        esac
     done
+
+    local data_override=""
+    [[ -n "$DATASET" ]] && data_override="$DATA" || data_override=""
+
+    if [[ -n "$MODEL" ]]; then
+        # Train single model
+        local model_yaml="${MODEL}.yaml"
+        [[ "$MODEL" == *.yaml ]] && model_yaml="$MODEL"
+        run_train "$model_yaml" "$MODEL" "$EPOCHS" "$DATA" "${NAME:-}"
+    else
+        # Train all models from config
+        local models=($(get_models))
+        for m in "${models[@]}"; do
+            local yaml="${m}.yaml"
+            [[ "$m" == *.yaml ]] && yaml="$m"
+            run_train "$yaml" "$m" "$EPOCHS" "$DATA" "${NAME:-}"
+        done
+    fi
 }
 
-# -----------------------------------------------------------------------------
-# PHASE 3: Combo backbone+neck - quick test
-# -----------------------------------------------------------------------------
-phase3_quick() {
-    echo "============================================================================="
-    echo "PHASE 3: Quick test ($EPOCHS_QUICK epochs on $DATA_QUICK) - Combo backbone+neck"
-    echo "============================================================================="
-    
-    local models=(
-        "yolo11_gam_coordatt_full.yaml yolo11_gam_coordatt_full"
-        "yolo11_simam_triplet_full.yaml yolo11_simam_triplet_full"
-        "yolo11_lsk_coordatt_full.yaml yolo11_lsk_coordatt_full"
-    )
-    
-    for entry in "${models[@]}"; do
-        read -r yaml name <<< "$entry"
-        run_train "$yaml" "$name" "$EPOCHS_QUICK" "$DATA_QUICK"
-    done
+cmd_pipeline() {
+    [[ -z "$DATASET" ]] && { echo "Error: --dataset required for pipeline"; exit 1; }
+
+    local dataset="$DATASET"
+    local model="${MODEL:-}"
+    local limit="${LIMIT:-}"
+    local dry_run="${DRY_RUN:-false}"
+
+    run_pipeline "$dataset" "$model" "$limit" "$DRY_RUN"
 }
 
-# -----------------------------------------------------------------------------
-# PHASE 4: Full training on custom dataset (EPOCHS_FULL epochs)
-# -----------------------------------------------------------------------------
-phase4_full() {
-    local dataset="${1:-$DATA_FULL}"
+cmd_validate() {
+    [[ -z "$DATASET" || -z "$MODEL" ]] && { echo "Error: --dataset and --model required for validate"; exit 1; }
+    run_validate "$DATASET" "$MODEL"
+}
+
+cmd_pipeline_full() {
+    local data_override="${DATA:-}"
+    [[ -n "$DATASET" ]] && data_override="$DATASET"
+
     local models=(
         "yolo11n"
         "yolo11_gam_coordatt_full"
@@ -161,120 +250,94 @@ phase4_full() {
         "yolo11_gam_min"
         "yolo26n"
     )
-    
+
+    local dataset="${data_override:-coco128.yaml}"
+
     echo "============================================================================="
-    echo "PHASE 4: Full training ($EPOCHS_FULL epochs) on $dataset"
+    echo "FULL PIPELINE: $EPOCHS epochs on $dataset"
     echo "============================================================================="
-    
+
     for model in "${models[@]}"; do
         run_pipeline "$dataset" "$model" "" "false"
     done
 }
 
 # -----------------------------------------------------------------------------
-# Quick validation run (limit images, dry-run or few epochs)
-# -----------------------------------------------------------------------------
-validate_quick() {
-    local dataset="$1"
-    local model="$2"
-    
-    echo "============================================================================="
-    echo "QUICK VALIDATION: $dataset / $model (limit 50, 1 epoch)"
-    echo "============================================================================="
-    
-    run_pipeline "$dataset" "$model" "50" "false"
-}
-
-# -----------------------------------------------------------------------------
-# Main menu / dispatch
+# Main
 # -----------------------------------------------------------------------------
 usage() {
     cat <<EOF
 Usage: $0 <command> [options]
 
 Commands:
-  phase1          Quick test Phase 1 (7 singoli, EPOCHS_QUICK epochs on DATA_QUICK)
-  phase2          Quick test Phase 2 (3 min variants, EPOCHS_QUICK epochs on DATA_QUICK)
-  phase3          Quick test Phase 3 (3 combo, EPOCHS_QUICK epochs on DATA_QUICK)
-  quick-all       Run phase1 + phase2 + phase3 sequentially
-  
-  full            Full training on custom dataset (EPOCHS_FULL epochs)
-                    Usage: $0 full [--data-full path/to/data.yaml] [--epochs-full N]
-  
-  validate        Quick validation on dataset (limit 50 imgs)
-                    Usage: $0 validate <dataset_path> <model_name>
-  
-  pipeline        Run full pipeline (infer → xai → viz) on dataset
-                    Usage: $0 pipeline <dataset_path> [model] [limit]
-  
-  dry-run         Dry-run pipeline to check config
-                    Usage: $0 dry-run <dataset_path> [model]
+  train              Train models
+        --data PATH        Dataset YAML (default: coco128.yaml)
+        --epochs N         Epochs (default: 100)
+        --model NAME       Single model to train (default: all from config)
+        --dataset NAME     Dataset filter from config (optional)
+        --name NAME        Custom run name (default: model name)
 
-Options:
-  --data-quick PATH     Dataset for quick tests (default: coco128.yaml)
-  --data-full PATH      Dataset for full training (default: DATA_QUICK)
-  --epochs-quick N      Epochs for quick tests (default: 3)
-  --epochs-full N       Epochs for full training (default: 100)
-  --device N            GPU device (default: 0)
-  --batch N             Batch size (default: 16)
-  --imgsz N             Image size (default: 640)
-  --workers N           DataLoader workers (default: 0)
+  pipeline           Run inference → XAI → viz pipeline
+        --dataset PATH     Dataset YAML path (required)
+        --model NAME       Model to run (default: all from config)
+        --limit N          Limit images (default: all)
+        --dry-run          Print commands without executing
 
-Environment variables:
-  DEVICE=0              GPU device (default: 0)
-  EPOCHS_FULL=100       Full training epochs
-  EPOCHS_QUICK=3        Quick test epochs
-  DATA_QUICK=coco128.yaml   Quick test dataset
-  DATA_FULL=                Full training dataset (default: DATA_QUICK)
-  BATCH=16              Batch size
-  IMGSZ=640             Image size
-  WORKERS=0             DataLoader workers
-  PYTHON=python         Python executable
+  validate           Quick validation (1 epoch, 50 images)
+        --dataset PATH     Dataset YAML path (required)
+        --model NAME       Model to validate (required)
+
+  pipeline-full      Run full pipeline on all benchmark models
+        --data PATH        Dataset YAML (default: DATA env)
+        --epochs N         Epochs for training step (default: 100)
+
+Global options:
+  --data PATH          Dataset YAML (default: coco128.yaml)
+  --epochs N           Epochs (default: 100)
+  --model NAME         Model name filter
+  --dataset NAME       Dataset name filter
+  --limit N            Limit images for infer/XAI
+  --device N           GPU device (default: 0)
+  --batch N            Batch size (default: 16)
+  --imgsz N            Image size (default: 640)
+  --workers N          DataLoader workers (default: 0)
+  --name NAME          Custom run name
+  --dry-run            Print commands without executing
+  --verbose            Verbose output
+
+Environment:
+  DEVICE=0         GPU device
+  EPOCHS=100       Default epochs
+  DATA=coco128.yaml Default dataset
+  BATCH=16         Batch size
+  IMGSZ=640        Image size
+  WORKERS=0        Workers
+  PYTHON=python    Python executable
 
 Examples:
-  $0 phase1
-  $0 --data-quick data/my_dataset.yaml phase1
-  $0 --data-quick data/my_dataset.yaml --epochs-quick 5 quick-all
-  $0 --data-full data/my_dataset.yaml --epochs-full 50 full
-  $0 validate data/my_dataset.yaml yolo11_gam_coordatt_full
-  $0 pipeline data/my_dataset.yaml yolo11_gam_coordatt_full 100
-  $0 dry-run data/my_dataset.yaml
-  DEVICE=1 EPOCHS_FULL=50 $0 --data-full data/my_dataset.yaml full
+  $0 train --data data/my.yaml --epochs 100 --model yolo11n
+  $0 train --data data/my.yaml --epochs 100
+  $0 pipeline --data data/my.yaml --model yolo11n --limit 100
+  $0 validate --data data/my.yaml --model yolo11n
+  $0 pipeline-full --data data/my.yaml --epochs 50
 EOF
 }
 
 # -----------------------------------------------------------------------------
 # Dispatch
 # -----------------------------------------------------------------------------
-case "${1:-}" in
-    phase1)
-        phase1_quick
-        ;;
-    phase2)
-        phase2_quick
-        ;;
-    phase3)
-        phase3_quick
-        ;;
-    quick-all)
-        phase1_quick
-        phase2_quick
-        phase3_quick
-        ;;
-    full)
-        phase4_full
-        ;;
-    validate)
-        [[ -z "${2:-}" || -z "${3:-}" ]] && { usage; exit 1; }
-        validate_quick "$2" "$3"
+case "${COMMAND:-}" in
+    train)
+        cmd_train "$@"
         ;;
     pipeline)
-        [[ -z "${2:-}" ]] && { usage; exit 1; }
-        run_pipeline "$2" "${3:-}" "${4:-}" "false"
+        cmd_pipeline
         ;;
-    dry-run)
-        [[ -z "${2:-}" ]] && { usage; exit 1; }
-        run_pipeline "$2" "${3:-}" "" "true"
+    validate)
+        cmd_validate
+        ;;
+    pipeline-full)
+        cmd_pipeline_full
         ;;
     *)
         usage
