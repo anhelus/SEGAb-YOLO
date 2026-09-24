@@ -21,6 +21,8 @@ LIMIT="${LIMIT:-}"
 DRY_RUN="${DRY_RUN:-false}"
 VERBOSE="${VERBOSE:-false}"
 NAME="${NAME:-}"
+SCALE="${SCALE:-n}"
+SCALE="${SCALE:-n}"
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$PROJECT_ROOT"
@@ -41,6 +43,7 @@ while [[ $# -gt 0 ]]; do
         --imgsz) IMGSZ="$2"; shift 2 ;;
         --workers) WORKERS="$2"; shift 2 ;;
         --name) NAME="$2"; shift 2 ;;
+        --scale) SCALE="$2"; shift 2 ;;
         --dry-run) DRY_RUN="true"; shift ;;
         --verbose) VERBOSE="true"; shift ;;
         *) echo "Unknown option: $1"; exit 1 ;;
@@ -188,6 +191,7 @@ cmd_train() {
     local model_filter=""
     local dataset_filter=""
     local name_override=""
+    local scale_override=""
 
     # Parse train-specific args
     while [[ $# -gt 0 ]]; do
@@ -197,6 +201,7 @@ cmd_train() {
             --model) MODEL="$2"; shift 2 ;;
             --dataset) DATASET="$2"; shift 2 ;;
             --name) NAME="$2"; shift 2 ;;
+            --scale) SCALE="$2"; shift 2 ;;
             *) break ;;
         esac
     done
@@ -204,18 +209,30 @@ cmd_train() {
     local data_override=""
     [[ -n "$DATASET" ]] && data_override="$DATA" || data_override=""
 
+    # Apply scale to model name if not already specified in model name
+    apply_scale() {
+        local model_name="$1"
+        local scale="${SCALE}"
+        # If model already contains a scale suffix (n/s/m/l/x), don't add another
+        if [[ "$model_name" =~ (n|s|m|l|x)$ ]]; then
+            echo "$model_name"
+        else
+            echo "${model_name}${scale}"
+        fi
+    }
+
     if [[ -n "$MODEL" ]]; then
         # Train single model
-        local model_yaml="${MODEL}.yaml"
-        [[ "$MODEL" == *.yaml ]] && model_yaml="$MODEL"
-        run_train "$model_yaml" "$MODEL" "$EPOCHS" "$DATA" "${NAME:-}"
+        local model_name=$(apply_scale "$MODEL")
+        local model_yaml="${model_name}.yaml"
+        run_train "$model_yaml" "$model_name" "$EPOCHS" "$DATA" "${NAME:-}"
     else
         # Train all models from config
         local models=($(get_models))
         for m in "${models[@]}"; do
-            local yaml="${m}.yaml"
-            [[ "$m" == *.yaml ]] && yaml="$m"
-            run_train "$yaml" "$m" "$EPOCHS" "$DATA" "${NAME:-}"
+            local model_name=$(apply_scale "$m")
+            local yaml="${model_name}.yaml"
+            run_train "$yaml" "$model_name" "$EPOCHS" "$DATA" "${NAME:-}"
         done
     fi
 }
@@ -227,6 +244,11 @@ cmd_pipeline() {
     local model="${MODEL:-}"
     local limit="${LIMIT:-}"
     local dry_run="${DRY_RUN:-false}"
+
+    # Apply scale to model if specified
+    if [[ -n "$model" && "$model" != *.yaml && ! "$model" =~ (n|s|m|l|x)$ ]]; then
+        model="${model}${SCALE}"
+    fi
 
     run_pipeline "$dataset" "$model" "$limit" "$DRY_RUN"
 }
@@ -240,24 +262,26 @@ cmd_pipeline_full() {
     local data_override="${DATA:-}"
     [[ -n "$DATASET" ]] && data_override="$DATASET"
 
-    local models=(
-        "yolo11n"
+    # Base model names (without scale suffix)
+    local base_models=(
+        "yolo11"
         "yolo11_gam_coordatt_full"
         "yolo11_simam_triplet_full"
         "yolo11_lsk_coordatt_full"
         "yolo11_coordatt_min"
         "yolo11_triplet_min"
         "yolo11_gam_min"
-        "yolo26n"
+        "yolo26"
     )
 
     local dataset="${data_override:-coco128.yaml}"
 
     echo "============================================================================="
-    echo "FULL PIPELINE: $EPOCHS epochs on $dataset"
+    echo "FULL PIPELINE: $EPOCHS epochs on $dataset (scale: $SCALE)"
     echo "============================================================================="
 
-    for model in "${models[@]}"; do
+    for base_model in "${base_models[@]}"; do
+        local model="${base_model}${SCALE}"
         run_pipeline "$dataset" "$model" "" "false"
     done
 }
@@ -270,12 +294,13 @@ usage() {
 Usage: $0 <command> [options]
 
 Commands:
-  train              Train models
+train              Train models
         --data PATH        Dataset YAML (default: coco128.yaml)
         --epochs N         Epochs (default: 100)
         --model NAME       Single model to train (default: all from config)
         --dataset NAME     Dataset filter from config (optional)
         --name NAME        Custom run name (default: model name)
+        --scale N          Model scale: n/s/m/l/x (default: n)
 
   pipeline           Run inference → XAI → viz pipeline
         --dataset PATH     Dataset YAML path (required)
@@ -302,6 +327,7 @@ Global options:
   --imgsz N            Image size (default: 640)
   --workers N          DataLoader workers (default: 0)
   --name NAME          Custom run name
+  --scale N            Model scale: n/s/m/l/x (default: n)
   --dry-run            Print commands without executing
   --verbose            Verbose output
 
@@ -311,15 +337,16 @@ Environment:
   DATA=coco128.yaml Default dataset
   BATCH=16         Batch size
   IMGSZ=640        Image size
-  WORKERS=0        Workers
-  PYTHON=python    Python executable
+  WORKERS=0        DataLoader workers
+  PYTHON=python3    Python executable
 
 Examples:
-  $0 train --data data/my.yaml --epochs 100 --model yolo11n
-  $0 train --data data/my.yaml --epochs 100
-  $0 pipeline --data data/my.yaml --model yolo11n --limit 100
+  $0 train --data data/my.yaml --epochs 100 --model yolo11n --scale n
+  $0 train --data data/my.yaml --epochs 100 --scale s
+  $0 pipeline --data data/my.yaml --model yolo11n --scale m --limit 100
   $0 validate --data data/my.yaml --model yolo11n
-  $0 pipeline-full --data data/my.yaml --epochs 50
+  $0 pipeline-full --data data/my.yaml --epochs 50 --scale l
+  DEVICE=1 EPOCHS=50 SCALE=x $0 pipeline-full --data data/my.yaml
 EOF
 }
 
