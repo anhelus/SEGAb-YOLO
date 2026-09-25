@@ -140,20 +140,20 @@ echo ""
     local python_cmd="${PYTHON:-python3}"
     $python_cmd -c "
 from segab_yolo import YOLO
-model = YOLO('\$model_yaml')
+model = YOLO('$model_yaml')
 model.train(
-    data='\$data',
-    epochs=\$epochs,
-    batch=\$BATCH,
-    imgsz=\$IMGSZ,
-    device=\$DEVICE,
-    workers=\$WORKERS,
+    data='$data',
+    epochs=$epochs,
+    batch=$BATCH,
+    imgsz=$IMGSZ,
+    device=$DEVICE,
+    workers=$WORKERS,
     verbose=False,
-    name='\$run_name_final',
+    name='$run_name_final',
     project='runs',
     exist_ok=True
 )
-print('DONE: \$run_name_final')
+print('DONE: $run_name_final')
 "
 }
 
