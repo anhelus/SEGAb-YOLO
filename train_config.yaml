@@ -1,11 +1,11 @@
 models:
   # Baseline
-  - yolo11n
+  - yolo11
   # Phase 1: Singoli attention (neck full P3+P4)
-  - yolo11_gam_n
-  - yolo11_simam_n
+  - yolo11_gam
+  - yolo11_simam
   # Phase 1: Singoli attention (backbone)
-  - yolo11_gam_bbone_n
+  - yolo11_gam_bbone
   # Phase 1: LSK backbone
   - yolo11_lsk_coordatt_full
   # Phase 2: Min variants (solo P3 - small objects focus)
@@ -17,7 +17,7 @@ models:
   - yolo11_simam_triplet_full
   - yolo11_lsk_coordatt_full
   # Reference
-  - yolo26n
+  - yolo26
 
 datasets:
   - name: tomatoes

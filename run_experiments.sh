@@ -74,6 +74,35 @@ echo "==========================================================================
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
+# Model name mapping for display
+model_display_name() {
+    local model="$1"
+    case "$model" in
+        yolo11) echo "YOLO11n" ;;
+        yolo11_gam) echo "YOLO11-GAM" ;;
+        yolo11_simam) echo "YOLO11-SimAM" ;;
+        yolo11_gam_bbone) echo "YOLO11-GAM-BBone" ;;
+        yolo11_simam_bbone) echo "YOLO11-SimAM-BBone" ;;
+        yolo11_lsk_coordatt_full) echo "YOLO11-LSK+CoordAtt" ;;
+        yolo11_coordatt_min) echo "YOLO11-CoordAtt-Min" ;;
+        yolo11_triplet_min) echo "YOLO11-Triplet-Min" ;;
+        yolo11_gam_coordatt_full) echo "YOLO11-GAM+CoordAtt" ;;
+        yolo11_simam_triplet_full) echo "YOLO11-SimAM+Triplet" ;;
+        yolo11_lsk_coordatt_full) echo "YOLO11-LSK+CoordAtt" ;;
+        yolo11_gam_min) echo "YOLO11-GAM-Min" ;;
+        yolo11_coordatt_min) echo "YOLO11-CoordAtt-Min" ;;
+        yolo11_triplet_min) echo "YOLO11-Triplet-Min" ;;
+        yolo11_gam_coordatt_full) echo "YOLO11-GAM+CoordAtt" ;;
+        yolo11_simam_triplet_full) echo "YOLO11-SimAM+Triplet" ;;
+        yolo11_lsk_coordatt_full) echo "YOLO11-LSK+CoordAtt" ;;
+        yolo11_gam_min) echo "YOLO11-GAM-Min" ;;
+        yolo11_coordatt_min) echo "YOLO11-CoordAtt-Min" ;;
+        yolo11_triplet_min) echo "YOLO11-Triplet-Min" ;;
+        yolo26) echo "YOLO26" ;;
+        *) echo "$model" ;;
+    esac
+}
+
 resolve() {
     local p="$1"
     if [[ ! "$p" = /* ]]; then
@@ -85,7 +114,8 @@ resolve() {
 
 run_train() {
     local model_yaml="$1"
-    local name="${2:-$(basename "$model_yaml" .yaml)}"
+    local raw_name="${2:-$(basename "$model_yaml" .yaml)}"
+    local display_name="$(model_display_name "$raw_name")"
     local epochs="${3:-$EPOCHS}"
     local data="${4:-$DATA}"
     local run_name="${5:-}"
@@ -94,13 +124,13 @@ run_train() {
         run_name="$NAME"
     fi
 
-    echo ""
-    echo ">>> Training: ${name:-$model_yaml} ($epochs epochs on $data)"
+echo ""
+    echo ">>> Training: ${display_name} ($epochs epochs on $data)"
     echo "-----------------------------------------------------------------------------"
 
     local model_path="$(resolve "segab_yolo/cfg/models/11/${model_yaml}")"
     local project_dir="runs/$(basename "$data" .yaml)"
-    local run_name_final="${NAME:-$(basename "$model_yaml" .yaml)}"
+    local run_name_final="${NAME:-${raw_name}}"
 
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "[DRY RUN] Would train: $model_yaml on $data for $epochs epochs"
@@ -110,20 +140,20 @@ run_train() {
     local python_cmd="${PYTHON:-python3}"
     $python_cmd -c "
 from segab_yolo import YOLO
-model = YOLO('$model_yaml')
+model = YOLO('\$model_yaml')
 model.train(
-    data='$data',
-    epochs=$epochs,
-    batch=$BATCH,
-    imgsz=$IMGSZ,
-    device=$DEVICE,
-    workers=$WORKERS,
+    data='\$data',
+    epochs=\$epochs,
+    batch=\$BATCH,
+    imgsz=\$IMGSZ,
+    device=\$DEVICE,
+    workers=\$WORKERS,
     verbose=False,
-    name='$run_name_final',
+    name='\$run_name_final',
     project='runs',
     exist_ok=True
 )
-print('DONE: $run_name_final')
+print('DONE: \$run_name_final')
 "
 }
 
@@ -213,8 +243,8 @@ cmd_train() {
     apply_scale() {
         local model_name="$1"
         local scale="${SCALE}"
-        # If model already contains a scale suffix (n/s/m/l/x), don't add another
-        if [[ "$model_name" =~ (n|s|m|l|x)$ ]]; then
+        # If model already contains a scale suffix (_n/_s/_m/_l/_x OR n/s/m/l/x at end), don't add another
+        if [[ "$model_name" =~ _[nsmlx]$ ]] || [[ "$model_name" =~ [nsmlx]$ ]]; then
             echo "$model_name"
         else
             echo "${model_name}${scale}"
@@ -294,7 +324,7 @@ usage() {
 Usage: $0 <command> [options]
 
 Commands:
-train              Train models
+  train              Train models
         --data PATH        Dataset YAML (default: coco128.yaml)
         --epochs N         Epochs (default: 100)
         --model NAME       Single model to train (default: all from config)
@@ -340,11 +370,30 @@ Environment:
   WORKERS=0        DataLoader workers
   PYTHON=python3    Python executable
 
+Model Mapping Table:
+  Base Name              Display Name              Scale Suffix
+  ---------------------------------------------------------------
+  yolo11                 YOLO11n                   +scale (e.g. yolo11s)
+  yolo11_gam             YOLO11-GAM                +scale (yolo11_gams)
+  yolo11_simam           YOLO11-SimAM              +scale (yolo11_simams)
+  yolo11_gam_bbone       YOLO11-GAM-BBone          +scale (yolo11_gam_bbones)
+  yolo11_simam_bbone     YOLO11-SimAM-BBone        +scale (yolo11_simam_bbones)
+  yolo11_lsk_coordatt_full  YOLO11-LSK+CoordAtt     (ends with _full, no scale)
+  yolo11_coordatt_min    YOLO11-CoordAtt-Min       +scale (yolo11_coordatt_mins)
+  yolo11_triplet_min     YOLO11-Triplet-Min        +scale (yolo11_triplet_mins)
+  yolo11_gam_coordatt_full YOLO11-GAM+CoordAtt     (ends with _full, no scale)
+  yolo11_simam_triplet_full YOLO11-SimAM+Triplet    (ends with _full, no scale)
+  yolo11_lsk_coordatt_full  YOLO11-LSK+CoordAtt     (ends with _full, no scale)
+  yolo11_gam_min         YOLO11-GAM-Min            +scale (yolo11_gam_mins)
+  yolo11_coordatt_min    YOLO11-CoordAtt-Min       +scale (yolo11_coordatt_mins)
+  yolo11_triplet_min     YOLO11-Triplet-Min        +scale (yolo11_triplet_mins)
+  yolo26                 YOLO26                    +scale (yolo26n, yolo26s, etc.)
+
 Examples:
-  $0 train --data data/my.yaml --epochs 100 --model yolo11n --scale n
+  $0 train --data data/my.yaml --epochs 100 --model yolo11 --scale n
   $0 train --data data/my.yaml --epochs 100 --scale s
-  $0 pipeline --data data/my.yaml --model yolo11n --scale m --limit 100
-  $0 validate --data data/my.yaml --model yolo11n
+  $0 pipeline --data data/my.yaml --model yolo11 --scale m --limit 100
+  $0 validate --data data/my.yaml --model yolo11
   $0 pipeline-full --data data/my.yaml --epochs 50 --scale l
   DEVICE=1 EPOCHS=50 SCALE=x $0 pipeline-full --data data/my.yaml
 EOF
