@@ -360,3 +360,4 @@ sudo docker run -it --ipc=host --runtime=nvidia --gpus all -v /path/on/host:/pat
 ```
 
 Replace `/path/on/host` with the directory on your local machine and `/path/in/container` with the desired path inside the container. This setup allows you to work with your local files within the container. For more information, refer to the [Note on File Accessibility](#note-on-file-accessibility) section.
+

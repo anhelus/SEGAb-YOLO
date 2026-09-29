@@ -10,3 +10,4 @@
 | `max_det`    | `int`       | `300`          | Maximum number of detections per image for memory efficiency.                        |
 | `classes`    | `list[int]` | `None`         | List of class indices to detect (e.g., `[0, 1]` for person & bicycle).               |
 | `output_dir` | `str`       | `None`         | Save directory for annotations (defaults to './labels' relative to data path).       |
+

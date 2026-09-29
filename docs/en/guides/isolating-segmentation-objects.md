@@ -394,3 +394,4 @@ results = model.predict(source="path/to/your/image.jpg", save_crop=True)
 ```
 
 Read more about the `save_crop` argument in the [Predict Mode Inference Arguments](../modes/predict.md#inference-arguments) section.
+

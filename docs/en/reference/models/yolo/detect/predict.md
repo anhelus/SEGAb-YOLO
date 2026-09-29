@@ -14,3 +14,4 @@ keywords: YOLO, Ultralytics, DetectionPredictor, object detection, Python, machi
 ## ::: ultralytics.models.yolo.detect.predict.DetectionPredictor
 
 <br><br>
+

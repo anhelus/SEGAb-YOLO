@@ -1,6 +1,6 @@
 # XAI Implementation Walkthrough
 
-I have implemented Explainable AI (XAI) features for the SEGAb-YOLO repository, focusing on **EigenCAM** and **Attention Map Visualization** for GAM and SimAM modules.
+I have implemented Explainable AI (XAI) features for the SegAtt-YOLO repository, focusing on **EigenCAM** and **Attention Map Visualization** for GAM and SimAM modules.
 
 ## Changes
 
@@ -29,3 +29,4 @@ python xai_predict.py --model ultralytics/cfg/models/11/yolo11-gam.yaml --source
 This will produce an `xai_output` directory containing:
 - `eigencam.jpg`: The EigenCAM visualization.
 - Subdirectories for each GAM/SimAM module with their respective attention maps.
+

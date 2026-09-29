@@ -177,3 +177,4 @@ Unlike traditional IP cameras that require external hardware for processing, reC
 - Comes pre-installed with Ultralytics YOLO26 models for immediate use
 
 These features make reCamera a standalone solution for edge AI applications without requiring additional external processing hardware.
+

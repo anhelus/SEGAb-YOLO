@@ -14,3 +14,4 @@ keywords: Ultralytics, speed estimation, YOLO, real-time tracking, object tracki
 ## ::: ultralytics.solutions.speed_estimation.SpeedEstimator
 
 <br><br>
+

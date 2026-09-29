@@ -61,3 +61,4 @@ Ultralytics handles emergency preparedness and response by developing, maintaini
 ### How does Ultralytics engage with stakeholders regarding its EHS performance?
 
 Ultralytics communicates openly with stakeholders about its EHS performance by sharing relevant information and addressing any concerns or expectations. This engagement includes regular reporting on EHS activities, performance metrics, and improvement initiatives. Stakeholders are also encouraged to provide feedback, which helps Ultralytics to refine its policies and practices continually. Learn more about this commitment in the [Communication principle](#policy-principles) section.
+

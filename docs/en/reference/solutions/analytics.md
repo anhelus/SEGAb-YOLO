@@ -14,3 +14,4 @@ keywords: Ultralytics, Analytics, Python, visual analytics, line chart, bar char
 ## ::: ultralytics.solutions.analytics.Analytics
 
 <br><br>
+

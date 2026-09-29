@@ -152,3 +152,4 @@ While COCO128 is primarily designed for object detection, the dataset's annotati
 - **Transfer learning**: As a starting point for fine-tuning models for custom tasks
 
 For specialized tasks like [segmentation](../../tasks/segment.md), consider using purpose-built variants like [COCO8-seg](../segment/coco8-seg.md) which include the appropriate annotations.
+

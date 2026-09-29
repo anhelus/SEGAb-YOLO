@@ -167,3 +167,4 @@ Yes. The current setup uses Flask with a basic HTML frontend, but you can replac
 ### Is it possible to search through videos instead of static images?
 
 Not directly. A simple workaround is to extract individual frames from your videos (e.g., one every second), treat them as standalone images, and feed those into the system. This way, the search engine can semantically index visual moments from your videos.
+

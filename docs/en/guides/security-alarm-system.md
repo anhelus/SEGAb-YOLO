@@ -144,3 +144,4 @@ Ultralytics YOLO26 provides an edge over models like Faster R-CNN or SSD with it
 ### How can I reduce the frequency of false positives in my security system using Ultralytics YOLO26?
 
 To reduce false positives, ensure your Ultralytics YOLO26 model is adequately trained with a diverse and well-annotated dataset. Fine-tuning hyperparameters and regularly updating the model with new data can significantly improve detection accuracy. Detailed [hyperparameter tuning](https://www.ultralytics.com/glossary/hyperparameter-tuning) techniques can be found in our [hyperparameter tuning guide](../guides/hyperparameter-tuning.md).
+

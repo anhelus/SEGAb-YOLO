@@ -627,3 +627,4 @@ for index, class_id in enumerate(classes):
 ```
 
 This approach provides a 3D visualization of segmented objects, useful for tasks like navigation and manipulation in [robotics applications](https://docs.ultralytics.com/guides/steps-of-a-cv-project).
+

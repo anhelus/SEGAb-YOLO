@@ -531,3 +531,4 @@ To visualize object tracks over multiple video frames, you can use the YOLO mode
     ```
 
 This script will plot the tracking lines showing the movement paths of the tracked objects over time, providing valuable insights into object behavior and patterns.
+

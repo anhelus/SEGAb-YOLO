@@ -336,3 +336,4 @@ The DeepX export pipeline uses every image in the calibration dataset (after `fr
 ### How do I install the DeepX runtime for inference?
 
 The DeepX runtime is not bundled with `ultralytics` and must be installed separately before running inference. On x86-64 Linux machines and ARM64 Debian Trixie machines (Raspberry Pi 5), install the NPU driver (`dxrt-driver-dkms`) and runtime (`libdxrt`) from the DEEPX-AI GitHub releases, then install the bundled `dx_engine` Python wheel. See the [Runtime Installation](#runtime-installation) section above for step-by-step commands.
+

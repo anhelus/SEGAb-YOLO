@@ -12,3 +12,4 @@ Sitemap: https://docs.ultralytics.com/ru/sitemap.xml
 Sitemap: https://docs.ultralytics.com/tr/sitemap.xml
 Sitemap: https://docs.ultralytics.com/vi/sitemap.xml
 Sitemap: https://docs.ultralytics.com/zh/sitemap.xml
+

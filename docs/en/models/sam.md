@@ -309,3 +309,4 @@ This function takes the path to your images and optional arguments for pretraine
 ### What datasets are used to train the Segment Anything Model (SAM)?
 
 SAM is trained on the extensive [SA-1B dataset](https://ai.meta.com/datasets/segment-anything/) which comprises over 1 billion masks across 11 million images. SA-1B is the largest segmentation dataset to date, providing high-quality and diverse [training data](https://www.ultralytics.com/glossary/training-data), ensuring impressive zero-shot performance in varied segmentation tasks. For more details, visit the [Dataset section](#key-features-of-the-segment-anything-model-sam).
+

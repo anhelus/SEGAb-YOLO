@@ -305,3 +305,4 @@ Ultralytics provides flexible licensing tailored to different needs:
 - **Enterprise License**: A commercial license designed for businesses integrating YOLOv5 into proprietary products or services. This license removes the open-source obligations of AGPL-3.0, allowing for closed-source distribution. Visit our [Licensing page](https://www.ultralytics.com/license) for further details or to request an [Enterprise License](https://www.ultralytics.com/legal/enterprise-software-license).
 
 Select the license that aligns best with your project's requirements and distribution model.
+

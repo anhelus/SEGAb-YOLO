@@ -128,3 +128,4 @@ The YAML configuration file for the **COCO8-Seg dataset** is available in the Ul
 ### What are some benefits of using mosaicing during training with the COCO8-Seg dataset?
 
 Using **mosaicing** during training helps increase the diversity and variety of objects and scenes in each training batch. This technique combines multiple images into a single composite image, enhancing the model's ability to generalize to different object sizes, aspect ratios, and contexts within the scene. Mosaicing is beneficial for improving a model's robustness and [accuracy](https://www.ultralytics.com/glossary/accuracy), especially when working with small datasets like COCO8-Seg. For an example of mosaiced images, see the [Sample Images and Annotations](#sample-images-and-annotations) section.
+

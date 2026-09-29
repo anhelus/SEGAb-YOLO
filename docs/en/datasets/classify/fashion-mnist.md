@@ -139,3 +139,4 @@ The Fashion-MNIST dataset is divided into two main subsets: 60,000 training imag
 ### How can I acknowledge the use of the Fashion-MNIST dataset in my research?
 
 If you utilize the Fashion-MNIST dataset in your research or development projects, it's important to acknowledge it by linking to the [GitHub repository](https://github.com/zalandoresearch/fashion-mnist). This helps in attributing the data to Zalando Research, who made the dataset available for public use.
+

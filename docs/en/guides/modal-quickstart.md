@@ -195,3 +195,4 @@ model = YOLO("/data/my_custom_model.pt")
 ```
 
 For more information on training custom models, see the [training guide](../modes/train.md).
+

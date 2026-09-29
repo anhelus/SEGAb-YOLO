@@ -134,3 +134,4 @@ Yes. Cityscapes requires accepting the dataset terms on the official website. Do
 ### Why does Cityscapes use `label_mapping`?
 
 Cityscapes source masks store original label IDs that differ from the 19 train IDs used for evaluation. The `label_mapping` section converts valid labels to contiguous class IDs `0`–`18`, and assigns `255` to ignored and void labels so they are excluded from the loss and metrics during training and validation.
+

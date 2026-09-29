@@ -14,3 +14,4 @@ keywords: Ultralytics, NCNNBackend, NCNN inference, Tencent NCNN, mobile inferen
 ## ::: ultralytics.nn.backends.ncnn.NCNNBackend
 
 <br><br>
+

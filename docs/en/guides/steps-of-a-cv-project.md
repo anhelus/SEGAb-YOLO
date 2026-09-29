@@ -231,3 +231,4 @@ For more information, check out the [model export guide](../modes/export.md).
 ### What are the best practices for monitoring and maintaining a deployed computer vision model?
 
 Continuous monitoring and maintenance are essential for a model's long-term success. Implement tools for tracking Key Performance Indicators (KPIs) and detecting anomalies. Regularly retrain the model with updated data to counteract model drift. Document the entire process, including model architecture, hyperparameters, and changes, to ensure reproducibility and ease of future updates. Learn more in our [monitoring and maintenance guide](./model-monitoring-and-maintenance.md).
+

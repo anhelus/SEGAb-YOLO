@@ -316,3 +316,4 @@ To report a bug, provide a clear and concise [Minimum Reproducible Example](http
 ### What does the AGPL-3.0 license mean if I use Ultralytics YOLO in my own project?
 
 If you use Ultralytics YOLO code or models (licensed under AGPL-3.0) in your project, the AGPL-3.0 license requires that your entire project (the derivative work) must also be licensed under AGPL-3.0 and its complete source code must be made publicly available. This ensures that the open-source nature of the software is preserved throughout its derivatives. If you cannot meet these requirements, you need to obtain an [Enterprise License](https://www.ultralytics.com/license). See the [Open-Sourcing Your Project](#open-sourcing-your-yolo-project-under-agpl-30) section for details.
+

@@ -455,3 +455,4 @@ See [Models Export](train/models.md#export-model), the [Export mode guide](../mo
 ??? question "Can I use Platform models commercially?"
 
     Free and Pro plans use the AGPL license. For commercial use without AGPL requirements, see [Ultralytics Licensing](https://www.ultralytics.com/license).
+

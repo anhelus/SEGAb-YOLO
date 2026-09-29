@@ -360,3 +360,4 @@ This approach allows you to leverage Triton's optimizations while using the fami
 - **Edge Optimization**: [Ultralytics YOLO26](../models/yolo26.md) models are designed with edge deployment in mind, offering excellent performance even on resource-constrained devices.
 
 For more details, compare the deployment options in the [model export guide](../modes/export.md).
+

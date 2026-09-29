@@ -14,3 +14,4 @@ keywords: Ultralytics, semantic segmentation, validator, validation, mIoU, YOLO,
 ## ::: ultralytics.models.yolo.semantic.val.SemanticSegmentationValidator
 
 <br><br>
+

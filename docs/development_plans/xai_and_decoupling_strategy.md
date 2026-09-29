@@ -1,6 +1,6 @@
-# Implementation Plan - XAI for SEGAb-YOLO
+# Implementation Plan - XAI for SegAtt-YOLO
 
-The goal is to implement Explainable AI (XAI) features, specifically EigenCAM and Attention Maps, for the SEGAb-YOLO model.
+The goal is to implement Explainable AI (XAI) features, specifically EigenCAM and Attention Maps, for the SegAtt-YOLO model.
 
 ## User Review Required
 
@@ -63,3 +63,4 @@ The goal is to implement Explainable AI (XAI) features, specifically EigenCAM an
 ### Decoupling Verification
 1.  **Network Check:** Run inference with network disabled (or monitored) to ensure no requests to `pypi.org` or `github.com` are made.
 2.  **Asset Check:** Try to load a model that usually triggers a download. It should fail gracefully or prompt for a local file.
+

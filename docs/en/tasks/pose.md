@@ -263,3 +263,4 @@ Refer to the [Export Section](#export) for more details. Exported models can be 
 ### What are the available Ultralytics YOLO26-pose models and their performance metrics?
 
 Ultralytics YOLO26 offers various pretrained pose models such as YOLO26n-pose, YOLO26s-pose, YOLO26m-pose, among others. These models differ in size, accuracy (mAP), and speed. For instance, the YOLO26n-pose model achieves a mAP<sup>pose</sup>50-95 of 50.0 and an mAP<sup>pose</sup>50 of 81.0. For a complete list and performance details, visit the [Models Section](#models).
+

@@ -14,3 +14,4 @@ keywords: Ultralytics, YOLO, OBBPredictor, oriented bounding box, object detecti
 ## ::: ultralytics.models.yolo.obb.predict.OBBPredictor
 
 <br><br>
+

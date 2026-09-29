@@ -30,3 +30,4 @@ keywords: Ultralytics, SAM3, SAM, text encoder, vision-language, transformer, to
 ## ::: ultralytics.models.sam.sam3.text_encoder_ve.text_global_pool
 
 <br><br>
+

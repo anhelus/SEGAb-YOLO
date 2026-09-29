@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# SEGAb-YOLO Experiment Runner - Simplified
+# SegAtt-YOLO Experiment Runner - Simplified
 # =============================================================================
 
 set -euo pipefail
@@ -63,7 +63,7 @@ VERBOSE="${VERBOSE:-false}"
 NAME="${NAME:-}"
 
 echo "============================================================================="
-echo "SEGAb-YOLO Experiment Runner"
+echo "SegAtt-YOLO Experiment Runner"
 echo "Project: $PROJECT_ROOT"
 echo "Command: $COMMAND | Data: $DATA | Epochs: $EPOCHS | Device: $DEVICE"
 echo "Model: ${MODEL:-all} | Dataset: ${DATASET:-all} | Limit: ${LIMIT:-none}"
@@ -128,7 +128,7 @@ echo ""
     echo ">>> Training: ${display_name} ($epochs epochs on $data)"
     echo "-----------------------------------------------------------------------------"
 
-    local model_path="$(resolve "segab_yolo/cfg/models/11/${model_yaml}")"
+    local model_path="$(resolve "segatt_yolo/cfg/models/11/${model_yaml}")"
     local project_dir="runs/$(basename "$data" .yaml)"
     local run_name_final="${NAME:-${raw_name}}"
 
@@ -139,7 +139,7 @@ echo ""
 
     local python_cmd="${PYTHON:-python3}"
     $python_cmd -c "
-from segab_yolo import YOLO
+from segatt_yolo import YOLO
 model = YOLO('$model_yaml')
 model.train(
     data='$data',

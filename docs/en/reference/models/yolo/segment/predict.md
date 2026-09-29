@@ -14,3 +14,4 @@ keywords: YOLO, SegmentationPredictor, machine learning, computer vision, object
 ## ::: ultralytics.models.yolo.segment.predict.SegmentationPredictor
 
 <br><br>
+

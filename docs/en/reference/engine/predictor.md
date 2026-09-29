@@ -14,3 +14,4 @@ keywords: Ultralytics, YOLO, Base Predictor, image inference, video inference, m
 ## ::: ultralytics.engine.predictor.BasePredictor
 
 <br><br>
+

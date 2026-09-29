@@ -14,3 +14,4 @@ keywords: Ultralytics, Heatmap, Python, Real-time Video, Object Tracking, cv2, S
 ## ::: ultralytics.solutions.heatmap.Heatmap
 
 <br><br>
+

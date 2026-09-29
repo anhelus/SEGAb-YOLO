@@ -353,3 +353,4 @@ Categories are sorted by `id` and mapped to sequential indices starting from 0. 
 ### Is there a performance overhead compared to pre-converted labels?
 
 The COCO JSON is parsed once on the first training run. Parsed labels are saved to a `.cache` file, so subsequent runs load instantly without re-parsing. Training speed is identical to standard YOLO training since annotations are held in memory. The cache is rebuilt automatically if the JSON file changes.
+

@@ -18,3 +18,4 @@ keywords: Ultralytics, semantic search, CLIP, FAISS, image retrieval, natural la
 ## ::: ultralytics.solutions.similarity_search.SearchApp
 
 <br><br>
+

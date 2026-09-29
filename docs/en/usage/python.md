@@ -372,3 +372,4 @@ model.val(data="path/to/separate/data.yaml")
 ```
 
 Check the [Val Mode](../modes/val.md) page for detailed examples and usage.
+

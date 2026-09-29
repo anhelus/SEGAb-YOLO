@@ -285,3 +285,4 @@ After exporting your YOLO26 model to an Edge TPU-compatible format, you can run 
         ```
 
 Comprehensive details on full prediction mode features can be found on the [Predict Page](../modes/predict.md).
+

@@ -185,3 +185,4 @@ Common challenges include:
 - Underestimating data requirements.
 
 Address these challenges through thorough initial research, clear communication with stakeholders, and iterative refinement of the problem statement and objectives. Learn more about these challenges in our [Computer Vision Project guide](steps-of-a-cv-project.md).
+

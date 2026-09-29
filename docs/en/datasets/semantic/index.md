@@ -163,3 +163,4 @@ Yes, if they already match your `names` class IDs. If the source dataset uses no
 ### Can I use my instance segmentation dataset to train semantic segmentation?
 
 Yes. Instance segmentation datasets use Ultralytics YOLO polygon labels (one `.txt` per image with `<class-index> <x1> <y1> <x2> <y2> ...` rows), and the same files can be reused for semantic segmentation — just **omit** `masks_dir` from the dataset YAML. The loader converts polygons to per-image masks on the fly. For multi-class datasets (`N > 1`) an extra `background` class is appended and the model is built with `N + 1` output channels. For single-class datasets (`N == 1`) training stays at 1 class — the mask shows your declared class as `1` and uncovered pixels as `0`.
+

@@ -18,3 +18,4 @@ keywords: Ultralytics, YOLO, parking management, computer vision, parking monito
 ## ::: ultralytics.solutions.parking_management.ParkingManagement
 
 <br><br>
+

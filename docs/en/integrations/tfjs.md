@@ -206,3 +206,4 @@ For deployment scenarios and more in-depth information, see our section on [Depl
 Yes, TensorFlow.js allows the deployment of YOLO26 models on Node.js environments. This enables server-side machine learning applications that benefit from the processing power of a server and access to server-side data. Typical use cases include real-time data processing and machine learning pipelines on backend servers.
 
 To get started with Node.js deployment, refer to the [Run TensorFlow.js in Node.js](https://www.tensorflow.org/js/guide/nodejs) guide from TensorFlow.
+

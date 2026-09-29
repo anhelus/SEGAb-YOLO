@@ -210,3 +210,4 @@ auto_annotate(data="path/to/images", det_model="yolo26x.pt", sam_model="sam_b.pt
 ```
 
 This function automates the annotation process, making it faster and more efficient. For more details, explore the [Auto-Annotate Reference](https://docs.ultralytics.com/reference/data/annotator#ultralytics.data.annotator.auto_annotate).
+

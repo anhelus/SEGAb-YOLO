@@ -242,3 +242,4 @@ Yes, you can run inference directly using the exported CoreML model. Below are t
         ```
 
 For additional information, refer to the [Usage section](#usage) of the CoreML export guide.
+

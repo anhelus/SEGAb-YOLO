@@ -225,3 +225,4 @@ Ultralytics YOLO26 offers several unique advantages over competing object detect
 - **Ease of Use**: Intuitive API and CLI for quick setup, making it accessible both to beginners and experts.
 
 To explore more about YOLO26's features, visit the [Ultralytics YOLO](https://www.ultralytics.com/yolo) page for detailed insights.
+

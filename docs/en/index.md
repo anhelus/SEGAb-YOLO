@@ -277,3 +277,4 @@ Ultralytics YOLO supports efficient and customizable multi-object tracking. To u
         ```
 
 For a detailed guide on setting up and running object tracking, check our [Track Mode](modes/track.md) documentation, which explains the configuration and practical applications in real-time scenarios.
+

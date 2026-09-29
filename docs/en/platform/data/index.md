@@ -187,3 +187,4 @@ Yes! Use the dataset URI format to train locally:
     ```
 
 Or export your dataset in [NDJSON format](../../datasets/detect/index.md#ultralytics-ndjson-format) for fully offline training.
+

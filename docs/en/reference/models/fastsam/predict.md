@@ -14,3 +14,4 @@ keywords: Ultralytics, Fast SAM Predictor, YOLO, segmentation, prediction, AI mo
 ## ::: ultralytics.models.fastsam.predict.FastSAMPredictor
 
 <br><br>
+

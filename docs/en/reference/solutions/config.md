@@ -14,3 +14,4 @@ keywords: Ultralytics, SolutionConfig, vision AI configuration, YOLO models, Pyt
 ## ::: ultralytics.solutions.config.SolutionConfig
 
 <br><br>
+

@@ -213,3 +213,4 @@ cv2.destroyAllWindows()
 ```
 
 This setup writes the monitored video to an output file, allowing you to review your workout performance later or share it with trainers for additional feedback.
+

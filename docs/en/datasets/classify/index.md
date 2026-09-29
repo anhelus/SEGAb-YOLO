@@ -208,3 +208,4 @@ Training a model using Ultralytics YOLO can be done easily in both Python and CL
         ```
 
 These examples demonstrate the straightforward process of training a YOLO model using either approach. For more information, visit the [Usage](#usage) section and the [Train](https://docs.ultralytics.com/tasks/classify#train) page for classification tasks.
+

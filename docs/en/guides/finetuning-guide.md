@@ -188,3 +188,4 @@ It depends on the dataset size and domain similarity. For small datasets with a 
 ### How do I prevent catastrophic forgetting when fine-tuning YOLO on new classes?
 
 Include examples of the original classes in the training data alongside the new classes. If that is not possible, freezing more layers (`freeze=10` or higher) and using a lower learning rate helps preserve the pretrained knowledge. See [Performance degrades on original classes](#performance-degrades-on-original-classes-after-fine-tuning) for more details.
+

@@ -176,3 +176,4 @@ Ultralytics YOLO26 provides several enhancements over prior models like YOLOv5 a
 - **Resource Efficiency**: Optimized for better speed with minimal computational requirements.
 
 For a comprehensive comparison, check [Ultralytics YOLO26 Documentation](https://docs.ultralytics.com/models/yolo26) and related blog posts discussing model performance.
+

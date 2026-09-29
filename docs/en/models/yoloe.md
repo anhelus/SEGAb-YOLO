@@ -1009,3 +1009,4 @@ results = model.predict("path/to/image.jpg")
 # Show results
 results[0].show()
 ```
+

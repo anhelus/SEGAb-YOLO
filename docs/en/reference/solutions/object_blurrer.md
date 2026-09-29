@@ -14,3 +14,4 @@ keywords: Ultralytics, ObjectBlurrer, object detection, blurring, real-time proc
 ## ::: ultralytics.solutions.object_blurrer.ObjectBlurrer
 
 <br><br>
+

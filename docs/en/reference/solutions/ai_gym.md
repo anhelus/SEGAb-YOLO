@@ -14,3 +14,4 @@ keywords: Ultralytics, AI Gym, YOLO, pose detection, gym step counting, real-tim
 ## ::: ultralytics.solutions.ai_gym.AIGym
 
 <br><br>
+

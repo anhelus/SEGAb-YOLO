@@ -160,3 +160,4 @@ Object counting with Ultralytics YOLO26 can be applied to numerous real-world sc
 - **Public Safety:** Monitor crowd density in specific zones during events.
 
 Explore more examples in the [Real World Applications](#real-world-applications) section and the [TrackZone](../guides/trackzone.md) solution for additional zone-based monitoring capabilities.
+

@@ -386,3 +386,4 @@ There's no strict limit, but very large models (>2GB) may have longer upload and
 ### Can I fine-tune pretrained models?
 
 Yes! You can use any of the official YOLO26 models as a base, or select one of your own completed models from the model selector in the training dialog. The Platform supports fine-tuning from any uploaded checkpoint.
+

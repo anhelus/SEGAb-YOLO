@@ -504,3 +504,4 @@ Ultralytics YOLO26 allows you to configure a variety of training settings such a
 | `save`   | `True`  | Enables saving of training checkpoints and final model weights.        |
 
 For an in-depth guide on training settings, check the [Train Settings](#train-settings) section.
+

@@ -215,3 +215,4 @@ After exporting YOLO26 models to the TorchScript format, you can deploy them acr
 - **Cloud Deployment**: Utilize services like [TorchServe](https://docs.pytorch.org/serve/getting_started.html) for scalable server-side deployment.
 
 Explore comprehensive guidelines for deploying models in these settings to take full advantage of TorchScript's capabilities.
+

@@ -315,3 +315,4 @@ Yes. torchvision classifiers, detectors, and segmentation models export to `.mlp
 ### Can I quantize my exported model to INT8 or FP16?
 
 Yes, for several formats. Pass `half=True` for FP16 or `int8=True` for INT8 when exporting to OpenVINO, CoreML, MNN, or NCNN. INT8 in OpenVINO additionally requires a `calibration_dataset` argument for [post-training quantization](https://www.ultralytics.com/glossary/model-quantization). See each format's integration page for quantization trade-offs.
+

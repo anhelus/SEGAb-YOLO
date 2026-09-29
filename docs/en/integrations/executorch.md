@@ -336,3 +336,4 @@ Yes! ExecuTorch supports hardware acceleration through various backends:
 - **Default**: XNNPACK for optimized CPU inference
 
 Refer to the [ExecuTorch Documentation](https://docs.pytorch.org/executorch/stable/compiler-delegate-and-partitioner.html) for backend-specific setup.
+

@@ -315,3 +315,4 @@ To deploy YOLO26 models in a web application, you can use TensorFlow.js (TF.js),
 2. Integrate the exported model into your web application.
 
 For step-by-step instructions, refer to our guide on [TensorFlow.js integration](../integrations/tfjs.md).
+

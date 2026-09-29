@@ -151,3 +151,4 @@ Noisy labels in the ImageWoof dataset simulate real-world conditions where label
 ### What are the key challenges of using the ImageWoof dataset?
 
 The primary challenge of the ImageWoof dataset lies in the subtle differences among the dog breeds it includes. Since it focuses on 10 closely related breeds, distinguishing between them requires more advanced and fine-tuned image classification models. This makes ImageWoof an excellent benchmark to test the capabilities and improvements of [deep learning](https://www.ultralytics.com/glossary/deep-learning-dl) models.
+

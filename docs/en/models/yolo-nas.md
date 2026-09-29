@@ -171,3 +171,4 @@ Yes, Ultralytics provides pretrained YOLO-NAS models that you can access directl
 - [YOLO-NAS-s](https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo_nas_s.pt)
 - [YOLO-NAS-m](https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo_nas_m.pt)
 - [YOLO-NAS-l](https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo_nas_l.pt)
+

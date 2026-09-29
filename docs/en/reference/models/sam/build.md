@@ -58,3 +58,4 @@ keywords: Ultralytics, SAM model, Segment Anything Model, SAM 2 model, Segment A
 ## ::: ultralytics.models.sam.build.build_sam
 
 <br><br>
+

@@ -596,3 +596,4 @@ FastAPI also supports SSE (Server-Sent Events), which is useful for streaming in
 This is actually a versatility feature of Google Cloud Platform, where you need to select a region for every service you use. For the task of deploying a containerized model on Vertex AI, your most important region selection is the one for the Model Registry. It will determine the availability of machine types and quotas for your model deployment.
 
 Additionally, if you will be extending the setup and storing prediction data or results in Cloud Storage or BigQuery, you will need to use the same region as for Model Registry to minimize latency and ensure high throughput for data access.
+

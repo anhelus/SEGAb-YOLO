@@ -214,3 +214,4 @@ These are internal parameters from the training pipeline that produced the base 
 ### Can I replicate the exact pretraining from scratch?
 
 The checkpoints were produced using an internal training branch with additional features not in the public codebase (like configurable `o2m` weights and `cls_w`). You can get very close results using the hyperparameters documented on this page with the public Ultralytics package, but an exact reproduction requires the internal branch.
+

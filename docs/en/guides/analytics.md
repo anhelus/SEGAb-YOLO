@@ -328,3 +328,4 @@ Ultralytics YOLO26 stands out from other object detection solutions like OpenCV 
 5. **Comprehensive Documentation**: Extensive [documentation](https://docs.ultralytics.com/) and [blog resources](https://www.ultralytics.com/blog) to guide users through every step.
 
 For more detailed comparisons and use cases, explore our [Ultralytics Blog](https://www.ultralytics.com/blog/ai-use-cases-transforming-your-future).
+

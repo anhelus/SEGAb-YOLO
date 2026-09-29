@@ -244,3 +244,4 @@ Each task extends the base detection output with task-specific data:
 | Segmentation | `yolo26n-seg.pt`  | `(N, 300, 38)` + proto `(N, 32, 160, 160)` |
 | Pose         | `yolo26n-pose.pt` | `(N, 300, 57)`                             |
 | OBB          | `yolo26n-obb.pt`  | `(N, 300, 7)`                              |
+

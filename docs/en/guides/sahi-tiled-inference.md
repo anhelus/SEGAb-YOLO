@@ -305,3 +305,4 @@ predict(
 ```
 
 For more detailed steps, visit our section on [Batch Prediction](#batch-prediction).
+

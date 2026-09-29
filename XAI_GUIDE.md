@@ -1,4 +1,4 @@
-# Explainable AI (XAI) Guide for SEGAb-YOLO
+# Explainable AI (XAI) Guide for SegAtt-YOLO
 
 This guide explains how to use the built-in XAI mechanisms to visualize and interpret the decisions of your YOLO models.
 

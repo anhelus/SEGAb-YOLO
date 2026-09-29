@@ -329,3 +329,4 @@ To validate a trained model's accuracy on a dataset like MNIST160, you can use t
         ```
 
 For more information, visit the [Validate](#val) section.
+

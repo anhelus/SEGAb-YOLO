@@ -22,3 +22,4 @@ keywords: Ultralytics, SAM Module, SAM 2 Module, object segmentation, image enco
 ## ::: ultralytics.models.sam.modules.sam.SAM3Model
 
 <br><br>
+

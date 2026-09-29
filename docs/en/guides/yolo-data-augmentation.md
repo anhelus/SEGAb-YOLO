@@ -515,3 +515,4 @@ Check if the `albumentations` package is installed. If not, you can install it b
 ### How do I customize my augmentations?
 
 You can customize augmentations by creating a custom dataset class and trainer. For example, you can replace the default Ultralytics classification augmentations with PyTorch's [torchvision.transforms.Resize](https://docs.pytorch.org/vision/stable/generated/torchvision.transforms.Resize.html) or other transforms. See the [custom training example](../tasks/classify.md#train) in the classification documentation for implementation details.
+

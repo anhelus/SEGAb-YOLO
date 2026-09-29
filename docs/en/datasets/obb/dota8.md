@@ -139,3 +139,4 @@ Mosaicing combines multiple images into one during training, increasing the vari
 ### Why should I use Ultralytics YOLO26 for object detection tasks?
 
 Ultralytics YOLO26 provides state-of-the-art real-time object detection capabilities, including features like oriented bounding boxes (OBB), [instance segmentation](https://www.ultralytics.com/glossary/instance-segmentation), and a highly versatile training pipeline. It's suitable for various applications and offers pretrained models for efficient fine-tuning. Explore further about the advantages and usage in the [Ultralytics YOLO26 documentation](https://github.com/ultralytics/ultralytics).
+

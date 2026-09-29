@@ -146,3 +146,4 @@ Ultralytics supports a comprehensive range of YOLO (You Only Look Once) versions
 ### What types of tasks can Ultralytics YOLO models perform?
 
 Ultralytics YOLO models are versatile and can perform tasks including object detection, instance segmentation, [semantic segmentation](../tasks/semantic.md), classification, pose estimation, and oriented object detection (OBB). The latest model, [YOLO26](yolo26.md), supports all six tasks plus open-vocabulary detection. For details on specific tasks, refer to the [Task pages](../tasks/index.md).
+

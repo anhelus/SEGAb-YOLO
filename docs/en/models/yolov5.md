@@ -177,3 +177,4 @@ You can train a YOLOv5u model by loading a pretrained model and running the trai
         ```
 
 For more detailed instructions, visit the [Usage Examples](#usage-examples) section.
+

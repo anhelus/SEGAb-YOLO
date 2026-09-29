@@ -311,3 +311,4 @@ Transaction receipts are available in the transaction history. Click the receipt
 ### Is there a free trial?
 
 The Free plan includes $5 signup credit ($25 with a company email) -- essentially a free trial. No credit card required to start.
+

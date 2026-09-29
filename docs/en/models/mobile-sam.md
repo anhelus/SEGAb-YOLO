@@ -248,3 +248,4 @@ MobileSAM is designed for fast, efficient image segmentation in mobile and edge 
 - **Integration in AI-powered mobile applications** for augmented reality (AR), analytics, and more
 
 For more details on use cases and performance, see [Adapting from SAM to MobileSAM](#adapting-from-sam-to-mobilesam) and the [Ultralytics blog on MobileSAM applications](https://www.ultralytics.com/blog/applications-of-meta-ai-segment-anything-model-2-sam-2).
+

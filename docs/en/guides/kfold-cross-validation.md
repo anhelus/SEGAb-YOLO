@@ -322,3 +322,4 @@ Your annotations should follow the YOLO detection format. Each annotation file m
 ### Can I use K-Fold Cross Validation with custom datasets other than Fruit Detection?
 
 Yes, you can use K-Fold Cross Validation with any custom dataset as long as the annotations are in the YOLO detection format. Replace the dataset paths and class labels with those specific to your custom dataset. This flexibility ensures that any object detection project can benefit from robust model evaluation using K-Fold Cross Validation. For a practical example, review our [Generating Feature Vectors](#generating-feature-vectors-for-object-detection-dataset) section.
+

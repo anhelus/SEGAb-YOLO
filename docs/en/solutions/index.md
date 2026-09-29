@@ -186,3 +186,4 @@ Yes, Ultralytics YOLO26 can be effectively used for monitoring workouts by track
 ### How does Ultralytics YOLO help in creating heatmaps for [data visualization](https://www.ultralytics.com/glossary/data-visualization)?
 
 Ultralytics YOLO26 can generate heatmaps to visualize data intensity across a given area, highlighting regions of high activity or interest. This feature is particularly useful in understanding patterns and trends in various computer vision tasks. Learn more about creating and using [Heatmaps](../guides/heatmaps.md) with YOLO26 for comprehensive data analysis and visualization.
+

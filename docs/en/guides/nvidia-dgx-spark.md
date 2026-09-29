@@ -416,3 +416,4 @@ DGX Spark offers significantly more compute power than Jetson devices with up to
 ### Can I use the same Docker image for DGX Spark and Jetson AGX Thor?
 
 Yes! The `ultralytics/ultralytics:latest-nvidia-arm64` Docker image supports both NVIDIA DGX Spark (with DGX OS) and Jetson AGX Thor (with JetPack 7.0), as both use ARM64 architecture with CUDA 13 and similar software stacks.
+

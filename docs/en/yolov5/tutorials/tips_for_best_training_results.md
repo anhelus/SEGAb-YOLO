@@ -94,3 +94,4 @@ The optimal batch size depends on your GPU memory. Larger batch sizes generally 
 ### How can I speed up YOLOv5 training?
 
 To speed up training, try: enabling mixed precision training with `--amp`, using multiple GPUs with `--device 0,1,2,3`, caching your dataset with `--cache`, and optimizing your batch size. Also consider using a smaller model variant like YOLOv5s if absolute accuracy isn't critical.
+

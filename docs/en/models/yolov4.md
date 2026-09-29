@@ -94,3 +94,4 @@ YOLOv4 is designed to optimize both speed and accuracy, making it ideal for real
 ### How can I get started with YOLOv4 if Ultralytics does not currently support it?
 
 To get started with YOLOv4, you should visit the official [YOLOv4 GitHub repository](https://github.com/AlexeyAB/darknet). Follow the installation instructions provided in the README file, which typically include cloning the repository, installing dependencies, and setting up environment variables. Once installed, you can train the model by preparing your dataset, configuring the model parameters, and following the usage instructions provided. Since Ultralytics does not currently support YOLOv4, it is recommended to refer directly to the YOLOv4 GitHub for the most up-to-date and detailed guidance.
+

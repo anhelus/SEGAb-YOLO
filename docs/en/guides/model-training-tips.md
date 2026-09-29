@@ -211,3 +211,4 @@ Using pretrained weights can greatly accelerate training and enhance model accur
 ### What is the recommended number of epochs for training a model, and how do I set this in YOLO26?
 
 The number of epochs refers to the complete passes through the training dataset during model training. A typical starting point is 300 epochs. If your model overfits early, you can reduce the number. Alternatively, if overfitting isn't observed, you might extend training to 600, 1200, or more epochs. To set this in YOLO26, use the `epochs` parameter in your training script. For additional advice on determining the ideal number of epochs, refer to this section on [number of epochs](#the-number-of-epochs-to-train-for).
+

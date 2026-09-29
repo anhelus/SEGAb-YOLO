@@ -205,3 +205,4 @@ The `output0` tensor contains class indices, which are internally represented as
 This behavior is expected and also applies to lower-precision or quantized exports where class index fidelity must be preserved.
 
 If full FP16 outputs are required, export with `end2end=False` and perform post-processing externally.
+

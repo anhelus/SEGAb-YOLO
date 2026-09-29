@@ -14,3 +14,4 @@ keywords: Ultralytics, AxeleraBackend, Axelera inference, AI accelerator, hardwa
 ## ::: ultralytics.nn.backends.axelera.AxeleraBackend
 
 <br><br>
+

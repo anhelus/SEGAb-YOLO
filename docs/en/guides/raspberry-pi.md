@@ -531,3 +531,4 @@ There are two methods to set up a Raspberry Pi Camera for YOLO26 inference:
     ```
 
 For detailed setup instructions, visit the [Inference with Camera](#inference-with-camera) section.
+

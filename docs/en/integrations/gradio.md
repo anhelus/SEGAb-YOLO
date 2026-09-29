@@ -195,3 +195,4 @@ Practical applications of combining Ultralytics YOLO26 with Gradio include:
 - **Community and Collaborations:** Making it easy to share models with the community for feedback and collaboration.
 
 For examples of similar use cases, check out the [Ultralytics blog on animal behavior monitoring](https://www.ultralytics.com/blog/monitoring-animal-behavior-using-ultralytics-yolov8) which demonstrates how interactive visualization can enhance wildlife conservation efforts.
+

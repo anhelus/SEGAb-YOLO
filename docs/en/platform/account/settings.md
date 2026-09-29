@@ -370,3 +370,4 @@ If you signed up with email and password, use the password reset flow on the sig
 | **Trash items**      | 30 days       |
 | **Account deletion** | Up to 30 days |
 | **Backups**          | 90 days       |
+

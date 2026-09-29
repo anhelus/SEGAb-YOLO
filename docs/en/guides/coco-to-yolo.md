@@ -340,3 +340,4 @@ convert_coco(labels_dir="annotations/", save_dir="output/", use_keypoints=True, 
 ```
 
 Note that if both `use_segments` and `use_keypoints` are set to `True`, only keypoints will be written to the label files — segments are silently ignored.
+

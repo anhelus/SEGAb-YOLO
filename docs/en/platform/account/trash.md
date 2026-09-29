@@ -191,3 +191,4 @@ No. If a project is permanently deleted, all models that were inside it are also
 ### How do I know when an item will be permanently deleted?
 
 Each item in Trash shows a "Days Remaining" counter indicating how many days until automatic permanent deletion occurs.
+

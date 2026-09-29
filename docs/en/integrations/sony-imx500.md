@@ -620,3 +620,4 @@ Based on Ultralytics benchmarks on Raspberry Pi AI Camera:
 - Model size of only 3.2MB after quantization
 
 This demonstrates that IMX500 format provides efficient real-time inference while maintaining good accuracy for edge AI applications.
+

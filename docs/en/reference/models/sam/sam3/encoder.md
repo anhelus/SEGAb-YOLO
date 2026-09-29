@@ -26,3 +26,4 @@ keywords: Ultralytics, SAM3, SAM, transformer encoder, fusion, attention, deep l
 ## ::: ultralytics.models.sam.sam3.encoder.pool_text_feat
 
 <br><br>
+

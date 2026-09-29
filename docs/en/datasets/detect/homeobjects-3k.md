@@ -167,3 +167,4 @@ Absolutely. With clean labeling, and standardized YOLO-compatible annotations, H
 ### Where can I find the annotation format and YAML?
 
 Refer to the [Dataset YAML](#dataset-yaml) section. The format is standard YOLO, making it compatible with most object detection pipelines.
+

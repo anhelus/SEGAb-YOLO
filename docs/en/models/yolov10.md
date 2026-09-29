@@ -312,3 +312,4 @@ YOLOv10 supports several export formats, including TorchScript, ONNX, OpenVINO, 
 ### What are the performance benchmarks for YOLOv10 models?
 
 YOLOv10 outperforms previous YOLO versions and other state-of-the-art models in both accuracy and efficiency. For example, YOLOv10s is 1.8x faster than RT-DETR-R18 with a similar AP on the COCO dataset. YOLOv10b shows 46% less latency and 25% fewer parameters than YOLOv9-C with the same performance. Detailed benchmarks can be found in the [Comparisons](#comparisons) section.
+

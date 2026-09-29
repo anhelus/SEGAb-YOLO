@@ -125,3 +125,4 @@ Yes, kitti is fully compatible with Ultralytics YOLO26. You can [train](../../mo
 ### Where can I find the kitti dataset configuration file?
 
 You can access the YAML file at [https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/kitti.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/kitti.yaml).
+

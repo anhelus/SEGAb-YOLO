@@ -150,3 +150,4 @@ The YAML configuration file for the Objects365 dataset is available at [Objects3
 ### How does the dataset structure of Objects365 enhance object detection modeling?
 
 The [Objects365 dataset](https://www.objects365.org/) is organized with 2 million high-resolution images and comprehensive annotations of over 30 million bounding boxes. This structure ensures a robust dataset for training [deep learning](https://www.ultralytics.com/glossary/deep-learning-dl) models in object detection, offering a wide variety of objects and scenarios. Such diversity and volume help in developing models that are more accurate and capable of generalizing well to real-world applications. For more details on the dataset structure, refer to the [Dataset YAML](#dataset-yaml) section.
+

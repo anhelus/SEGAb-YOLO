@@ -418,3 +418,4 @@ The health check uses a 55-second timeout to accommodate worst-case cold starts.
 ### Can I use custom domains?
 
 Custom domains are coming soon. Currently, endpoints use platform-generated URLs.
+

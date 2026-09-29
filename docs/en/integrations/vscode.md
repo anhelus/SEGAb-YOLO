@@ -255,3 +255,4 @@ Like any other VS Code extension, you can uninstall it by navigating to the Exte
     <img src="https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/vscode-extension-menu.avif" alt="VS Code extension menu">
   <br>
 </p>
+

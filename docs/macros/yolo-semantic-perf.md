@@ -5,3 +5,4 @@
 | [YOLO26m-sem](https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26m-sem.pt) | 1024 &times; 2048           | 82.0               | 19.9 ± 0.1                                  | 14.3                     | 304.5                   |
 | [YOLO26l-sem](https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26l-sem.pt) | 1024 &times; 2048           | 82.9               | 26.5 ± 0.1                                  | 17.9                     | 384.7                   |
 | [YOLO26x-sem](https://github.com/ultralytics/assets/releases/download/v8.4.0/yolo26x-sem.pt) | 1024 &times; 2048           | 83.6               | 48.9 ± 0.2                                  | 40.2                     | 861.7                   |
+

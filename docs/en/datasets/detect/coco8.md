@@ -132,3 +132,4 @@ Mosaic augmentation, as used in COCO8 training, combines multiple images into on
 ### How Can I Validate My YOLO26 Model Trained on the COCO8 Dataset?
 
 To validate your YOLO26 model after training on COCO8, use the model's validation commands in either Python or CLI. This evaluates your model's performance using standard metrics. For step-by-step instructions, visit the [YOLO Validation documentation](../../modes/val.md).
+

@@ -151,3 +151,4 @@ Inference can be done using Python or CLI methods with a fine-tuned YOLO26 model
 ### Where can I find the YAML configuration file for the medical-pills dataset?
 
 The YAML file is available at [medical-pills.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/medical-pills.yaml), containing dataset paths, classes, and additional configuration details essential for training models on this dataset.
+

@@ -215,3 +215,4 @@ With scale-to-zero enabled:
 - Subsequent requests are fast
 
 First requests after an idle period trigger a cold start.
+

@@ -14,3 +14,4 @@ keywords: Ultralytics, queue management, object tracking, real-time video, Pytho
 ## ::: ultralytics.solutions.queue_management.QueueManager
 
 <br><br>
+

@@ -432,3 +432,4 @@ The performance of YOLO26 models on NVIDIA Jetson Orin NX 16GB varies based on T
 - **INT8 Precision**: 5.95 ms/im, 168 FPS
 
 These benchmarks underscore the efficiency and capability of using TensorRT-optimized YOLO26 models on NVIDIA Jetson hardware. For further details, see our [Benchmark Results](#benchmark-results) section.
+

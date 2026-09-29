@@ -132,3 +132,4 @@ Oriented Object Detection (OBB) with YOLO26 provides enhanced [precision](https:
 - **Versatile Applications:** Useful for tasks in geospatial analysis, robotics, etc.
 
 Check out the [Oriented Object Detection section](obb.md) for more details and examples.
+

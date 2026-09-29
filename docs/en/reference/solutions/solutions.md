@@ -22,3 +22,4 @@ keywords: Ultralytics, Solutions, Object counting, Speed Estimation, Heatmaps, Q
 ## ::: ultralytics.solutions.solutions.SolutionResults
 
 <br><br>
+

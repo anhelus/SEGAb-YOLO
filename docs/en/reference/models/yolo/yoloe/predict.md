@@ -18,3 +18,4 @@ keywords: YOLOE, visual prompts, predictors, YOLOEVPDetectPredictor, YOLOEVPSegP
 ## ::: ultralytics.models.yolo.yoloe.predict.YOLOEVPSegPredictor
 
 <br><br>
+

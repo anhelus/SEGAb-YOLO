@@ -128,3 +128,4 @@ Consider using [Ultralytics Platform](../../platform/index.md) for a streamlined
 Remember to document your progress, share insights with the vibrant Ultralytics community, and utilize resources like [GitHub discussions](https://github.com/ultralytics/yolov5/discussions) for collaboration and support. Now, go forth and innovate with YOLOv5 and GCP!
 
 Want to continue enhancing your ML skills? Dive into our [documentation](../../quickstart.md) and explore the [Ultralytics Blog](https://www.ultralytics.com/blog) for more tutorials and insights. Let your AI adventure continue!
+

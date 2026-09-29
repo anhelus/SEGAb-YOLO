@@ -72,3 +72,4 @@ For more details, explore the [GitHub Dependabot Alerts section](#github-dependa
 Ultralytics encourages users to report potential security issues through private channels. Users can report vulnerabilities discreetly via the [contact form](https://www.ultralytics.com/contact) or by emailing [security@ultralytics.com](mailto:security@ultralytics.com). This ensures responsible disclosure and allows the security team to investigate and address vulnerabilities securely and efficiently.
 
 For more information on private vulnerability reporting, refer to the [Private Vulnerability Reporting section](#private-vulnerability-reporting).
+

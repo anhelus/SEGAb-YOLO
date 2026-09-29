@@ -124,3 +124,4 @@ All team members share a single credit balance. The Owner and Admins can top up 
 ### How do I upgrade from Pro to Enterprise?
 
 Enterprise pricing and provisioning are handled directly by the Ultralytics team. See [Ultralytics Licensing](https://www.ultralytics.com/license) for plan details.
+

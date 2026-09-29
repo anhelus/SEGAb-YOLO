@@ -157,3 +157,4 @@ These datasets are tailored for scenarios where OBBs offer a significant advanta
 ### Can I use my own dataset with oriented bounding boxes for YOLO26 training, and if so, how?
 
 Yes, you can use your own dataset with oriented bounding boxes for YOLO26 training. Ensure your dataset annotations are converted to the YOLO OBB format, which involves defining bounding boxes by their four corner points. You can then create a [YAML configuration file](../../usage/cfg.md) specifying the dataset paths, classes, and other necessary details. For more information on creating and configuring your datasets, refer to the [Supported Datasets](#supported-datasets) section.
+

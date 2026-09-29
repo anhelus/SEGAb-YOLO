@@ -157,3 +157,4 @@ Yes, the LVIS dataset includes a variety of images with diverse object categorie
 ![LVIS large vocabulary instance segmentation dataset mosaic](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/lvis-mosaiced-training-batch.avif)
 
 This mosaiced image demonstrates a training batch composed of multiple dataset images combined into one. Mosaicing increases the variety of objects and scenes within each training batch, enhancing the model's ability to generalize across different contexts. For more details on the LVIS dataset, explore the [LVIS dataset documentation](#key-features).
+

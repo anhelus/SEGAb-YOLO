@@ -14,3 +14,4 @@ keywords: FastSAM, Ultralytics, model interface, YOLO, deep learning, machine le
 ## ::: ultralytics.models.fastsam.model.FastSAM
 
 <br><br>
+

@@ -417,3 +417,4 @@ The current API processes one image per request. For batch:
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
         results = list(executor.map(predict, images))
     ```
+

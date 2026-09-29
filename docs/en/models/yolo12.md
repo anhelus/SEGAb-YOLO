@@ -192,3 +192,4 @@ By default, the Ultralytics YOLO12 implementation does _not_ require FlashAttent
 ### Where can I find usage examples and more detailed documentation for YOLO12?
 
 This page provides basic [usage examples](#usage-examples) for training and inference. For comprehensive documentation on these and other modes, including [Validation](../modes/val.md) and [Export](../modes/export.md), consult the dedicated [Predict](../modes/predict.md) and [Train](../modes/train.md) pages. For task-specific information (segmentation, classification, oriented object detection, and pose estimation), refer to the respective documentation: [Segment](../tasks/segment.md), [Classify](../tasks/classify.md), [OBB](../tasks/obb.md), and [Pose](../tasks/pose.md). These resources provide in-depth guidance for effectively utilizing YOLO12 in various scenarios.
+

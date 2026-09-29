@@ -144,3 +144,4 @@ For a deeper understanding of data augmentation methods such as mosaic and their
 ### Can I Use COCO8-Multispectral for Benchmarking or Educational Purposes?
 
 Absolutely! The small size and multispectral nature of COCO8-Multispectral make it ideal for benchmarking, educational demonstrations, and prototyping new model architectures. For more benchmarking datasets, see the [Ultralytics Benchmark Dataset Collection](https://docs.ultralytics.com/datasets).
+

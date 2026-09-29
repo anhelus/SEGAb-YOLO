@@ -206,3 +206,4 @@ Different types of data annotation cater to various computer vision tasks:
 - **Keypoints**: Identify specific points of interest within an image, useful for tasks like pose estimation and facial landmark detection.
 
 Selecting the appropriate annotation type depends on your project's requirements. Learn more about how to implement these annotations and their formats in our [data annotation guide](#what-is-data-annotation).
+

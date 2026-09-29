@@ -1,4 +1,4 @@
-# SEGAb-YOLO — AGPL-3.0 License
+# SegAtt-YOLO — AGPL-3.0 License
 
 [build-system]
 requires = ["setuptools>=70.0.0", "wheel"]
@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "segab-yolo"
 dynamic = ["version"]
-description = "SEGAb-YOLO: Segmentation-Guided Attention Boosting for YOLO — explainability and robustness tools."
+description = "SegAtt-YOLO: Segmentation-Guided Attention Boosting for YOLO — explainability and robustness tools."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { "text" = "AGPL-3.0" }
@@ -107,19 +107,19 @@ typing = [
 ]
 
 [project.urls]
-"Source" = "https://github.com/anhelus/SEGAb-YOLO"
+"Source" = "https://github.com/anhelus/SegAtt-YOLO"
 
 [project.scripts]
-yolo = "segab_yolo.cfg:entrypoint"
-segab-yolo = "segab_yolo.cfg:entrypoint"
+yolo = "segatt_yolo.cfg:entrypoint"
+segab-yolo = "segatt_yolo.cfg:entrypoint"
 
 # Tools settings -------------------------------------------------------------------------------------------------------
 [tool.setuptools]
-packages = { find = { where = ["."], include = ["segab_yolo", "segab_yolo.*"] } }
-package-data = { "segab_yolo" = ["**/*.yaml", "**/*.sh", "../tests/*.py"], "segab_yolo.assets" = ["*.jpg"], "segab_yolo.solutions.templates" = ["*.html"]}
+packages = { find = { where = ["."], include = ["segatt_yolo", "segatt_yolo.*"] } }
+package-data = { "segatt_yolo" = ["**/*.yaml", "**/*.sh", "../tests/*.py"], "segatt_yolo.assets" = ["*.jpg"], "segatt_yolo.solutions.templates" = ["*.html"]}
 
 [tool.setuptools.dynamic]
-version = { attr = "segab_yolo.__version__" }
+version = { attr = "segatt_yolo.__version__" }
 
 [tool.pytest.ini_options]
 addopts = "--doctest-modules --durations=30 --color=yes"
@@ -129,9 +129,9 @@ markers = [
 norecursedirs = [".git", "dist", "build"]
 
 [tool.coverage.run]
-source = ["segab_yolo/"]
+source = ["segatt_yolo/"]
 data_file = "tests/.coverage"
-omit = ["segab_yolo/utils/callbacks/*"]
+omit = ["segatt_yolo/utils/callbacks/*"]
 
 [tool.isort]
 line_length = 120

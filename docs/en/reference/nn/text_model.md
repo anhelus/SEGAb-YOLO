@@ -30,3 +30,4 @@ keywords: YOLOE, text encoding, CLIP, MobileCLIP, TextModel, vision-language mod
 ## ::: ultralytics.nn.text_model.build_text_model
 
 <br><br>
+

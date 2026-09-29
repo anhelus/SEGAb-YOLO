@@ -174,3 +174,4 @@ The dataset configuration file, `carparts-seg.yaml`, which contains details abou
 ### Why should I use the Carparts Segmentation Dataset?
 
 This dataset offers rich, annotated data crucial for developing accurate [segmentation models](https://docs.ultralytics.com/tasks/segment) for automotive applications. Its diversity helps improve model robustness and performance in real-world scenarios like automated vehicle inspection, enhancing safety systems, and supporting autonomous driving technology. Using high-quality, domain-specific datasets like this accelerates AI development.
+

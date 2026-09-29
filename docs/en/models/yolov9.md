@@ -239,3 +239,4 @@ YOLOv9 is designed to mitigate information loss, which is particularly important
 ### What tasks and modes does YOLOv9 support?
 
 YOLOv9 supports various tasks including object detection and [instance segmentation](https://www.ultralytics.com/glossary/instance-segmentation). It is compatible with multiple operational modes such as inference, validation, training, and export. This versatility makes YOLOv9 adaptable to diverse real-time computer vision applications. Refer to the [supported tasks and modes](#supported-tasks-and-modes) section for more information.
+

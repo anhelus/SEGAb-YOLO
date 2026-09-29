@@ -269,3 +269,4 @@ for result, frame in model.predict():
 ```
 
 Explore the [callback source code](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/utils/callbacks/base.py) for more options and examples.
+

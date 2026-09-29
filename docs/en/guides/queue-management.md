@@ -208,3 +208,4 @@ Ultralytics YOLO26 is used in various real-world applications for queue manageme
 - **Banks:** Enhances customer service by managing queues efficiently in banks.
 
 Check our [blog on real-world queue management](https://www.ultralytics.com/blog/a-look-at-real-time-queue-monitoring-enabled-by-computer-vision) to learn more about how computer vision is transforming queue monitoring across industries.
+

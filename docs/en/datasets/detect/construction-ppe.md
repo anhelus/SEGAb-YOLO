@@ -155,3 +155,4 @@ Yes. Images are curated from real construction sites under diverse conditions. T
 ### What are the benefits of using the Construction-PPE dataset in AI projects?
 
 The dataset enables real-time detection of personal protective equipment, helping monitor worker safety on construction sites. With classes for both worn and missing gear, it supports AI systems that can automatically flag safety violations, generate compliance insights, and reduce risks. It also provides a practical resource for developing computer vision solutions in workplace safety, robotics, and academic research.
+

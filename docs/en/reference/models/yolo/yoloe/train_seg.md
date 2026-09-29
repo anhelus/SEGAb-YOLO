@@ -26,3 +26,4 @@ keywords: YOLOE, segmentation, trainers, YOLOESegTrainer, YOLOEPESegTrainer, YOL
 ## ::: ultralytics.models.yolo.yoloe.train_seg.YOLOESegVPTrainer
 
 <br><br>
+

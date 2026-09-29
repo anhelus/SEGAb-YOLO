@@ -18,3 +18,4 @@ keywords: TQDM, progress bar, Ultralytics, GitHub Actions, zero dependencies, ri
 ## ::: ultralytics.utils.tqdm.is_noninteractive_console
 
 <br><br>
+

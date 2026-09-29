@@ -215,3 +215,4 @@ Real-time object tracking can be achieved using the track mode in Ultralytics YO
         ```
 
 For in-depth instructions, visit the [Track Guide](../modes/track.md).
+

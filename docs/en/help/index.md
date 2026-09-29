@@ -49,3 +49,4 @@ Learn more in the [Continuous Integration (CI) Guide](CI.md).
 Ultralytics takes data privacy seriously. Our [Privacy Policy](privacy.md) outlines how we collect and use anonymized data to improve the YOLO package while prioritizing user privacy and control. We adhere to strict data protection regulations to ensure your information is secure at all times.
 
 For more information, review our [Privacy Policy](privacy.md).
+

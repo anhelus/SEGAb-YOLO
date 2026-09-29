@@ -66,3 +66,4 @@ keywords: Ultralytics, YOLO, configuration, cfg2dict, get_cfg, check_cfg, save_d
 ## ::: ultralytics.cfg.__init__.copy_default_cfg
 
 <br><br>
+

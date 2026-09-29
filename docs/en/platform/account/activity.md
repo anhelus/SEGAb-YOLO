@@ -199,3 +199,4 @@ The activity event remains in your history with a note that the resource was del
 ### Does activity work with team workspaces?
 
 Yes, the Activity feed shows events for the currently active workspace. Switch workspaces in the sidebar to see activity for different workspaces.
+

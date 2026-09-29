@@ -299,3 +299,4 @@ os.environ["COMET_MODE"] = "offline"
 ```
 
 This feature allows you to log your experiment data locally, which can later be uploaded to Comet when internet connectivity is available. This is particularly useful when working in environments with limited internet access. For more details, refer to the [Offline Logging](#offline-logging) section.
+

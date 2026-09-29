@@ -246,3 +246,4 @@ results = model("image.jpg", device="vulkan:0")  # Use first Vulkan device
 ```
 
 For multi-GPU systems, specify the device index (e.g., `vulkan:1` for the second GPU). Ensure Vulkan drivers are installed for your GPU. See the [Vulkan GPU Acceleration](#vulkan-gpu-acceleration) section for more details.
+

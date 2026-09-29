@@ -14,3 +14,4 @@ keywords: Ultralytics, ObjectCropper, object detection, cropping, real-time proc
 ## ::: ultralytics.solutions.object_cropper.ObjectCropper
 
 <br><br>
+

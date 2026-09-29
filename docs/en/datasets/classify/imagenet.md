@@ -130,3 +130,4 @@ The ImageNet dataset is organized using the WordNet hierarchy, where each node i
 ### What role does the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) play in computer vision?
 
 The annual [ImageNet Large Scale Visual Recognition Challenge (ILSVRC)](https://image-net.org/challenges/LSVRC/) has been pivotal in driving advancements in computer vision by providing a competitive platform for evaluating algorithms on a large-scale, standardized dataset. It offers standardized evaluation metrics, fostering innovation and development in areas such as image classification, object detection, and [image segmentation](https://www.ultralytics.com/glossary/image-segmentation). The challenge has continuously pushed the boundaries of what is possible with deep learning and computer vision technologies.
+

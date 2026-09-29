@@ -212,3 +212,4 @@ trainer.train()
 ```
 
 For comprehensive instructions and examples, review the [`DetectionTrainer` Reference](../reference/models/yolo/detect/train.md).
+

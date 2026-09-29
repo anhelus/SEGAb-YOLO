@@ -177,3 +177,4 @@ The Signature Detection Dataset is divided into two subsets:
 - **Validation Set**: Includes 35 images with annotations.
 
 For detailed information, you can refer to the [Dataset Structure](#dataset-structure) section. Additionally, view the complete dataset configuration in the `signature.yaml` file located at [signature.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/signature.yaml).
+

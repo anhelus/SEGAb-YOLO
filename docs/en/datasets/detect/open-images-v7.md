@@ -235,3 +235,4 @@ The Open Images V7 dataset supports a variety of computer vision tasks including
 - **Multimodal Image Descriptions**
 
 Its comprehensive annotations and broad scope make it suitable for training and evaluating advanced [machine learning](https://www.ultralytics.com/glossary/machine-learning-ml) models, as highlighted in practical use cases detailed in our [applications](#applications) section.
+

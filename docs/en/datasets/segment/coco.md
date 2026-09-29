@@ -154,3 +154,4 @@ The COCO-Seg dataset is partitioned into three subsets for specific training and
 3. **Test2017**: Encompasses 20K images reserved for testing and benchmarking trained models. Note that ground truth annotations for this subset are not publicly available, and performance results are submitted to the [COCO evaluation server](https://codalab.lisn.upsaclay.fr/competitions/7383) for assessment.
 
 For smaller experimentation needs, you might also consider using the [COCO8-seg dataset](https://docs.ultralytics.com/datasets/segment/coco8-seg), which is a compact version containing just 8 images from the COCO train 2017 set.
+

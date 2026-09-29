@@ -146,3 +146,4 @@ Ultralytics YOLO models offer several advantages for training on the Caltech-256
 - **Pretrained Models**: Starting from pretrained models, like `yolo26n-cls.pt`, can significantly reduce training time and improve model [accuracy](https://www.ultralytics.com/glossary/accuracy).
 
 For more details, explore our [comprehensive training guide](../../modes/train.md) and learn about [image classification](../../tasks/classify.md) with Ultralytics YOLO.
+

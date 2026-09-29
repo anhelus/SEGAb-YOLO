@@ -155,3 +155,4 @@ Yes, you can use [Ultralytics Platform](https://docs.ultralytics.com/platform) t
 ### How does MNIST compare to other image classification datasets?
 
 MNIST is simpler than many modern datasets like [CIFAR-10](../classify/cifar10.md) or [ImageNet](../classify/imagenet.md), making it ideal for beginners and quick experimentation. While more complex datasets offer greater challenges with color images and diverse object categories, MNIST remains valuable for its simplicity, small file size, and historical significance in the development of machine learning algorithms. For more advanced classification tasks, consider using [Fashion-MNIST](../classify/fashion-mnist.md), which maintains the same structure but features clothing items instead of digits.
+

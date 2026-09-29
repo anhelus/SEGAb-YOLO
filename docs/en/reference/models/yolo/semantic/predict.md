@@ -14,3 +14,4 @@ keywords: Ultralytics, semantic segmentation, predictor, inference, YOLO, semant
 ## ::: ultralytics.models.yolo.semantic.predict.SemanticSegmentationPredictor
 
 <br><br>
+

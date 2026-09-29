@@ -171,3 +171,4 @@ Acknowledging the dataset's creators helps support continued research and develo
 ### What are some practical examples of using the CIFAR-10 dataset?
 
 The CIFAR-10 dataset is often used for training image classification models, such as Convolutional Neural Networks (CNNs) and Support Vector Machines (SVMs). These models can be employed in various computer vision tasks including [object detection](https://www.ultralytics.com/glossary/object-detection), [image recognition](https://www.ultralytics.com/glossary/image-recognition), and automated tagging. To see some practical examples, check the code snippets in the [usage](#usage) section.
+

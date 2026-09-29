@@ -168,3 +168,4 @@ Ultralytics YOLO26 is utilized in various real-world applications for parking lo
 - **Parking Space Detection**: Accurately identifying available and occupied spaces.
 - **Surveillance**: Enhancing security through real-time monitoring.
 - **Traffic Flow Management**: Reducing idle times and congestion with efficient traffic handling. Images showcasing these applications can be found in [real-world applications](#real-world-applications).
+

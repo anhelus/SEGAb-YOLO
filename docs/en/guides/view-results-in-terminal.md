@@ -241,3 +241,4 @@ To troubleshoot issues with the `python-sixel` library:
 4. Double-check your code for potential errors, specifically the usage of `SixelWriter` and image data conversion steps.
 
 For further assistance on working with YOLO models and sixel integration, see the [export](../modes/export.md) and [predict mode](../modes/predict.md) documentation pages.
+

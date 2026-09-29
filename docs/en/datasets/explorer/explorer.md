@@ -279,3 +279,4 @@ You should see something like this
 ```python
 exp.plot_similar(idx=[7146, 14035])  # Using avg embeddings of 2 images
 ```
+

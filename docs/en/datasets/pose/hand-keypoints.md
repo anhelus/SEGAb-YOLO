@@ -184,3 +184,4 @@ This structure ensures a comprehensive training and validation process. For more
 The dataset configuration is defined in a YAML file, which includes paths, classes, and other relevant information. The `hand-keypoints.yaml` file can be found at [hand-keypoints.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/hand-keypoints.yaml).
 
 To use this YAML file for training, specify it in your training script or CLI command as shown in the training example above. For more details, refer to the [Dataset YAML](#dataset-yaml) section.
+

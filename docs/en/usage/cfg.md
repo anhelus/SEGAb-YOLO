@@ -215,3 +215,4 @@ For a full overview, see [Predict Settings](#predict-settings) and the [Predict 
 ### Why use mixed precision training with YOLO models?
 
 [Mixed precision](https://www.ultralytics.com/glossary/mixed-precision) training (`amp=True`) reduces memory usage and speeds up training using FP16 and FP32. It's beneficial for modern GPUs, allowing larger models and faster computations without significant accuracy loss. Learn more in the [Train Guide](../modes/train.md).
+

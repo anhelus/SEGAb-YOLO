@@ -178,3 +178,4 @@ If training fails:
 | Most training jobs            | RTX PRO 6000     |
 | Large datasets or batch sizes | H100 SXM or H200 |
 | Budget-conscious              | RTX 4090         |
+

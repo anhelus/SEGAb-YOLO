@@ -187,3 +187,4 @@ If you use the SKU-110k dataset in your research or development work, please cit
         ```
 
 More information about the dataset can be found in the [Citations and Acknowledgments](#citations-and-acknowledgments) section.
+

@@ -54,3 +54,4 @@ keywords: Ultralytics, SAM, AMG, API Reference, models, mask stability, crop box
 ## ::: ultralytics.models.sam.amg.batched_mask_to_box
 
 <br><br>
+

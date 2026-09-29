@@ -478,3 +478,4 @@ data = {
 model = YOLOWorld("yolov8s-worldv2.yaml")
 model.train(data=data, batch=128, epochs=100, trainer=WorldTrainerFromScratch)
 ```
+

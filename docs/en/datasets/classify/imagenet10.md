@@ -127,3 +127,4 @@ The ImageNet10 dataset has several key features:
 ### How does ImageNet10 compare to other small datasets like ImageNette?
 
 While both [ImageNet10](imagenet10.md) and [ImageNette](imagenette.md) are subsets of ImageNet, they serve different purposes. ImageNet10 contains just 20 images (2 per class) from the first 10 classes of ImageNet, making it extremely lightweight for CI testing and quick sanity checks. In contrast, ImageNette contains thousands of images across 10 easily distinguishable classes, making it more suitable for actual model training and development. ImageNet10 is designed for verification of pipeline functionality, while ImageNette is better for meaningful but faster-than-full-ImageNet training experiments.
+

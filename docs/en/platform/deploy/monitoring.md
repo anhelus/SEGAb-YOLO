@@ -353,3 +353,4 @@ For real-time debugging, check logs which are near-instant.
 ### Can I monitor multiple endpoints together?
 
 Yes, the deployments page shows all endpoints with aggregated overview cards. Use the table view to compare performance across deployments.
+

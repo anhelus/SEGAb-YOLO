@@ -394,3 +394,4 @@ results = model("image.jpg")
 ```
 
 See the [Usage Examples](#usage-examples) section for training, validation, and export instructions.
+

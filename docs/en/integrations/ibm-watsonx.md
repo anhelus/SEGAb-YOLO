@@ -407,3 +407,4 @@ Before you start training a YOLO26 model on IBM Watsonx, ensure you have the fol
 - **Jupyter Notebook**: Set up a Jupyter Notebook environment within Watsonx.ai for coding and model training.
 
 For more information on setting up your environment, visit our [Ultralytics Installation guide](../quickstart.md).
+

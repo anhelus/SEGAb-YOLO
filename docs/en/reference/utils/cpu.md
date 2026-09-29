@@ -14,3 +14,4 @@ keywords: Ultralytics, CPUInfo, CPU, system info, hardware, utils
 ## ::: ultralytics.utils.cpu.CPUInfo
 
 <br><br>
+

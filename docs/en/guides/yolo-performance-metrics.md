@@ -207,3 +207,4 @@ Validation metrics from YOLO26 like precision, recall, mAP, and IoU help diagnos
 - **IoU**: Helps fine-tune object localization accuracy.
 
 By analyzing these metrics, specific weaknesses can be targeted, such as adjusting confidence thresholds to improve precision or gathering more diverse data to enhance recall. For detailed explanations of these metrics and how to interpret them, check [Object Detection Metrics](#object-detection-metrics) and consider implementing [hyperparameter tuning](https://docs.ultralytics.com/guides/hyperparameter-tuning) to optimize your model.
+

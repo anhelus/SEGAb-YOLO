@@ -185,3 +185,4 @@ The [accuracy](https://www.ultralytics.com/glossary/accuracy) of speed estimatio
 **Note**: Always consider margin of error and validate the estimates with ground truth data when possible.
 
 For further accuracy improvement tips, check the [Arguments `SpeedEstimator` section](#speedestimator-arguments).
+

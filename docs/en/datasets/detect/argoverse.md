@@ -151,3 +151,4 @@ The Argoverse dataset `*.zip` file, previously available on Amazon S3, can now b
 A YAML file contains the dataset's paths, classes, and other essential information. For the Argoverse dataset, the configuration file, `Argoverse.yaml`, can be found at the following link: [Argoverse.yaml](https://github.com/ultralytics/ultralytics/blob/main/ultralytics/cfg/datasets/Argoverse.yaml).
 
 For more information about YAML configurations, see our [datasets](../index.md) guide.
+

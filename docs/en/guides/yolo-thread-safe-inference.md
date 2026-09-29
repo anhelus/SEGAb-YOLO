@@ -223,3 +223,4 @@ For more about threading in Python, see the [Understanding Python Threading](#un
 Yes, using Python's `multiprocessing` module is safer and often more efficient for running YOLO model inference in parallel. Process-based parallelism creates separate memory spaces, avoiding the Global Interpreter Lock (GIL) and reducing the risk of concurrency issues. Each process will operate independently with its own YOLO model instance.
 
 For further details on process-based parallelism with YOLO models, refer to the page on [Thread-Safe Inference](#thread-safe-inference).
+

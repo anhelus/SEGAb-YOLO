@@ -128,3 +128,4 @@ The ADE20K dataset follows the official ADEChallengeData2016 layout, with images
 ### Why does ADE20K use `label_mapping`?
 
 ADE20K annotation masks store source label IDs where `0` denotes the ignore or background class. The `label_mapping` section maps valid labels `1` through `150` to contiguous train IDs `0` through `149`, and assigns `255` to ignored pixels so they are excluded from the loss and metrics during training and validation.
+

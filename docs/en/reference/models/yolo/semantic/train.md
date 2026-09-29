@@ -14,3 +14,4 @@ keywords: Ultralytics, semantic segmentation, trainer, training, YOLO, semantic
 ## ::: ultralytics.models.yolo.semantic.train.SemanticSegmentationTrainer
 
 <br><br>
+

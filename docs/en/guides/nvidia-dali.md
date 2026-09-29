@@ -575,3 +575,4 @@ Nearly identical. Set `antialias=False` in `fn.resize` to match OpenCV's `cv2.IN
 ### What about CV-CUDA as an alternative to DALI?
 
 [CV-CUDA](https://github.com/CVCUDA/CV-CUDA) is another NVIDIA library for GPU-accelerated vision processing. It provides per-operator control (like [OpenCV](https://www.ultralytics.com/glossary/opencv) but on GPU) rather than DALI's pipeline approach. CV-CUDA's `cvcuda.copymakeborder()` supports explicit per-side padding, making centered letterbox straightforward. Choose DALI for pipeline-based workflows (especially with [Triton](triton-inference-server.md)), and CV-CUDA for fine-grained operator-level control in custom inference code.
+

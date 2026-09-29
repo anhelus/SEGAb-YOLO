@@ -248,3 +248,4 @@ DOTA images, which can be very large, are split into smaller resolutions for man
         ```
 
 This process facilitates better training efficiency and model performance. For detailed instructions, visit the [split DOTA images section](#split-dota-images).
+

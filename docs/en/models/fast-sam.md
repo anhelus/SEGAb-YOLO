@@ -365,3 +365,4 @@ FastSAM supports multiple prompt types for guiding the segmentation tasks:
 - **Point Prompt**: Segments objects near specific user-defined points.
 
 This flexibility allows FastSAM to adapt to a wide range of user interaction scenarios, enhancing its utility across different applications. For more information on using these prompts, refer to the [Key Features](#key-features) section.
+

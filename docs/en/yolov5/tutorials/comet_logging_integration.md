@@ -255,3 +255,4 @@ python utils/loggers/comet/hpo.py \
 Comet provides a number of ways to visualize the results of your sweep. Take a look at a [project with a completed sweep here](https://www.comet.com/examples/comet-example-yolov5/view/PrlArHGuuhDTKC1UuBmTtOSXD/panels?utm_source=yolov5&utm_medium=partner&utm_campaign=partner_yolov5_2022&utm_content=github).
 
 ![Comet Hyperparameter Visualization](https://cdn.jsdelivr.net/gh/ultralytics/assets@main/docs/hyperparameter-yolo.avif)
+

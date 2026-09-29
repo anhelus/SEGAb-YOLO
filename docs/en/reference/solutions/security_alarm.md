@@ -14,3 +14,4 @@ keywords: Ultralytics, Security Alarm System, Real-time Surveillance, Object Det
 ## ::: ultralytics.solutions.security_alarm.SecurityAlarm
 
 <br><br>
+

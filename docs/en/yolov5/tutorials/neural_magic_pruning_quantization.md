@@ -274,3 +274,4 @@ deepsparse.benchmark zoo:cv/detection/yolov5-s/pytorch/ultralytics/coco/pruned35
 **Research or Testing?** DeepSparse Community is free for research and testing. Get started with their [Documentation](https://www.redhat.com/en/about/press-releases/red-hat-completes-acquisition-neural-magic-fuel-optimized-generative-ai-innovation-across-hybrid-cloud).
 
 For more information on deploying YOLOv5 with DeepSparse, check out the [Neural Magic's DeepSparse documentation](https://www.redhat.com/en/about/press-releases/red-hat-completes-acquisition-neural-magic-fuel-optimized-generative-ai-innovation-across-hybrid-cloud) and the [Ultralytics blog post on DeepSparse integration](https://www.ultralytics.com/blog/deploy-yolov5-with-neural-magics-deepsparse-for-gpu-class-performance-on-cpus).
+

@@ -140,3 +140,4 @@ from ultralytics import YOLO
 model = YOLO("yolo26n.pt")
 results = model.track(source="video.mp4", tracker="custom_tracker.yaml")
 ```
+

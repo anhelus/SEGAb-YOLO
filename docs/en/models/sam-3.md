@@ -693,3 +693,4 @@ On the SA-Co/Gold benchmark with triple human annotation:
 - **Human upper bound**: 81.4 CGF1 (most liberal annotator)
 
 SAM 3 achieves strong performance approaching human-level accuracy on open-vocabulary concept segmentation, with the gap primarily on ambiguous or subjective concepts (e.g., "small window", "cozy room").
+

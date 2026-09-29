@@ -177,3 +177,4 @@ To split your dataset, a common practice is to divide it into 70% for training, 
 ### Can I handle varying image sizes in YOLO26 without manual resizing?
 
 Yes, Ultralytics YOLO26 can handle varying image sizes through the 'imgsz' parameter during model training. This parameter ensures that images are resized so their largest dimension matches the specified size (e.g., 640 pixels), while maintaining the aspect ratio. For more flexible input handling and automatic adjustments, check the [model training section](../modes/train.md).
+

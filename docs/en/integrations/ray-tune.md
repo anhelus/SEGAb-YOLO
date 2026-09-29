@@ -355,3 +355,4 @@ result_grid = model.tune(data="coco8.yaml", space=search_space, use_ray=True)
 ```
 
 This customizes the range of hyperparameters like initial learning rate and momentum to be explored during the tuning process. For advanced configurations, refer to the [Custom Search Space Example](#custom-search-space-example) section.
+

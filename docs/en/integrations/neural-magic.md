@@ -211,3 +211,4 @@ Integrating Neural Magic's DeepSparse with YOLO26 offers several benefits:
 - **Cost-Effective:** Reduces operational expenses through efficient resource utilization.
 
 For a deeper dive into these advantages, visit the [Benefits of Integrating Neural Magic's DeepSparse with YOLO26 section](#benefits-of-integrating-neural-magics-deepsparse-with-yolo26).
+

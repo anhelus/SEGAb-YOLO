@@ -24,3 +24,4 @@
 | H200 SXM     | Hopper     | 141 GB | $3.99     | Maximum performance        |
 | B200         | Blackwell  | 180 GB | $5.49     | Large models (Pro+)        |
 | B300         | Blackwell  | 288 GB | $7.39     | Largest models (Pro+)      |
+

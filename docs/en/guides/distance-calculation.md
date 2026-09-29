@@ -159,3 +159,4 @@ The key arguments for initializing the `DistanceCalculation` class in Ultralytic
 - `show`: Flag to display the output.
 
 For an exhaustive list and default values, see the [arguments of DistanceCalculation](#distancecalculation-arguments).
+

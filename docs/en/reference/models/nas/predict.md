@@ -14,3 +14,4 @@ keywords: Ultralytics, YOLO, NASPredictor, object detection, machine learning, A
 ## ::: ultralytics.models.nas.predict.NASPredictor
 
 <br><br>
+

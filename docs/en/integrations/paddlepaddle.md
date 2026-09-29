@@ -220,3 +220,4 @@ PaddlePaddle provides flexible deployment options:
 - **Paddle.js**: Enables deploying models directly within web browsers.
 
 These options cover a broad range of deployment scenarios, from on-device inference to scalable cloud services. Explore more deployment strategies on the [Ultralytics Model Deployment Options page](../guides/model-deployment-options.md).
+

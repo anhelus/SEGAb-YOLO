@@ -187,3 +187,4 @@ When running benchmarks, several arguments can be customized to suit specific ne
 - **verbose:** Control the level of logging detail.
 
 For a full list of arguments, refer to the [Arguments](#arguments) section.
+

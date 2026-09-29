@@ -217,3 +217,4 @@ Different image formats have unique characteristics (compression, bit depth, col
 
 - **AVIF**: Requires `pillow-avif-plugin`
 - **HEIC**: Requires `pillow-heif`
+

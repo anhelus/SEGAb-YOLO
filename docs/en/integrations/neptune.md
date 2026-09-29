@@ -175,3 +175,4 @@ The current integration automatically creates a new run for each training sessio
 ### Where can I find the model weights in Neptune?
 
 In your Neptune dashboard, navigate to the **Artifacts** or **All Metadata** section. You will find a `weights` folder containing your `best.pt` file, which you can download for deployment.
+

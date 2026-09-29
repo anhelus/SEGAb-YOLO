@@ -769,3 +769,4 @@ yolo_bbox2segment(
 ```
 
 For more information, visit the [yolo_bbox2segment reference page](../reference/data/converter.md#ultralytics.data.converter.yolo_bbox2segment).
+

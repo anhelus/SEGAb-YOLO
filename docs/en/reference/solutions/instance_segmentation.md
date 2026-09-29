@@ -14,3 +14,4 @@ keywords: Ultralytics, InstanceSegmentation, instance segmentation, masks, Pytho
 ## ::: ultralytics.solutions.instance_segmentation.InstanceSegmentation
 
 <br><br>
+

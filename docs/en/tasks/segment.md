@@ -270,3 +270,4 @@ Exporting a YOLO segmentation model to ONNX format is simple and can be done usi
         ```
 
 For more details on exporting to various formats, refer to the [Export](../modes/export.md) page.
+

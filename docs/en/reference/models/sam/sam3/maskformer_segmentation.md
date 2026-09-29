@@ -30,3 +30,4 @@ keywords: Ultralytics, SAM3, MaskFormer, segmentation head, mask prediction, dee
 ## ::: ultralytics.models.sam.sam3.maskformer_segmentation.UniversalSegmentationHead
 
 <br><br>
+

@@ -247,3 +247,4 @@ YOLO11 achieves greater accuracy with fewer parameters through advancements in m
 ### Can YOLO11 be deployed on edge devices?
 
 Yes, YOLO11 is designed for adaptability across various environments, including edge devices. Its optimized architecture and efficient processing capabilities make it suitable for deployment on edge devices, cloud platforms, and systems supporting NVIDIA GPUs. This flexibility ensures that YOLO11 can be used in diverse applications, from real-time detection on mobile devices to complex segmentation tasks in cloud environments. For more details on deployment options, refer to the [Export](../modes/export.md) documentation.
+

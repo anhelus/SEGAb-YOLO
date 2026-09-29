@@ -534,3 +534,4 @@ model.train(data="coco8.yaml", box=10.0, cls=1.5, dfl=2.0)
 ```
 
 For structural changes to the loss (such as adding class weights), you need to subclass the loss and model as shown in the [class weights section](#adding-class-weights).
+

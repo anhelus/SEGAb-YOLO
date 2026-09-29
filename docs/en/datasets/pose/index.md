@@ -214,3 +214,4 @@ convert_coco(labels_dir="path/to/coco/annotations/", use_keypoints=True)
 ```
 
 This tool helps seamlessly integrate COCO datasets into YOLO projects. For details, refer to the [Conversion Tool](#conversion-tool) section and the [data preprocessing guide](https://docs.ultralytics.com/guides/preprocessing_annotated_data).
+

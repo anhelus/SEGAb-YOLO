@@ -156,3 +156,4 @@ Yes, Ultralytics YOLO models are highly versatile and can be integrated with var
 - **[TensorFlow](https://www.ultralytics.com/glossary/tensorflow).js:** For web and Node.js apps, see the [TF.js conversion guide](https://docs.ultralytics.com/integrations/tfjs).
 
 Explore more integrations on the [Ultralytics Integrations page](https://docs.ultralytics.com/integrations).
+

@@ -22,3 +22,4 @@ keywords: Ultralytics, SAM3, ViTDet, vision transformer, backbone, attention, de
 ## ::: ultralytics.models.sam.sam3.vitdet.ViT
 
 <br><br>
+

@@ -303,3 +303,4 @@ Albumentations enhances various [computer vision tasks](../tasks/index.md) inclu
 - [Pose Estimation](../tasks/pose.md): Helps models adapt to different viewpoints and lighting conditions
 
 The library's diverse augmentation options make it valuable for any vision task requiring robust model performance.
+

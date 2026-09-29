@@ -30,3 +30,4 @@ keywords: Ultralytics, PyTorch, utils, initialization, inverse sigmoid, multisca
 ## ::: ultralytics.nn.modules.utils.multi_scale_deformable_attn_pytorch
 
 <br><br>
+

@@ -455,3 +455,4 @@ yolo solutions count source="path/to/video.mp4"
 ```
 
 These solutions require minimal configuration and provide immediate functionality for common computer vision tasks. To see all available solutions, run `yolo solutions help`. Each solution has specific parameters that can be customized to fit your needs.
+

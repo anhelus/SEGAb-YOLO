@@ -14,3 +14,4 @@ keywords: Ultralytics, Object Counter, Real-time Tracking, Video Stream, Python,
 ## ::: ultralytics.solutions.region_counter.RegionCounter
 
 <br><br>
+
