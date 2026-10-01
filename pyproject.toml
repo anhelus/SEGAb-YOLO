@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 # Project settings -----------------------------------------------------------------------------------------------------
 [project]
-name = "segab-yolo"
+name = "segatt-yolo"
 dynamic = ["version"]
 description = "SegAtt-YOLO: Segmentation-Guided Attention Boosting for YOLO — explainability and robustness tools."
 readme = "README.md"
@@ -111,7 +111,7 @@ typing = [
 
 [project.scripts]
 yolo = "segatt_yolo.cfg:entrypoint"
-segab-yolo = "segatt_yolo.cfg:entrypoint"
+segatt-yolo = "segatt_yolo.cfg:entrypoint"
 
 # Tools settings -------------------------------------------------------------------------------------------------------
 [tool.setuptools]

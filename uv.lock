@@ -5004,7 +5004,7 @@ wheels = [
 ]
 
 [[package]]
-name = "segab-yolo"
+name = "segatt-yolo"
 source = { editable = "." }
 dependencies = [
     { name = "einops" },

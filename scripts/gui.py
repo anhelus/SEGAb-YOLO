@@ -1,4 +1,4 @@
-"""Gradio GUI for SEGAb-YOLO pipeline."""
+"""Gradio GUI for segatt-yolo pipeline."""
 
 import os
 import subprocess
@@ -158,10 +158,10 @@ def _run_pipeline_generator(config_rel: str):
 
 
 def build_app() -> gr.Blocks:
-    app = gr.Blocks(title="SEGAb-YOLO Pipeline GUI")
+    app = gr.Blocks(title="segatt-yolo Pipeline GUI")
 
     with app:
-        gr.Markdown("# SEGAb-YOLO Pipeline GUI")
+        gr.Markdown("# segatt-yolo Pipeline GUI")
 
         # --------------------------------------------------------------- Pipeline
         with gr.TabItem("Pipeline"):
